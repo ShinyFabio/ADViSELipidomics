@@ -1,0 +1,8 @@
+default:
+  golem_name: ADViSELipidomics
+  golem_version: 0.6.0
+  app_prod: no
+production:
+  app_prod: yes
+dev:
+  golem_wd: C:/Users/fabio/Documents/ADViSELipidomics

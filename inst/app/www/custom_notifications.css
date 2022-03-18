@@ -1,0 +1,12 @@
+/* Put shiny notifications front and center */
+#shiny-notification-panel {
+  width: 50px;
+  max-width: 100px;
+}
+
+.shiny-notification {
+  height: max-content !important;
+}
+
+
+      
