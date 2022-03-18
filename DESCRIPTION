@@ -15,7 +15,10 @@ Description: ADViSELipidomics is suitable for the acquisition of LipidSearch fil
              concentration) and the statistical analysis of the feature matrix.
 License: MIT + file LICENSE
 Depends:
-    shinyBS
+    shinyBS,
+    shiny (>= 1.6.0),
+    shinyWidgets,
+    shinydashboard
 Imports: 
     attempt,
     config (>= 0.3.1),
@@ -23,9 +26,6 @@ Imports:
     glue,
     golem (>= 0.3.1),
     htmltools,
-    shiny (>= 1.6.0),
-    shinyWidgets,
-    shinydashboard,
     shinyFiles,
     shinyjs,
     shinycssloaders,
@@ -71,9 +71,13 @@ Imports:
     factoextra,
     cluster,
     gridExtra,
+    limma,
     metabolomicsWorkbenchR,
     openxlsx,
-    crayon
+    crayon,
+    data.table,
+    knitr,
+    tibble
 biocViews:
     SummarizedExperiment,
     limma,
