@@ -24,7 +24,7 @@
 #' @importFrom MASS rlm
 #' @importFrom purrr flatten
 #' @importFrom reshape2 melt dcast
-#' @import stats
+#' @importFrom stats lm coef
 #'
 #' @export
 #'
@@ -90,13 +90,13 @@ calibplot_advise_lipidomics <- function(out,
 
       # Coefficients
       if(lm_robust_flag == FALSE){
-        model <- lm(aux[,1]~aux[,2])
-        coef_df[k,] <- coef(model)
+        model <- stats::lm(aux[,1]~aux[,2])
+        coef_df[k,] <- stats::coef(model)
         met <- "lm"
         metgg = "lm"
       } else {
         model <- MASS::rlm(aux[,1]~aux[,2])
-        coef_df[k,] <- coef(model)
+        coef_df[k,] <- stats::coef(model)
         met <-  "rlm"
         metgg = MASS::rlm
       }
@@ -139,13 +139,13 @@ calibplot_advise_lipidomics <- function(out,
 
         # Coefficients
         if(lm_robust_flag == FALSE){
-          model <- lm(aux[,1] ~ 0 + aux[,2])
-          coef_df[k,] <- coef(model)
+          model <- stats::lm(aux[,1] ~ 0 + aux[,2])
+          coef_df[k,] <- stats::coef(model)
           met = "lm"
           metgg = "lm"
         } else {
           model <- MASS::rlm(aux[,1] ~ 0 + aux[,2])
-          coef_df[k,] <- coef(model)
+          coef_df[k,] <- stats::coef(model)
           met = "rlm"
           metgg = MASS::rlm
         }

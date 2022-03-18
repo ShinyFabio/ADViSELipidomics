@@ -6,7 +6,8 @@
 #'
 #' @noRd 
 #'
-#' @importFrom shiny NS tagList 
+#' @importFrom shiny NS tagList
+#' @importFrom stats prcomp
 mod_imputation_step_ui <- function(id, offset){
   ns <- NS(id)
   tagList(

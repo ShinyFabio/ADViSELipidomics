@@ -5,6 +5,7 @@
 #' @import shiny
 #' @rawNamespace import(ggplot2, except = last_plot)
 #' @rawNamespace import(plotly, except = rename)
+#' @importFrom stats prcomp kmeans dist hclust
 #' @importFrom shinyFiles shinyDirChoose getVolumes parseDirPath
 #' @importFrom fs path_home
 #' @importFrom DT renderDT datatable JS
@@ -17,7 +18,6 @@
 #' @importFrom shinyWidgets sendSweetAlert show_alert
 #' @importFrom grDevices colorRampPalette
 #' @importFrom RColorBrewer brewer.pal
-#' @importFrom stats reorder
 #' @import ggfortify
 #' @importFrom tidyr gather separate pivot_longer unite
 #' @importFrom forcats fct_rev
