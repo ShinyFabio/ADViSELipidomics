@@ -35,6 +35,8 @@ Default = "none".}
 \item{batch_type}{Character string. Different methodologies to cope with the eventual presence
 of batch effects: "none", "remove", "fit". Default = "fit".}
 
+\item{batch_method}{Algorithm used for the batch effect. Choices are: "limma", "combat_nonparam" and "combat_param".}
+
 \item{batch_vars}{Character vector, with the names of the variables from the target file,
 considered as batch effects for the entire experiment. Default = "".}
 
@@ -52,28 +54,6 @@ differentially expressed or not. Default = 0.05.}
 \item{decide_met}{Character string specifying how genes and contrasts are to be combined
 in the multiple testing scheme. Choices are "separate", "global", "hierarchical" or "nestedF".
 More information in "limma' package. Default = "separate".}
-
-\item{batch_alg}{Character string. Different methodologies to cope with the selection of
-batch_type = "remove". It can be "limma", "combat_param_full" or "combat_nonparam_full".
-Default = "limma".}
-
-\item{tag_name}{Character string. A string to tag all the output files for the ongoing
-analysis from this function. Default = "analysis".}
-
-\item{lfc}{Numerical value. Threshold on logFC values in the plots. Default = 2.}
-
-\item{col_de}{Character vector. It defines the correspondence between differential expressed
-lipids (-1 down-regulated, 1 up-regulated) and colors in the plots.
-Default = c("-1" = "green","0" = "black","1" = "red").}
-
-\item{interactive}{Logical value. If TRUE, main plots are interactive by the use of "plotly"
-package. Default = TRUE.}
-
-\item{de_table_path}{Character string for the folder in which storing tables resulting from
-the differential analysis. Default = "DETable".}
-
-\item{de_plot_path}{Character string for the folder in which storing tables resulting from
-the differential analysis. Default = "DEPlot".}
 }
 \value{
 res: a list with results from the experimental design, updated with the results

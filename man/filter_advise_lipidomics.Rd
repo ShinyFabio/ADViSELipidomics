@@ -19,6 +19,8 @@ species: first number is the lower bound, second number is the upper bound. Defa
 
 \item{db_bound}{Numerical vector. It is the range of the double bonds for each lipid
 species: first number is the lower bound, second number is the upper bound. Default = c(0,6).}
+
+\item{data_type}{Character. Where come from the data. Can be "LipidSearch" or "LIQUID".}
 }
 \value{
 res: a list with results from the reading step, updated with the filtered data, divided

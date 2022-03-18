@@ -6,7 +6,6 @@
 #' @param min_elem Numeric. Internal value.
 #' @param thresh p-value threshold. Possible options are 0.001, 0.01, 0.05.
 #' @param k The name of the contrast.
-#' @param sumexp List. The SummarizedExperiment result.
 #'
 #' @return write something
 #'
@@ -28,7 +27,7 @@ enrichment_advise_lipidomics <- function(out,
                                          rank_c = "logFC",
                                          min_elem = 2,
                                          thresh = 0.05,
-                                         k = "" #aggiunto
+                                         k = ""
                                          ){
   # Creation lipid sets
   lipid <- SummarizedExperiment::rowData(out$sumexp_data)
@@ -45,15 +44,13 @@ enrichment_advise_lipidomics <- function(out,
   }
   
   # Application of fast gene set enrichment analysis
-  #for(k in 1:length(out$limma_result)){   ##COMMENTATO
-    
-    result <- out$limma_result[[k]] %>% dplyr::arrange(-dplyr::across(rank_c)) ###modificato con across
+
+    result <- out$limma_result[[k]] %>% dplyr::arrange(-dplyr::across(rank_c))
     stats <- as.data.frame(result)[,rank_c]
     names(stats) <- as.character(as.data.frame(result)[, "Lipids"])
     
-    # plotEnrichment(set$Class_PC,stats)
-   
-    fun_gsea <- fgsea::fgsea(pathways = set, stats = stats, minSize = min_elem, nperm=5000000)  ###aggiunto nperm
+
+    fun_gsea <- fgsea::fgsea(pathways = set, stats = stats, minSize = min_elem, nperm=5000000)
     fun_gsea <- fun_gsea %>%
       dplyr::arrange(padj) %>%
       dplyr::rename(set = pathway)
@@ -84,12 +81,8 @@ enrichment_advise_lipidomics <- function(out,
                                   sig_plot_2 + ggpubr::rremove("xlab"),
                                   sig_plot_3,
                                   ncol = 1, common.legend = TRUE, legend = "right") %>%
-      ggpubr::annotate_figure(top = ggpubr::text_grob(paste0("Lipid Set Enrichment Analysis: ",
-                                             k ###MODIFICATO era names(out$limma_result)[k]
-                                             )))
-    #ggsave(paste0("sig_plot_",names(out$limma_result)[k],".pdf"), sig_plot, width = 7, height = 7)
-    
-  #}
-    
+      ggpubr::annotate_figure(top = ggpubr::text_grob(paste0("Lipid Set Enrichment Analysis: ", k)))
+
+
   return(sig_plot)
 }

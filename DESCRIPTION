@@ -1,6 +1,6 @@
 Package: ADViSELipidomics
 Title: Shinyapp for the acquisition and the analysis of lipidomics data from ADViSE project
-Version: 0.6.0
+Version: 1.0.0
 Authors@R: c(person("Eugenio", "Del Prete", email = "e.delprete@na.iac.cnr.it",
                  role = c("aut","cre"), comment = c(ORCID = "0000-0003-3214-9021")),
             person("Ana Margarida", "Campos", email = "campos.anamargarida@gmail.com",
@@ -77,7 +77,8 @@ Imports:
     crayon,
     data.table,
     knitr,
-    tibble
+    tibble,
+    scales
 biocViews:
     SummarizedExperiment,
     limma,

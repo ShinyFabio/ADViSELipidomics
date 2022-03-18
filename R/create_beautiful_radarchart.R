@@ -7,25 +7,18 @@
 #' The rows must contain a row with maximum values and a row with mininum values, plus one or two rows with a "Codice_azienda".
 #' @param caxislabels Range of values inside the spider plot (eg. caxislabels = c(0, 2, 5, 7, 10)).
 #' @param color Function that provides colors to the plot. For example color = grDevices::hcl.colors(2, palette = "Dynamic").
+#' @param vlabels Character vector for the names for variables.
+#' @param title Character vector for the radarchart title.
 #' 
 #' 
 #' @importFrom fmsb radarchart
 #' 
-#' @examples \dontrun{
-#' 
-#' create_beautiful_radarchart(
-#'  radardatamm[c("Max", "Min", "SA_10_massa_ultima","AV_02_massa_ultima"),], 
-#'  caxislabels = c(0, 2, 4, 6, 8, 10), 
-#'  color = grDevices::hcl.colors(2, palette = "Dynamic")
-#'  )
-#' 
-#' }
-#' 
+
 
 
 create_beautiful_radarchart <- function(data, color = "#00AFBB", 
                                         vlabels = colnames(data),
-                                        caxislabels = NULL, title = NULL, ...){
+                                        caxislabels = NULL, title = NULL){
   radarchart(
     data, axistype = 1,
     # Customize the polygon
@@ -36,6 +29,6 @@ create_beautiful_radarchart <- function(data, color = "#00AFBB",
     axislabcol = "grey", 
     # Variable labels
     vlcex = 1.3, vlabels = vlabels, seg = 5,
-    caxislabels = caxislabels, title = title, ...
+    caxislabels = caxislabels, title = title
   )
 }

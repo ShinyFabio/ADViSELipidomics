@@ -43,31 +43,26 @@ caliblist_advise_lipidomics <- function(out,
   #Reading calibration target file
   message("Reading calibration targetfile...")
   
-  ### AGGIUNTA ####
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Reading", "<b>", info, "</b>", "calibration targetfile...")), type = "default")
-  ### FINE AGGIUNTA #####
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Reading", "<b>", info, "</b>", "calibration targetfile...")), type = "default")
+  }
   
   name_file <- list.files(calibration_path)
   
 
-  #### MODIFICA ####
-  ## Versione PIPELINE:
-  #calibration <- readxl::read_xlsx(paste0(out$folders$target_path,calibration_targetfile))
-  ## Versione SHINY:
   calibration = calibration_targetfile
-  #### FINE MODIFICA ####
-  
   calibration$Class = strsplit(calibration$Class, split = ",")
   calibration$Name = strsplit(calibration$Name, split = ",")
   calibration_list = list()
+  
   # Creating calibration list
   message("Creating calibration list...")
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Creating calibration list...")), type = "default")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Creating calibration list...")), type = "default")
+  }
+  
   nas_list = list()
-  ###FINE AGGIUNTA
-
   rt_range <- out$targets$internal_standard %>% dplyr::select(Class,Ion,MinRt,MaxRt,InternalStandardLipidIon)
 
 
@@ -78,9 +73,9 @@ caliblist_advise_lipidomics <- function(out,
     our_file <- unlist(conc_temp$Name)
 
     if (!all(our_file %in% tools::file_path_sans_ext(name_file))){
-      ###AGGIUNTA
-      showNotification(tagList(icon("times-circle"), HTML("&nbsp;Calibration file missing!")), type = "error")
-      ###FINE AGGIUNTA
+      if(shiny::isRunning()){
+        showNotification(tagList(icon("times-circle"), HTML("&nbsp;Calibration file missing!")), type = "error")
+      }
       stop("Calibration file missing!")
       
     } else {
@@ -106,10 +101,8 @@ caliblist_advise_lipidomics <- function(out,
 
     if (length(conc_list) != 0){
       
-      ####AGGIUNTA
       nas_list[[k]] = data.frame("NAs" = unlist(lapply(conc_list, function(x) sum(is.na(x$Area)))))
-      ####FINE AGGIUNTA
-      
+
       mean_df <- base::Reduce(aux_fun, conc_list)
       mean_df <- cbind(mean_df$LipidIon,rowMeans(mean_df[,-1], na.rm = TRUE))
       colnames(mean_df) <- c("LipidIon",calibration$`Concentration (ng/mL)`[k])
@@ -119,21 +112,23 @@ caliblist_advise_lipidomics <- function(out,
   
   if(length(calibration_list) == 0){
     message(paste("Calibration list for",info,"is empty"))
-    showNotification(tagList(icon("exclamation-circle"), HTML("&nbsp;Calibration list for",info,"is empty")), type = "warning")
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("exclamation-circle"), HTML("&nbsp;Calibration list for",info,"is empty")), type = "warning")
+    }
     return(NULL)
   }
   
-  ####AGGIUNTA
   nas_list = base::Filter(Negate(is.null), nas_list)
   df_nas = lapply(nas_list, function(x) tibble::rownames_to_column(x, "Sample")) %>% data.table::rbindlist() %>% dplyr::filter(NAs != 0)
   if(sum(df_nas$NAs) > 0){
-    showNotification(duration = 8, tagList(icon("exclamation-circle"), 
+    if(shiny::isRunning()){
+      showNotification(duration = 8, tagList(icon("exclamation-circle"), 
                                            HTML("&nbsp;Some lipid areas (",sum(nas$NAs),"in total) are equal or less than 0 and will be replaced with NA. 
                                     Check the console to see where NAs are introduced.")), type = "warning")
+    }
     cat(crayon::bgYellow(crayon::red("NAs are introduced in the following samples.")))
     print(df_nas)
   }
-  ####FINE AGGIUNTA
 
   calibration_mat <- base::Filter(Negate(is.null), calibration_list) %>% 
     purrr::reduce(dplyr::full_join,by = "LipidIon") %>% 
@@ -147,8 +142,9 @@ caliblist_advise_lipidomics <- function(out,
   
   
   
-  ####AGGIUNTA
-  showNotification(tagList(icon("check"), HTML("&nbsp;Calibration list successfully created!")), type = "message")
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("check"), HTML("&nbsp;Calibration list successfully created!")), type = "message")
+  }
+  
   return(calibration_mat)
 }

@@ -62,19 +62,19 @@ expdesign_advise_lipidomics <- function(out,
   
   message("Design matrix creation...")
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Design matrix creation...")), type = "default")
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Design matrix creation...")), type = "default")
+  }
   
   # Considering batch effects in the model
   if(batch_type == "none"){
     message("Batch effect variables are not present.")
     message(paste0("Design matrix with formula: ~0+",
                    paste(design_vars, collapse = ":")))
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Batch effect variables are not present.")), type = "default")
-    showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"))), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Batch effect variables are not present.")), type = "default")
+      showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"))), type = "default")
+    }
     
     tot_vars = design_vars
   }
@@ -83,10 +83,10 @@ expdesign_advise_lipidomics <- function(out,
     message("Batch effects will be 'removed' before the creation of the contrast matrix.")
     message(paste0("Design matrix with formula: ~0+",
                    paste(design_vars, collapse = ":")))
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Batch effects will be 'removed' before the creation of the contrast matrix.")), type = "default")
-    showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"))), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Batch effects will be 'removed' before the creation of the contrast matrix.")), type = "default")
+      showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"))), type = "default")
+    }
     tot_vars = design_vars
   }
   
@@ -95,10 +95,10 @@ expdesign_advise_lipidomics <- function(out,
     message(paste0("Batch effect variables are explicitly provided: ", batch_vars))
     message(paste0("Design matrix with formula: ~0+",
                    paste(design_vars, collapse = ":"), "+", paste(batch_vars, collapse = "+")))
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Batch effect variables are explicitly provided: ", paste(batch_vars, collapse = ","))), type = "default")
-    showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"), "+", paste(batch_vars, collapse = "+"))), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Batch effect variables are explicitly provided: ", paste(batch_vars, collapse = ","))), type = "default")
+      showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"), "+", paste(batch_vars, collapse = "+"))), type = "default")
+    }
     tot_vars = c(design_vars,batch_vars)
   }
   
@@ -106,10 +106,10 @@ expdesign_advise_lipidomics <- function(out,
     message(paste0("Batch effect variables are estimated."))
     message(paste0("Design matrix with formula: ~0+",
                    paste(design_vars, collapse = ":")), " (Batch effect added in model matrix)")
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Batch effect variables are estimated.")), type = "default")
-    showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"), " (Batch effect added in model matrix)")), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Batch effect variables are estimated.")), type = "default")
+      showNotification(tagList(icon("info"), HTML("&nbsp;Design matrix with formula: ~0+",paste(design_vars, collapse = ":"), " (Batch effect added in model matrix)")), type = "default")
+    }
     tot_vars = design_vars
   }
   
@@ -156,25 +156,23 @@ expdesign_advise_lipidomics <- function(out,
       stringr::str_replace_all("[:]", "_") %>%
       stringr::str_replace_all("[;]", "_and_")
   } else {
-    ###AGGIUNTA
-    showNotification(tagList(icon("times-circle"), HTML("&nbsp;At least one factor has only one level -> ",paste0(names(which(!n_level > 1)), collapse = ";"))), type = "error")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("times-circle"), HTML("&nbsp;At least one factor has only one level -> ",paste0(names(which(!n_level > 1)), collapse = ";"))), type = "error")
+    }
     stop(paste0("At least one factor has only one level -> ",
                 paste0(names(which(!n_level > 1)), collapse = ";")))
   }
   
   # Check on design matrix rank
   if(!limma::is.fullrank(design)){
-    ###AGGIUNTA
-    showNotification(tagList(icon("times-circle"), HTML("&nbsp;Design matrix has not full rank: contrast matrix cannot be created!")), type = "error")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("times-circle"), HTML("&nbsp;Design matrix has not full rank: contrast matrix cannot be created!")), type = "error")
+    }
     stop("Design matrix has not full rank: contrast matrix cannot be created!")
   }
   
   # Setting the list of contrasts to be investigated
-  # contrast_list <- readr::read_csv(file_contrast, #MODIFICA file_contrast invece di paste0(out$folders$contrast_path, file_contrast)
-  #                                  col_names = FALSE)
-  contrast_list = file_contrast   #AGGIUNTA
+  contrast_list = file_contrast
   
   message("List of contrast")
   print(contrast_list)

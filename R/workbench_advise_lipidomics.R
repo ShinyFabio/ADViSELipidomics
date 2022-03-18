@@ -57,8 +57,10 @@ workbench_advise_lipidomics <-  function(filtered, coldata, metadata, data_type,
   
   message("Row annotations initialization...")
   
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Row annotations initialization...")), type = "default")
-
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Row annotations initialization...")), type = "default")
+  }
+  
   if(id == "ST000608"){
     test = strsplit(filtered$concentration_matrix_filt[,1], split = "\\(")
     aux_rowdata_class = unlist(lapply(test,"[",1))
@@ -99,7 +101,9 @@ workbench_advise_lipidomics <-  function(filtered, coldata, metadata, data_type,
                                    rep(1:aux_t, each = 4), sep = "_")
   } else {
     message("There is an issue on number of variable after parsing.")
-    showNotification(tagList(icon("times-circle"), HTML("&nbsp;There is an issue on number of variable after parsing")), type = "error")
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("times-circle"), HTML("&nbsp;There is an issue on number of variable after parsing")), type = "error")
+    }
   }
   
   aux_sn <- c(grep("sn",colnames(aux_rowdata), value = TRUE))
@@ -117,7 +121,9 @@ workbench_advise_lipidomics <-  function(filtered, coldata, metadata, data_type,
   #### colData ####
   
   message("Column annotations initialization...")
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Column annotations initialization...")), type = "default")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Column annotations initialization...")), type = "default")
+  }
 
 
   aux_coldata = coldata %>% as.data.frame() %>% dplyr::rename(SampleID = local_sample_id)
@@ -159,7 +165,9 @@ workbench_advise_lipidomics <-  function(filtered, coldata, metadata, data_type,
 
 
   message("Metadata initialization...")
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Metadata initialization...")), type = "default")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Metadata initialization...")), type = "default")
+  }
 
   
 
@@ -188,8 +196,9 @@ workbench_advise_lipidomics <-  function(filtered, coldata, metadata, data_type,
   res <- list(sumexp_data = sumexp, sumexp_data_mean = sumexp_mean, replicates = tec_rep, data_type = data_type)
   
   message("---> SUMMERIZED EXPERIMENT DATA ADVISE-LIPIDOMICS PIPELINE END <---")
-  
-  showNotification(tagList(icon("check"), HTML("&nbsp;Summarized experiment data saved!")), type = "message")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("check"), HTML("&nbsp;Summarized experiment data saved!")), type = "message")
+  }
   return(res)
 
 }

@@ -22,8 +22,6 @@ enrichment_advise_lipidomics(
 \item{thresh}{p-value threshold. Possible options are 0.001, 0.01, 0.05.}
 
 \item{k}{The name of the contrast.}
-
-\item{sumexp}{List. The SummarizedExperiment result.}
 }
 \value{
 write something

@@ -8,6 +8,7 @@
 #' species: first number is the lower bound, second number is the upper bound. Default = c(14,24).
 #' @param db_bound Numerical vector. It is the range of the double bonds for each lipid
 #' species: first number is the lower bound, second number is the upper bound. Default = c(0,6).
+#' @param data_type Character. Where come from the data. Can be "LipidSearch" or "LIQUID".
 #'
 #' @return res: a list with results from the reading step, updated with the filtered data, divided
 #' into non-labeled data (lipid_filtered) and deuterated data (lipid_deuterated).
@@ -41,9 +42,9 @@ filter_advise_lipidomics <- function(out,
   # I) Check on retention time range
   message("Check on retention time range...")
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on retention time range...")), type = "default")
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on retention time range...")), type = "default")
+  }
 
   if(data_type == "LipidSearch"){
     rt_range <- out$targets$internal_standard %>% dplyr::select(Class,Ion,MinRt,MaxRt,InternalStandardLipidIon)
@@ -75,9 +76,9 @@ filter_advise_lipidomics <- function(out,
   # II) Check on number of carbon atoms: range and even number
   message("Check on number of carbon atoms...")
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on number of carbon atoms...")), type = "default")
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on number of carbon atoms...")), type = "default")
+  }
   
   if(data_type == "LipidSearch"){
       #--- Subfunction---#
@@ -150,9 +151,9 @@ filter_advise_lipidomics <- function(out,
   # III) Check on insaturation (double bonds)
   message("Check on number of double bonds...")
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on number of double bonds...")), type = "default")
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on number of double bonds...")), type = "default")
+  }
   
   #---Subfunction---#
   fun_d <- function(d){
@@ -175,9 +176,9 @@ filter_advise_lipidomics <- function(out,
     #IV) Check on same species per class (observed m/z values)
     message("Check on observed m/z values...")
     
-    ###AGGIUNTA
-    showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on observed m/z values...")), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on observed m/z values...")), type = "default")
+    }
     
     #---Subfunction---#
     fun_e <- function(e){
@@ -224,9 +225,9 @@ filter_advise_lipidomics <- function(out,
     #### LIQUID 
     #IV) Check on replicates lipids
     message("Check on replicates lipids...")
-    
-    showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on replicates lipids...")), type = "default")
-    
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("cogs"), HTML("&nbsp;Check on replicates lipids...")), type = "default")
+    }
     
     #---Subfunction---#
     fun_f <- function(f){
@@ -256,9 +257,10 @@ filter_advise_lipidomics <- function(out,
   
   res <- purrr::flatten(list(out,aux_out))
 
-  ###AGGIUNTA
-  showNotification(tagList(icon("check"), HTML("&nbsp;Filtering data completed!")), type = "message")
-  return(res)
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("check"), HTML("&nbsp;Filtering data completed!")), type = "message")
+  }
   
+  return(res)
+
 }

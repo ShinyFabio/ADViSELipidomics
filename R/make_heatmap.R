@@ -16,6 +16,9 @@
 #' @param unit_legend An unit label for the legend. If data are scaled will be "Z-score" otherwise will be the input.
 #' @param col_label_size Size of the column labels. By default col_label_size = 10.
 #' @param padding padding for the heatmap in mm. By default padding = c(2,2,2,15).
+#' @param filter Character vector. The filtering on column by value. For example: c(input$filtheatmapcol, input$filtheatmapval).
+#' @param log_data Logical value. Set to TRUE to perform a log2 scaling.
+#' @param order_data Logical value. Set to TRUE if you want to performin the ordering based on the add_rowannot value.
 #'
 #' @importFrom dplyr select arrange across left_join
 #' @importFrom stats dist hclust as.dendrogram setNames
@@ -123,7 +126,6 @@ if(col_dend == TRUE){
 }
 
 
-#creo l'annotazione
 getPalette = grDevices::colorRampPalette(RColorBrewer::brewer.pal(12, "Paired"))
 
 #row annotation
@@ -143,7 +145,7 @@ colorannot_col = stats::setNames(getPalette(leng_col), c(row.names(table(annotda
 colorannot_col = stats::setNames(list(colorannot_col), paste(add_colannot))
 col_ha = ComplexHeatmap::HeatmapAnnotation(df = annotdata_col, which = "column", col = colorannot_col, border = TRUE)
 
-#aggiungi spazio tra annotazione e heatmap
+#add space between annotation and heatmap
 ComplexHeatmap::ht_opt(ROW_ANNO_PADDING = grid::unit(4, "mm"), COLUMN_ANNO_PADDING = grid::unit(4, "mm"))
 
 
@@ -153,7 +155,7 @@ ht = ComplexHeatmap::Heatmap(temp, name = unit_legend, rect_gp = grid::gpar(col 
                              cluster_rows = row_dend2, cluster_columns = col_dend2, 
                              left_annotation = row_ha, bottom_annotation = col_ha,
                              column_split = col_split, row_split = row_split,
-                             row_gap = grid::unit(2, "mm"), column_gap = grid::unit(2, "mm"), #spazio tra le divisioni
+                             row_gap = grid::unit(2, "mm"), column_gap = grid::unit(2, "mm"), #space between divisions
                              col = legend_col
 )
 ht = ComplexHeatmap::draw(ht, padding = grid::unit(padding, "mm"))

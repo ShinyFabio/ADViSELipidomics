@@ -9,8 +9,7 @@ create_beautiful_radarchart(
   color = "#00AFBB",
   vlabels = colnames(data),
   caxislabels = NULL,
-  title = NULL,
-  ...
+  title = NULL
 )
 }
 \arguments{
@@ -19,20 +18,12 @@ The rows must contain a row with maximum values and a row with mininum values, p
 
 \item{color}{Function that provides colors to the plot. For example color = grDevices::hcl.colors(2, palette = "Dynamic").}
 
+\item{vlabels}{Character vector for the names for variables.}
+
 \item{caxislabels}{Range of values inside the spider plot (eg. caxislabels = c(0, 2, 5, 7, 10)).}
+
+\item{title}{Character vector for the radarchart title.}
 }
 \description{
 This function make a customized spider plot using the {fmsb} package.
-}
-\examples{
-\dontrun{
-
-create_beautiful_radarchart(
- radardatamm[c("Max", "Min", "SA_10_massa_ultima","AV_02_massa_ultima"),], 
- caxislabels = c(0, 2, 4, 6, 8, 10), 
- color = grDevices::hcl.colors(2, palette = "Dynamic")
- )
-
-}
-
 }

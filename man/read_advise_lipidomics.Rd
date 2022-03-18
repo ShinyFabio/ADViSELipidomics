@@ -9,6 +9,8 @@ read_advise_lipidomics(out, datapath, data_type = "LipidSearch", target_file)
 \arguments{
 \item{out}{List. It is the result from the \code{init_advise_lipidomics} function.}
 
+\item{datapath}{Character. Path for the folder containing the data files.}
+
 \item{data_type}{Character string. The data type to read. Can be "LipidSearch" or "Liquid".
 By default "LipidSearch".}
 

@@ -8,6 +8,7 @@
 #' (as out$targets$targetfile_lipidomics).
 #' @param data_type Character string. The data type to read. Can be "LipidSearch" or "Liquid".
 #' By default "LipidSearch".
+#' @param datapath Character. Path for the folder containing the data files.
 #'
 #' @return res: a list with result from the initialization step, updated with the data to be
 #' analyzed with the forthcoming steps.
@@ -28,18 +29,19 @@
 #' @note Last change 17/12/2021
 
 read_advise_lipidomics <- function(out,
-                                   datapath,    ###AGGIUNTO datapath
-                                   data_type = "LipidSearch",   ###AGGIUNTO data_type
+                                   datapath,
+                                   data_type = "LipidSearch",
                                    target_file){
 
   message("---> READING AND STORING DATA ADVISE-LIPIDOMICS PIPELINE START <---")
 
   file_list <- unlist(strsplit(target_file$File_name, split = ";"))
 
-  ###AGGIUNTA
   datapath = paste0(datapath, "/")
-  showNotification(tagList(icon("info"), HTML("&nbsp;Number of files to be imported: ", length(file_list))), type = "default")
-  ###FINE AGGIUNTA
+  
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("info"), HTML("&nbsp;Number of files to be imported: ", length(file_list))), type = "default")
+  }
   
   message(paste0("Number of files to be imported: ", length(file_list)))
   
@@ -48,23 +50,22 @@ read_advise_lipidomics <- function(out,
     message(paste0(file_list[k]))
   }
 
-  if (!all(file_list %in% list.files(datapath))){      ###MODIFICA list.files(datapath) anzichè list.files(paste0(input_path,"Data\\")
+  if (!all(file_list %in% list.files(datapath))){
     message("At least one file is missing or reported with the wrong name!")
     
-    ###AGGIUNTA
-    showNotification(tagList(icon("times-circle"), HTML("&nbsp;At least one file is missing or reported with the wrong name!")), type = "error")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("times-circle"), HTML("&nbsp;At least one file is missing or reported with the wrong name!")), type = "error")
+    }
     
   } else {
     
-    ###AGGIUNTA
-    showNotification(tagList(icon("cogs"), HTML("&nbsp;Reading and storing data...")), type = "default")
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("cogs"), HTML("&nbsp;Reading and storing data...")), type = "default")
+    }
     percentage <- 0
-    ###FINE AGGIUNTA
-    
-    aux_name <- paste0(datapath, file_list)         ###MODIFICA paste0(datapath, file_list) anzichè paste0(input_path,"Data\\",file_list)
-    if(data_type == "LipidSearch"){          #####aggiunta if
-      ###AGGIUNTA
+
+    aux_name <- paste0(datapath, file_list)
+    if(data_type == "LipidSearch"){
       raw_list <- lapply(aux_name, function(x) {
         percentage <<- percentage + 1/length(file_list)*100
         incProgress(1/length(file_list), detail = paste0("Progress: ",round(percentage,0), " %"))
@@ -73,34 +74,31 @@ read_advise_lipidomics <- function(out,
           dplyr::mutate(Area = replace(Area, Area <= 0 , NA))
         })
       
-      ###FINE AGGIUNTA
-      
-      #prima era così:
-      #raw_list <- lapply(aux_name, function(x) readr::read_delim(x, "\t", escape_double = FALSE, trim_ws = TRUE, skip = 5))
-      
       data_list <- lapply(raw_list, function(x) x %>%
                             dplyr::select(LipidIon,Class,FattyAcid,Ion,ObsMz,TopRT,Area))
       names(raw_list) <- tools::file_path_sans_ext(file_list)
       names(data_list) <- tools::file_path_sans_ext(file_list)
       
-      ####AGGIUNTA
       nas = data.frame("NAs" = unlist(lapply(raw_list, function(x) sum(is.na(x$Area))))) %>% dplyr::filter(NAs != 0)
       if(sum(nas$NAs) > 0){
-        showNotification(duration = 8, tagList(icon("exclamation-circle"), 
+        if(shiny::isRunning()){
+          showNotification(duration = 8, tagList(icon("exclamation-circle"), 
                                  HTML("&nbsp;Some lipid areas (",sum(nas$NAs),"in total) are equal or less than 0 and will be replaced with NA. 
                                       Check the console to see where NAs are introduced.")), type = "warning")
+        }
         cat(crayon::bgYellow(crayon::red("NAs are introduced in the following samples.")))
         print(nas)
       }
-      ###FINE AGGIUNTA
-      
-    } ### fine aggiunta if
+
+    }
     
     
-    if(data_type == "Liquid"){   #####inizio aggiunta if
+    if(data_type == "Liquid"){
       raw_list <- lapply(aux_name, function(x) {
         percentage <<- percentage + 1/length(file_list)*100
-        incProgress(1/length(file_list), detail = paste0("Progress: ",round(percentage,0), " %"))
+        if(shiny::isRunning()){
+          incProgress(1/length(file_list), detail = paste0("Progress: ",round(percentage,0), " %"))
+        }
         readr::read_delim(x, "\t", escape_double = FALSE, trim_ws = TRUE, n_max = 1000000)})
       
       names(raw_list) <- tools::file_path_sans_ext(file_list)
@@ -110,35 +108,35 @@ read_advise_lipidomics <- function(out,
                             dplyr::rename_with(.fn = ~gsub(" ","_",.), .cols = everything())
       )
       
-      #ora devo unire i positivi e i negativi
+      #joining positive and negative
       rem_names = gsub("_negative","",names(data_list))
       rem_names = gsub("_positive","", rem_names)
       names(data_list) <- rem_names
       data_list = purrr::map(purrr::set_names(unique(names(data_list))), ~Reduce(rbind, data_list[names(data_list)==.]))
-    }  ####fine aggiunta if
+    }
 
   }
 
   
   message("Checking replicates...")
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Checking replicates...")), type = "default")
-  ###FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Checking replicates...")), type = "default")
+  }
   
-  aux_sam <- target_file$SampleID #MODIFICA prima eraout$targets$targetfile_lipidomics$SampleID
+  aux_sam <- target_file$SampleID
   aux_cou <- stringr::str_count(aux_sam, "_")
   if(sum(aux_cou) != 0){
     message("Technical replicates are present")
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Technical replicates are present.")), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Technical replicates are present.")), type = "default")
+    }
     tec_rep = TRUE
   } else {
     message("Technical replicates are absent")
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Technical replicates are absent.")), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Technical replicates are absent.")), type = "default")
+    }
     tec_rep = FALSE
   }
   
@@ -150,10 +148,10 @@ read_advise_lipidomics <- function(out,
   
   res <- purrr::flatten(list(out,aux_out))
   
-  ###AGGIUNTA
-  showNotification(tagList(icon("check"), HTML("&nbsp;Data successfully loaded!")), type = "message")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("check"), HTML("&nbsp;Data successfully loaded!")), type = "message")
+  }
   return(res)
-  ###FINE AGGIUNTA
-  
+
   
 }

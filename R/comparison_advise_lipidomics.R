@@ -39,14 +39,7 @@ comparison_advise_lipidomics <- function(out,
   # Differential expressed lipids Venn diagram
   if(ncol(out$test_result) > 2 & ncol(out$test_result) < 6){
     
-    # out_list <- list()
-    # for(k in 1:ncol(out$test_result)){
-    #   aux_col <- as.data.frame(out$test_result[,k])
-    #   idx <- which(as.data.frame(aux_col) != 0)
-    #   aux_col[idx,] <- rownames(aux_col)[idx]
-    #   out_list[[k]] <- aux_col[aux_col!="0"]
-    # }
-    
+
     aux_con <- tibble::rownames_to_column(as.data.frame(out$test_result)) %>%
       dplyr::mutate_all(list(~dplyr::case_when(. != 0 ~ rowname,  TRUE ~ "0"))) %>%
       dplyr::select(-rowname)
@@ -71,11 +64,7 @@ comparison_advise_lipidomics <- function(out,
         ggplot2::scale_fill_gradient(low = "white", high = "blue") +
         ggplot2::scale_x_continuous(expand = expansion(mult = .2))
       
-      
-      # ggplot2::ggsave(paste0(out$folders$output_path_plots,de_plot_path,"\\venn_diagram_gradient_",
-      #                        tag_name, ".pdf"),
-      #                 plot = vd_plot, device = "pdf", width = 7, height = 7)
-      
+
     } else {
       
       region_label <- data_venn@region %>%
@@ -92,10 +81,6 @@ comparison_advise_lipidomics <- function(out,
         scale_x_continuous(expand = expansion(mult = .2)) +
         theme_void()
       
-      # ggplot2::ggsave(paste0(out$folders$output_path_plots,de_plot_path,"\\venn_diagram_color_",
-      #                        tag_name, ".pdf"),
-      #                 plot = vd_plot, device = "pdf", width = 7, height = 7)
-      
     }
     
   } else {
@@ -109,11 +94,9 @@ comparison_advise_lipidomics <- function(out,
   aux_color <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12,"Paired"))
   comb_mat <- ComplexHeatmap::make_comb_mat(out$test_result)
   
-  #pdf(file = paste0(out$folders$output_path_plots,de_plot_path,"\\upset_plot_", tag_name, ".pdf"))
   upset_plot <- ComplexHeatmap::UpSet(comb_mat, comb_col = aux_color(length(comb_degree(comb_mat))))
   plot(upset_plot)
-  #dev.off()
-  
+
   
   message("---> COMPARISON PLOTS ADVISE-LIPIDOMICS PIPELINE END <---")
   

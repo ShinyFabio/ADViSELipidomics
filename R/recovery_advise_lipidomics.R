@@ -5,6 +5,7 @@
 #' matrix)
 #'
 #' @param out List. It is the result from the \code{calibplot_advise_lipidomics} function.
+#' @param intercept_flag Logical value. If set to TRUE the intercept will be set to zero.
 #'
 #' @return res: a list with results from calibration steps, updated with the recovery percentages
 #' and the concentration matrix (feature matrix).
@@ -32,7 +33,7 @@
 #' @note Last change 14/01/2022
 
 recovery_advise_lipidomics <- function(out,
-                                       intercept_flag    ####AGGIUNTA
+                                       intercept_flag = TRUE
                                        ){
 
   message("---> RECOVERY PERCENTAGE ADVISE-LIPIDOMICS PIPELINE START <---")
@@ -42,9 +43,9 @@ recovery_advise_lipidomics <- function(out,
 
   message("Calculating recovery percentage...")
   
-  ####AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Calculating recovery percentage...")), type = "default")
-  ####FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Calculating recovery percentage...")), type = "default")
+  }
 
   #---Subfunction---#
   fun_g <- function(g){
@@ -89,9 +90,9 @@ recovery_advise_lipidomics <- function(out,
 
   message("Correction by recovery percentage...")
   
-  ####AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Correction by recovery percentage...")), type = "default")
-  ####FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Correction by recovery percentage...")), type = "default")
+  }
   
   
   aux_conc_mat <- lapply(out$lipid_filtered, function(x) x %>%
@@ -145,25 +146,34 @@ recovery_advise_lipidomics <- function(out,
   if("Norm_factor" %in% colnames(out$targets$targetfile_lipidomics)){
     if(0 %in% out$targets$targetfile_lipidomics$Norm_factor){
       message("There's a 0 inside the Norm_factor column. Check the values.")
-      showNotification(tagList(icon("times-circle"), HTML("&nbsp;There's a 0 inside the Norm_factor column. Check the values.")), type = "error")
+      if(shiny::isRunning()){
+        showNotification(tagList(icon("times-circle"), HTML("&nbsp;There's a 0 inside the Norm_factor column. Check the values.")), type = "error")
+      }
       return(NULL)
     }
     
     if(TRUE %in% is.na(out$targets$targetfile_lipidomics$Norm_factor)){
       message("One or more NA in the Norm_factor column. Normalization will not be performed.")
-      showNotification(tagList(icon("info"), HTML("&nbsp;One or more NA in the Norm_factor column. Normalization will not be performed.")), type = "default")
+      if(shiny::isRunning()){
+        showNotification(tagList(icon("info"), 
+                                 HTML("&nbsp;One or more NA in the Norm_factor column. Normalization will not be performed.")), type = "default")
+      }
     }else{
       for(i in colnames(conc_mat[,-1])){
         norm_fact = out$targets$targetfile_lipidomics %>% dplyr::filter(SampleID == i)
         conc_mat[,i] <- conc_mat[,i] / norm_fact$Norm_factor
       }
       message("Applied normalization.")
-      showNotification(tagList(icon("cogs"), HTML("&nbsp;Applied normalization with the formula new_conc = old_conc / norm_fact")), type = "default")
+      if(shiny::isRunning()){
+        showNotification(tagList(icon("cogs"), HTML("&nbsp;Applied normalization with the formula new_conc = old_conc / norm_fact")), type = "default")
+      }
     }
     
   }else{
     message("Column 'Norm_factor' not present in the target file. Normalization will not be performed.")
-    showNotification(tagList(icon("info"), HTML("&nbsp;Column 'Norm_factor' not present in the target file. Normalization will not be performed.")), type = "default")
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Column 'Norm_factor' not present in the target file. Normalization will not be performed.")), type = "default")
+    }
   }
 
   ##table with lipid out of linearity
@@ -180,9 +190,10 @@ recovery_advise_lipidomics <- function(out,
 
   res <- purrr::flatten(list(out,aux_out))
   
-  ####AGGIUNTA
-  showNotification(tagList(icon("check"), HTML("&nbsp;Recovery percentage for each internal standard lipid species calculated!")), type = "message")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("check"), HTML("&nbsp;Recovery percentage for each internal standard lipid species calculated!")), type = "message")
+  }
+  
   return(res)
-  #####FINE AGGIUNTA
 
 }

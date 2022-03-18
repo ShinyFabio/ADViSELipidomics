@@ -4,10 +4,12 @@
 \alias{recovery_advise_lipidomics}
 \title{recovery_advise_lipidomics}
 \usage{
-recovery_advise_lipidomics(out, intercept_flag)
+recovery_advise_lipidomics(out, intercept_flag = TRUE)
 }
 \arguments{
 \item{out}{List. It is the result from the \code{calibplot_advise_lipidomics} function.}
+
+\item{intercept_flag}{Logical value. If set to TRUE the intercept will be set to zero.}
 }
 \value{
 res: a list with results from calibration steps, updated with the recovery percentages

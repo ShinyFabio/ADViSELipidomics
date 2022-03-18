@@ -33,6 +33,8 @@
 #' @importFrom factoextra fviz_nbclust fviz_cluster eclust fviz_dend fviz_silhouette
 #' @importFrom metabolomicsWorkbenchR do_query
 #' @importFrom openxlsx write.xlsx
+#' @importFrom graphics par
+#' @import scales
 #' @noRd
 
 

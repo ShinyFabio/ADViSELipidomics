@@ -7,6 +7,7 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-stable-succes.svg)](https://www.tidyverse.org/lifecycle/#stable)
+[![R-CMD-check](https://github.com/ShinyFabio/ADViSELipidomics/workflows/R-CMD-check/badge.svg)](https://github.com/ShinyFabio/ADViSELipidomics/actions)
 <!-- badges: end -->
 
 ADViSELipidomics is a novel Shiny app for the preprocessing, analysis,
@@ -52,3 +53,22 @@ brew install cairo
     sudo apt install libmagick++-dev
     sudo apt-get install libc6
     sudo apt-get install libnlopt-dev
+
+After that, open RStudio and launch this code. Make sure you already
+have installed the `{devtools}` package
+
+``` r
+devtools::install_github("ShinyFabio/ADViSELipidomics")
+```
+
+If R asks you to install packages that requires compilation, click on
+“No” otherwise the installation progress will take a lot.
+
+## Usage
+
+After the installation is completed, just run:
+
+``` r
+library("ADViSELipidomics")
+run_ADViSELipidomics()
+```

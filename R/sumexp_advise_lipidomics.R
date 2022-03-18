@@ -32,9 +32,9 @@ sumexp_advise_lipidomics <- function(out){
 
   message("Feature matrix initialization...")
   
-  #####AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Feature matrix initialization...")), type = "default")
-  #####FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Feature matrix initialization...")), type = "default")
+  }
   
   # Replicates
   aux_assay <- out$concentration_matrix_filt
@@ -56,9 +56,9 @@ sumexp_advise_lipidomics <- function(out){
 
   message("Column annotations initialization...")
   
-  #####AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Column annotations initialization...")), type = "default")
-  #####FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Column annotations initialization...")), type = "default")
+  }
   
   
   # Replicates
@@ -66,10 +66,9 @@ sumexp_advise_lipidomics <- function(out){
   rownames(aux_coldata) <-  aux_coldata$SampleID
   aux_coldata <- aux_coldata[!(rownames(aux_coldata) %in% out$sample_filtered), ]
   
-  ####AGGIUNTA rimuove colonne tutte na e trasforma i numeri in factor
+  # removing na columns
   aux_coldata = aux_coldata[,colSums(is.na(aux_coldata))<nrow(aux_coldata)]
-  ####FINE AGGIUNTA
-  
+
   if(out$replicates == TRUE){
     # Samples (averaged replicates)
     aux_coldata_mean <- aux_coldata
@@ -78,16 +77,15 @@ sumexp_advise_lipidomics <- function(out){
     aux_coldata_mean <- aux_coldata_mean %>%
       dplyr::distinct(SampleID, .keep_all = TRUE)
     rownames(aux_coldata_mean) <- aux_coldata_mean$SampleID
-    ####AGGIUNTA rimuove colonne tutte na
+    #removing all na columns
     aux_coldata_mean = aux_coldata_mean[,colSums(is.na(aux_coldata_mean))<nrow(aux_coldata_mean)]
-    ####FINE AGGIUNTA
   }
   
   message("Row annotations initialization...")
   
-  #####AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Row annotations initialization...")), type = "default")
-  #####FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Row annotations initialization...")), type = "default")
+  }
   
   aux_rowdata <- strsplit(out$concentration_matrix_filt[,1], split = ")")
   aux_rowdata_ion <- unlist(lapply(aux_rowdata,"[",2))
@@ -116,9 +114,9 @@ sumexp_advise_lipidomics <- function(out){
   } else {
     message("There is an issue on number of variable after parsing.")
     
-    #####AGGIUNTA
-    showNotification(tagList(icon("times-circle"), HTML("&nbsp;There is an issue on number of variable after parsing")), type = "error")
-    #####FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("times-circle"), HTML("&nbsp;There is an issue on number of variable after parsing")), type = "error")
+    }
   }
 
   aux_sn <- c(grep("sn",colnames(aux_rowdata), value = TRUE))
@@ -133,9 +131,9 @@ sumexp_advise_lipidomics <- function(out){
 
   message("Metadata initialization...")
   
-  #####AGGIUNTA
-  showNotification(tagList(icon("cogs"), HTML("&nbsp;Metadata initialization...")), type = "default")
-  #####FINE AGGIUNTA
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("cogs"), HTML("&nbsp;Metadata initialization...")), type = "default")
+  }
   
   aux_metadata <- list(AnalysisLab = out$analysis$lab_analyst,
                        DataAnalyst = out$analysis$data_analyst,
@@ -165,9 +163,10 @@ sumexp_advise_lipidomics <- function(out){
 
   res <- purrr::flatten(list(out,aux_out))
   
-  ####AGGIUNTA
-  showNotification(tagList(icon("check"), HTML("&nbsp;Summarized experiment data saved!")), type = "message")
+  if(shiny::isRunning()){
+    showNotification(tagList(icon("check"), HTML("&nbsp;Summarized experiment data saved!")), type = "message")
+  }
+  
   return(res)
-  #####FINE AGGIUNTA
 
 }

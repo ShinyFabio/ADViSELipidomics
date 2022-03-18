@@ -13,6 +13,7 @@
 #' (by using the function by MASS package). Default = FALSE.
 #' @param lin_calibration Logical value. If TRUE, a filter on concentration range of linearity is
 #' applied, considering the min and max values in the internal standard file. Default  = TRUE.
+#' @param plot_calibration Logical value. If TRUE calibration plots are drawn.
 #'
 #' @return res: a list with results from filtering step, updated with the calibration matrix
 #' and the linear model coefficients.
@@ -41,7 +42,7 @@ calibplot_advise_lipidomics <- function(out,
                                         intercept_flag = TRUE,
                                         lm_robust_flag = FALSE,
                                         lin_calibration = TRUE,
-                                        plot_calibration = TRUE         ###AGGIUNTA: plot_calibration = TRUE
+                                        plot_calibration = TRUE
                                         ){
 
   if (!dir.exists(paste0(out$folders$output_path_plots,cal_plot_path))){
@@ -52,9 +53,9 @@ calibplot_advise_lipidomics <- function(out,
   
   if(lin_calibration == TRUE){
     
-    ###AGGIUNTA
-    showNotification(tagList(icon("cogs"), HTML("&nbsp;Checking calibration linearity...")), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("cogs"), HTML("&nbsp;Checking calibration linearity...")), type = "default")
+    }
     
     aux_cal <- cbind(rownames(cal_mat),cal_mat) %>% dplyr::select(-LipidIon)
     aux_lin <- out$targets$internal_standard[,c("InternalStandardLipidIon",
@@ -75,9 +76,9 @@ calibplot_advise_lipidomics <- function(out,
 
     message("Calibration without intercept at zero...")
     
-    ###AGGIUNTA
-    showNotification(tagList(icon("info"), HTML("&nbsp;Calibration without intercept at zero...")), type = "default")
-    ###FINE AGGIUNTA
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("info"), HTML("&nbsp;Calibration without intercept at zero...")), type = "default")
+    }
     
     coef_df <- data.frame(matrix(nrow = nrow(cal_mat),ncol = 2))
     colnames(coef_df) <- c("q","m")
@@ -92,25 +93,25 @@ calibplot_advise_lipidomics <- function(out,
         model <- lm(aux[,1]~aux[,2])
         coef_df[k,] <- coef(model)
         met <- "lm"
-        metgg = "lm"                           ###AGGIUNTO metgg = "lm" da usare all'interno di ggplot
+        metgg = "lm"
       } else {
         model <- MASS::rlm(aux[,1]~aux[,2])
         coef_df[k,] <- coef(model)
         met <-  "rlm"
-        metgg = MASS::rlm                      ###AGGIUNTO metgg = MASS::rlm da usare all'interno di ggplot
+        metgg = MASS::rlm
       }
 
       # Plots
-      if(plot_calibration == TRUE){                  ####MODIFICA plot_calibration anzichè out$plots$plot_calibration
+      if(plot_calibration == TRUE){
         g <- ggplot(as.data.frame(aux),aes(x = aux[,2], y = aux[,1])) +
-          stat_smooth(method = metgg, formula = y~x, se = FALSE, na.rm = TRUE) +    ###MODIFICA method = metgg invece che method = met
+          stat_smooth(method = metgg, formula = y~x, se = FALSE, na.rm = TRUE) +
           geom_point(na.rm = TRUE) +
           labs(title = colnames(aux)[2]) +
           xlab("Concentration (ng/ml)") + ylab("Mean Area")
         colnames(aux)[2] <- gsub(":","-",colnames(aux)[2])
         colnames(aux)[2] <- gsub("/","o",colnames(aux)[2])
         ggsave(paste0(out$folders$output_path_plots, cal_plot_path, "\\Calibration_", met,
-                      "_", colnames(aux)[2],".png"), plot = g, device = "png")      ###MODIFICA ".pdf" in ".png" e device = "png"
+                      "_", colnames(aux)[2],".png"), plot = g, device = "png")
       }
 
     }
@@ -123,9 +124,9 @@ calibplot_advise_lipidomics <- function(out,
 
       message("Calibration with intercept at zero...")
       
-      ###AGGIUNTA
-      showNotification(tagList(icon("info"), HTML("&nbsp;Calibration with intercept at zero...")), type = "default")
-      ###FINE AGGIUNTA
+      if(shiny::isRunning()){
+        showNotification(tagList(icon("info"), HTML("&nbsp;Calibration with intercept at zero...")), type = "default")
+      }
       
       
       coef_df <- data.frame(matrix(nrow = nrow(cal_mat),ncol = 1))
@@ -141,25 +142,25 @@ calibplot_advise_lipidomics <- function(out,
           model <- lm(aux[,1] ~ 0 + aux[,2])
           coef_df[k,] <- coef(model)
           met = "lm"
-          metgg = "lm"                        ###AGGIUNTO metgg = "lm" da usare all'interno di ggplot
+          metgg = "lm"
         } else {
           model <- MASS::rlm(aux[,1] ~ 0 + aux[,2])
           coef_df[k,] <- coef(model)
           met = "rlm"
-          metgg = MASS::rlm                   ###AGGIUNTO metgg = MASS::rlm da usare all'interno di ggplot
+          metgg = MASS::rlm
         }
 
         # Plots
-        if(plot_calibration == TRUE){                  ####MODIFICA plot_calibration anzichè out$plots$plot_calibration
+        if(plot_calibration == TRUE){
           g <- ggplot(as.data.frame(aux),aes(x = aux[,2], y = aux[,1])) +
-            stat_smooth(method = metgg, formula = y~0+x, se = FALSE, na.rm = TRUE) +   ###MODIFICA method = metgg invece che method = met
+            stat_smooth(method = metgg, formula = y~0+x, se = FALSE, na.rm = TRUE) +
             geom_point(na.rm = TRUE) +
             labs(title = colnames(aux)[2]) +
             xlab("Concentration (ng/ml)") + ylab("Mean Area")
           colnames(aux)[2] <- gsub(":","-",colnames(aux)[2])
           colnames(aux)[2] <- gsub("/","o",colnames(aux)[2])
           ggsave(paste0(out$folders$output_path_plots, cal_plot_path,"\\Calibration_", met,
-                        "_", colnames(aux)[2],".png"), plot = g, device = "png")     ###MODIFICA ".pdf" in ".png" e device = "png"
+                        "_", colnames(aux)[2],".png"), plot = g, device = "png")
         }
 
       }
@@ -179,16 +180,15 @@ calibplot_advise_lipidomics <- function(out,
 
   res <- purrr::flatten(list(out,aux_out))
   
-  
-  ###AGGIUNTA
-  if(plot_calibration == TRUE){
-    showNotification(tagList(icon("check"), HTML("&nbsp;Calibration coefficients calculated and plots done!")), type = "message")
-    showNotification(tagList(icon("info"), HTML("&nbsp;Plots saved in ", cal_plot_path)), type = "default")
-  }else{
-    showNotification(tagList(icon("check"), HTML("&nbsp;Calibration coefficients calculated!")), type = "message")
+  if(shiny::isRunning()){
+    if(plot_calibration == TRUE){
+      showNotification(tagList(icon("check"), HTML("&nbsp;Calibration coefficients calculated and plots done!")), type = "message")
+      showNotification(tagList(icon("info"), HTML("&nbsp;Plots saved in ", cal_plot_path)), type = "default")
+    }else{
+      showNotification(tagList(icon("check"), HTML("&nbsp;Calibration coefficients calculated!")), type = "message")
+    }
   }
-  #res = purrr::flatten(list(res, intercept_flag, lm_robust_flag))
+
   return(res)
-  ###FINE AGGIUNTA
 
 }

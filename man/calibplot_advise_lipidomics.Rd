@@ -30,6 +30,8 @@ intercept at zero. Default = FALSE.}
 
 \item{lin_calibration}{Logical value. If TRUE, a filter on concentration range of linearity is
 applied, considering the min and max values in the internal standard file. Default  = TRUE.}
+
+\item{plot_calibration}{Logical value. If TRUE calibration plots are drawn.}
 }
 \value{
 res: a list with results from filtering step, updated with the calibration matrix

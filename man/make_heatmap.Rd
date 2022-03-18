@@ -27,11 +27,17 @@ make_heatmap(
 \arguments{
 \item{data}{A summarizedexperiment object. Tested only on sumexp averaged}
 
+\item{filter}{Character vector. The filtering on column by value. For example: c(input$filtheatmapcol, input$filtheatmapval).}
+
 \item{add_rowannot}{A column used for the left (row) annotation (e.g. "Product_Batch")}
 
 \item{add_colannot}{A column used for the bottom (column) annotation (e.g. "Class")}
 
+\item{log_data}{Logical value. Set to TRUE to perform a log2 scaling.}
+
 \item{scale_data}{Scaling data option. Data can be scaled (using scale()) by row ("row"), by column ("column") or not scaled ("none"). The result is the z-score.}
+
+\item{order_data}{Logical value. Set to TRUE if you want to performin the ordering based on the add_rowannot value.}
 
 \item{row_dend}{Boolean. Render dendogram on rows (TRUE or FALSE).}
 

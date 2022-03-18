@@ -68,8 +68,8 @@ na_advise_lipidomics <- function(out,
     message(paste0("Number of lipids totally absent: ", nrow(all_na_lipid)))
     message(paste0("Name of lipids totally absent: ", "\n"))
     message(paste0(rownames(all_na_lipid), "\n"))
-
-    if(na_filter_lip != 1){
+    
+    if(na_filter_lip != 1 && shiny::isRunning()){
       showNotification(tagList(icon("cogs"), HTML("&nbsp;Filtering NA by lipid...")), type = "default")
       showNotification(tagList(icon("info"), HTML("&nbsp;Number of lipids totally absent: ", nrow(all_na_lipid))), type = "default")
     }
@@ -91,7 +91,7 @@ na_advise_lipidomics <- function(out,
     message(paste0("Name of samples totally absent: ", "\n"))
     message(paste0(rownames(all_na_sample), "\n"))
 
-    if(na_filter_sam != 1){
+    if(na_filter_sam != 1 && shiny::isRunning()){
       showNotification(tagList(icon("cogs"), HTML("&nbsp;Filtering NA by sample...")), type = "default")
       showNotification(tagList(icon("info"), HTML("&nbsp;Number of samples totally absent: ", nrow(all_na_sample))), type = "default")
     }
@@ -109,7 +109,9 @@ na_advise_lipidomics <- function(out,
 
   if(imputation_met != "none"){
     message("Imputing NA values...")
-    showNotification(tagList(icon("cogs"), HTML("&nbsp;Imputing NA values...")), type = "default")
+    if(shiny::isRunning()){
+      showNotification(tagList(icon("cogs"), HTML("&nbsp;Imputing NA values...")), type = "default")
+    }
   }
 
   if(imputation_met == "knn"){
@@ -133,10 +135,8 @@ na_advise_lipidomics <- function(out,
     na_conc_list <- split(na_conc_mat,
                           factor(na_conc_mat$Sample,levels = unique(na_conc_mat$Sample)))
     
-    ### AGGIUNTA DA TESTARE
     na_conc_list <-  lapply(na_conc_list, function(x) x %>% dplyr::select(-Sample))
-    #####
-    
+
     #---Subfunction---#
     fun_h <- function(h){
       if(imputation_met == "mean"){
@@ -180,11 +180,14 @@ na_advise_lipidomics <- function(out,
 
   res <- purrr::flatten(list(out,aux_out))
   
-  if(imputation_met == "none" && na_filter_sam == 1 && na_filter_lip == 1){
-    showNotification(tagList(icon("info"), HTML("&nbsp;No NA imputation or filtering performed.")), type = "default")
-  }else{
-    showNotification(tagList(icon("check"), HTML("&nbsp;NA filtering and imputation done!")), type = "message")
+  if(shiny::isRunning()){
+    if(imputation_met == "none" && na_filter_sam == 1 && na_filter_lip == 1){
+      showNotification(tagList(icon("info"), HTML("&nbsp;No NA imputation or filtering performed.")), type = "default")
+    }else{
+      showNotification(tagList(icon("check"), HTML("&nbsp;NA filtering and imputation done!")), type = "message")
+    }
   }
+  
   return(res)
 
 }
