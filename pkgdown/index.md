@@ -62,46 +62,49 @@ run_ADViSELipidomics()
 
 ADViSELipidomics has a graphical user interface (GUI) implemented using the shiny and golem R packages. It has five main sections: Home, Data Import & Preprocessing, SumExp Visualization, Exploratory Analysis, and Statistical Analysis. Each section is accessible from a sidemenu on the left.
 
+# 2. Input Data
 
-## Home section
-Home section contains general information about ADViSELipidomics like the citation, the link to the github page and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
+ADViSELipidomics allows the user to import files concerning different types of data:
+* LipidSearch or LIQUID. ADViSELipidomics deals with the data files containing information on chromatographic peak area or peak intensity per lipid, obtained as output from external software for identifying and quantifying lipids (i.e., ADViSELipidomics currently supports the output formats from LipidSearch or LIQUID). Moreover, it requires the Target File with details on samples (such as treatments or biological replicates), the Internal Reference File with bounds for the filtering step in the following modules. ADViSELipidomics shows a quality plot based on the sum of chromatographic peak area per sample (or replicate). In the case of LipidSearch output associated with internal lipid standards, ADViSELipidomics also requires all the Calibration Files for the construction of the calibration curves.
+* Metabolomics Workbench. ADViSELipidomics can download in real-time suitable selected lipidomic experiments from the online repository;
+* Excel. The user can upload two Excel files, the data matrix and the Target File;
+* SummarizedExperiment. The user can upload a SummarizedExperiment R object (SE), with several types of information (data matrix, information on lipids, information on samples, metadata if available).
 
-## Data Import & Preprocessing
-This section allows users to import and process lipidomics data from various sources. 
-When the user opens this section for the first time after launch, a message box appears and asks you to write your name and your company. These informations will be stored in the final output of ADViSELipidomics. By default, if you click on "Run", the following informations will be stored: User: "Name", Company: "Company". Next, the user can choose between different types of data i.e. LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). Based on your choice, the workflow can be different and requires different files. Here we describe all the required files for each typology.
+Hence, as can be seen, ADViSELipidomics requires different files that may change beetween the different types of data. To sum up, here is a list with all the required files for each data type:
 
 
-* **LipidSearch without Internal Standard lipid: **
+* **LipidSearch without Internal Standard lipid:** 
   * Target file (.xlsx)
   * Internal Reference file (.xlxs)
-  * Output coming from LipidSearch related to your samples(.txt)
-* **LipidSearch with Internal Standard lipid: **
+  * Data files coming from LipidSearch related to your samples (.txt)
+* **LipidSearch with Internal Standard lipid:** 
   * Target file (.xlsx)
   * Internal Reference file (.xlxs)
-  * Output coming from LipidSearch related to your samples(.txt)
+  * Data files coming from LipidSearch related to your samples (.txt)
   * Calibration File for deuterated (.xlsx)
   * Calibration File for nonlabeled (.xlsx)
-  * Output coming from LipidSearch related to the internal standard (.txt)
-* **LIQUID**
+  * Data files coming from LipidSearch related to the internal standard (.txt)
+* **LIQUID** 
   * Target file (.xlsx)
   * Internal Reference file (.xlxs)
   * Output coming from LIQUID related to your samples(.tsv)
-* **User’s Excel File**
+* **User’s Excel File** 
   * Target file (.xlsx)
   * Data Matrix File (.xlsx)
-* **SummarizedExperiment**
+* **SummarizedExperiment** 
   * SummarizedExperiment object (.rds)
 
 For **Metabolomics Workbench** you don't need to import anything, just choose the  Metabolomics Workbench ID study.
 
+Before run ADViSELipidomics make sure that you have all the required files and that they are draw up properly. Apart of the output files from LipidSearch and LIQUID, ADViSELipidomics requires that the Excel files have a given structure with some mandatory columns. Here we provide a guide to the creation of these Excel files. 
 
-A part of the output from LipidSearch and LIQUID, ADViSELipidomics requires that the Excel files have a given structure with some mandatory columns. Here we provide a guide to the creation of these Excel files.
 
-### Data files (LipidSearch or LIQUID)
+
+## 2.1 Data files (LipidSearch or LIQUID)
 
 The output of LipidSearch and LIQUID are some text files containing information on chromatographic peak area or peak intensity per lipid. If your data come from **LipidSearch** you should have a deuterated file and a non-labeled file for each sample (or replicate). The extension of these files should be .txt. If your data come from **LIQUID** you can have a positive and a negative file, with .tsv extension. In any case, put your data file in a folder and rename each file with your sample id in a proper way. 
 
-**Example:**
+**Example:** 
 your sample it's called "AF-1CM" and you have two technical replicates. Then, depending on the output software, the name of the data files should be:
 * for LipidSearch: "AF-1C-M_deuterated_1.txt", "AF-1C-M_nonlabeled_1.txt" and "AF-1C-M_deuterated_2.txt" and "AF-1C-M_nonlabeled_2.txt"
 * for LIQUID: "AF-1C-M_positive_1", "AF-1C-M_negative_1" and "AF-1C-M_positive_2", "AF-1C-M_negative_2"
@@ -110,32 +113,83 @@ The last two characters (e.g. "_1") refers to the technical replicate. If you do
 
 
 
-
 **NOTE**
-In the choice of your sample name, it's better to avoid special characters and **DO NOT use "_"**. This character is used by ADViSELipidomics to split the file name in three parts: the sample name, the type of file (deuterated/nonlabeled or positive/negative) and the technical replicate.
+In the choice of your sample name, it's better to avoid special characters and **DO NOT use underscores (_)**. This character is used by ADViSELipidomics to split the file name in three parts: the sample name, the type of file (deuterated/nonlabeled or positive/negative) and the technical replicate as shown in the following picture:
+
+![datafile_names](https://user-images.githubusercontent.com/78078351/159508536-ee7bc3c2-59c2-4c11-bb32-782c7eb76696.png)
+
 Bad name: "Blood_bag_deuterated_1.txt"
 Good name: "Blood-bag_deuterated_1.txt"
 
 
-### Target File
+## 2.2 Target File (LipidSearch, LIQUID, and User’s Excel File)
 The Target File is an Excel file that contains all the informations about your samples. It is the most important file since it is used for  LipidSearch import, LIQUID import, and User’s Excel File import. This file requires some mandatory columns that have to be filled with some criteria:
 
 
-* **SampleID** this column contains the ID of each sample. To prevent errors, the best way to write the IDs is: "samplename_1" where in "samplename" you can write your sample name and "_1" represents the identification for the technical replicate. If your experiment doesn't have technical replicates, you can simply write "samplename". A good SampleID could be "AF-1C_1" if technical replicate are present, or "AF-1C" if not. A bad name could be "AF_1C_1" (with another underscore).
+* **SampleID (LipidSearch, LIQUID and User’s Excel)** this column contains the ID of each sample. To prevent errors, the best way to write the IDs is: "samplename_1" where in "samplename" you can write your sample name and "_1" represents the identification for the technical replicate. If your experiment doesn't have technical replicates, you can simply write "samplename". A good SampleID could be "AF-1C_1" if technical replicate are present, or "AF-1C" if not. A bad name could be "AF_1C_1" (with another underscore).
 
 
-*	**File_name** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases for each sample there are two different file. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a semicolon ";".
+*	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases for each sample there are two different file. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"**.
 
 
-SampleID similar to targetfile, so samplename_1 if replicates are present otherwhise jus samplename. E.g. AF-CD14-1_1
--	Norm_factor optional. If not present data won’t be normalized. Just put a number. Be careful with decimal point (if . or ,).
+* **Norm_factor (LipidSearch, LIQUID - optional)** If you need to normalize your data by a normalization factor, you can add this column and write a number (Be careful with decimal point) for each sample. If it's not present, data won’t be normalized.
+
+In the picture below there is a Target File example, enlightned in yellow the mandatory columns, and in green the optional column. You can fill the Target File with any other informative column, just try to avoid special characters like \^$.?*|+()[]{} and whitespace.You can use - or _ instead of whitespace.
+
+![Screenshot (197)](https://user-images.githubusercontent.com/78078351/159510916-f0fac7fa-fa98-4bdb-a88a-505c0f6a6098.png)
+
+The example target file can be downloaded from here:
+
+[Targetfile_Lipidomics.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325363/Targetfile_Lipidomics_new.xlsx)
+
+
+##  2.3 Internal Reference File (LipidSearch, LIQUID)
+In LipidSearch and LIQUID option, ADViSELipidomics requires also another Excel file here called Internal Reference File which contains the list of the Internal Standard lipids defined per class and adduct, upper/lower bounds for the number of carbon atoms, upper/lower bounds for the number of double bonds, nominal standard concentration, and upper/lower bounds for the concentration linearity in the calibration curves. This file has many mandatory columns that depends both on the external software (LipidSearch, LIQUID) and the presence of internal standard (only for LipidSearch).
+
+* **LipidSearch** 
+  - **Class** contains the lipid class (e.g. *DG* )
+  - **Ion** the ion of interested (e.g. *M-H* )
+  - **MinRt** minimum retention time (a number)
+  - **MaxRt** maximum retention time (a number)
+  - **InternalStandardLipidIon** lipid of .........????? (e.g. *Cer(d18:1_17:0)-H* )
+  - **MinLinearity** minimum value for the concentration linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
+  - **MaxLinearity** minimum value for the concentration linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
+
+The picture below shows an Internal Reference File example in the case of LipidSearch and the presence of Internal Standards. In yellow the mandatory columns, and in green the columns needed only in the presence of Internal Standards.
+
+![Screenshot (199)](https://user-images.githubusercontent.com/78078351/159517154-aca32f9c-1c0f-4299-9937-b49fa1b3b028.png)
+
+The Internal Reference File example for the LipidSearch with Internal Standards option can be downloaded from here:
+
+[Internal_Reference_file_LipidSearch_withIS.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325722/Internal_Reference_file_LipidSearch_withIS.xlsx)
+
+* **LIQUID**
+  - **Class** contains the lipid class (e.g. *DG* )
+  - **Adduct** the ion of interested (e.g. *[M-H]+* )
+  - **MinRt** minimum retention time (a number)
+  - **MaxRt** maximum retention time (a number)
+
+The picture below shows an Internal Reference File example in the case of LIQUID. In yellow the mandatory columns.
+
+![Screenshot (201)](https://user-images.githubusercontent.com/78078351/159518027-cb2a3eea-923f-49b7-8633-0502d0935032.png)
+
+The Internal Reference File example for the LIQUID option can be downloaded from here:
+
+[Targetfile_Lipidomics_LIQUID.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325726/Targetfile_Lipidomics_LIQUID.xlsx)
+
+
+## 2.4 Calibration Files (LipidSearch with Internal Standards)
+In the case of LipidSearch, you can choose to use or not use Internal Standard if you have them. In the case you have Internal Standard and you want to use them, you need to upload also some Calibration Files which are two Excel files and the data files coming from LipidSearch. For the data files
+
+## 2.1Home section
+Home section contains general information about ADViSELipidomics like the citation, the link to the github page and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
+
+## 2.2 Data Import & Preprocessing
+This section allows users to import and process lipidomics data from various sources. 
+When the user opens this section for the first time after launch, a message box appears and asks you to write your name and your company. These informations will be stored in the final output of ADViSELipidomics. By default, if you click on "Run", the following informations will be stored: User: "Name", Company: "Company". Next, the user can choose between different types of data i.e. LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). Based on your choice, the workflow can be different and requires different files. Here we describe all the required files for each typology.
 
 
 
-Here we present an example of a Target File.
 
 
 
-
-
-ADViSELipidomics deals with the data files containing information on chromatographic peak area or peak intensity per lipid, obtained as output from LipidSearch. If your lipidomic data come from LipidSearch, you can choose to use or not internal standard
