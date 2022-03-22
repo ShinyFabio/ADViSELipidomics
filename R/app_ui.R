@@ -29,7 +29,7 @@ app_ui <- function(request) {
     # Your application UI logic 
 
     dashboardPage(
-      dashboardHeader(title = "ADViSELipidomics", tags$li(class = "dropdown", actionBttn("jumptohome", icon = icon("home"), style = "stretch", size = "lg" , color = "primary"))),
+      dashboardHeader(title = "ADViSELipidomics", tags$li(class = "dropdown", actionBttn("jumptohome", icon = icon("home"), style = "stretch", size = "lg"))),
       
       
     dashboardSidebar(
@@ -78,22 +78,29 @@ app_ui <- function(request) {
              files together with lipids and samples details, select filters and methods to perform on 
              dataset, and obtain the results in form of tables and plots.",style = "color: #0e3d51;")
           ))),
-          br(),
+          linebreaks(3),
           fluidRow(column(width = 12, style = "text-align:center",
                           actionButton("gotoimport", "Start!", icon = icon("rocket"),class = "btn btn-primary btn-lg", 
                                        width = "250px", style='padding:10px; font-size:250%; font-weight: bold;'))),
-          br(), br(), br(),
+          linebreaks(5),
           fluidRow(
             shinydashboard::infoBox(width = 3, icon = icon("github"), title = "Bug reports", 
             subtitle = "If you encounter a bug or a problem click here and go to the GitHub page.", 
-            color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics", fill = T),
-            column(4),
-            shinydashboard::infoBox(width = 5, icon = icon("newspaper"), title = "Citation",
-                                    subtitle = "Please cite our article (E. Del Prete, Ana M. Campos, 
+            color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T),
+          shinydashboard::infoBox(width = 6, icon = icon("newspaper"), title = "Citation",
+                                  subtitle = "Please cite our article (E. Del Prete, A. M. Campos, 
                                     F. Della Rocca, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for the analysis of lipidomic data, ..., 2022) 
-                                    when you publish using this tool. ", color = "aqua", fill = T
-                                    )
-            ),
+                                    when you publish using this tool. ", color = "aqua", fill = T),
+            shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
+                                    subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
+                                    color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T)
+          ),
+          linebreaks(2),
+          column(6, offset = 3, wellPanel(
+                    h4("This package has been developed at IAC-CNR/ICB-CNR under the financial support of the Regione 
+                    Campania project: Piattaforma tecnologica per la lotta alle patologie oncologiche Antitumor 
+                    Drugs and Vaccines from the SEa (ADViSE)")))
+
         ),
         
         tabItem(tabName = "rawsub",
@@ -494,12 +501,13 @@ app_ui <- function(request) {
             column(
               2,
               box(width = NULL, status = "primary",
-                  radioButtons("selplotlip1", choices = c("Lipid class distribution", "Lipid class proportion", "Lipid species distribution"),
+                  radioButtons("selplotlip1", choices = c("Lipid class distribution", "Lipid class proportion", "Lipid species distribution", "Lipid boxplot"),
                     label = tags$span("Data information",
                       tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
                              title = "Lipid class distribution is the number of lipids that belong to each class. 
                              Lipid class proportion is the relative proportion among lipids classes for each sample.
-                             Lipid species distribution is the concentration of each lipid species for each condition."))
+                             Lipid species distribution is the abudance of each lipid species for each condition in a given
+                             lipidic class. Lipid boxplot shows the amount of a selected lipid compared to a variable."))
                       ),
 
                 conditionalPanel(
@@ -511,11 +519,25 @@ app_ui <- function(request) {
                   awesomeCheckbox("summ_taxabar", "Summarize data"),
                   selectInput("annot_taxa", "Annotation", choices = "")
                 ),
+                
                 conditionalPanel(
                   condition = "input.selplotlip1 == 'Lipid species distribution'",
                   selectInput("class_spec_dist", "Select a lipid class", choices = ""),
                   selectInput("fill_spec_dist", "Select a fill variable", choices = ""),
                   awesomeCheckbox("summ_spec_dist", "Summarise by fill variable", value = TRUE)
+                ),
+                
+                #boxplot
+                conditionalPanel(
+                  condition = "input.selplotlip1 == 'Lipid boxplot'",
+                  selectInput("select_lipidplot", "Select a lipid", choices = ""),
+                  selectInput("select_fillboxplot", "Select fill column", choices = ""),
+                  fluidRow(
+                    column(6,awesomeCheckbox("log_lipidboxplot", "Log scale", value = TRUE)),
+                    column(6, conditionalPanel(condition = "output.check_replicates == true",
+                                               awesomeCheckbox("summ_lipidboxplot", "Summarize data", value = FALSE)))
+                  ),
+                  awesomeCheckbox("addpoints_lipidboxplot", "Add points", value = FALSE)
                 )
               )
             ),
@@ -529,29 +551,14 @@ app_ui <- function(request) {
             conditionalPanel(
               condition = "input.selplotlip1 == 'Lipid species distribution'",
               column(10, shinycssloaders::withSpinner(plotly::plotlyOutput("lipspec_barplot",height = "650px")))
-            )
+            ),
+            conditionalPanel(
+              condition = "input.selplotlip1 == 'Lipid boxplot'",
+              column(10, shinycssloaders::withSpinner(plotly::plotlyOutput("lipcondplot")))
+              )
           )
         ),
 
-        tabPanel(
-          "Boxplot",
-          sidebarLayout(
-            sidebarPanel(width = 3,
-              selectInput("select_lipidplot", "Select a lipid", choices = ""),
-              selectInput("select_fillboxplot", "Select fill column", choices = ""),
-              fluidRow(
-                column(6,awesomeCheckbox("log_lipidboxplot", "Log scale", value = TRUE)),
-                column(6, conditionalPanel(condition = "output.check_replicates == true",
-                       awesomeCheckbox("summ_lipidboxplot", "Summarize data", value = FALSE)))
-              ),
-              awesomeCheckbox("addpoints_lipidboxplot", "Add points", value = FALSE)
-            ),
-            mainPanel(
-              width = 9,
-              shinycssloaders::withSpinner(plotly::plotlyOutput("lipcondplot"))
-            )
-          )
-        ),
 
         tabPanel("Scatterplot",
           sidebarLayout(

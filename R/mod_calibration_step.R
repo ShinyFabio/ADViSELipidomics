@@ -196,11 +196,11 @@ mod_calibration_step_server <- function(id, stepc){
     
     ####PART 2. Select the calibration curve folder
     
-    #se tutti i data sono stati caricati
     output$checkfilterdata = reactive(
       return(is.null(stepd()))
     )
     outputOptions(output, "checkfilterdata", suspendWhenHidden = FALSE)
+    
     
     volumes = c(Home = fs::path_home(), shinyFiles::getVolumes()())
     
@@ -383,7 +383,7 @@ mod_calibration_step_server <- function(id, stepc){
     
     
     
-    ####### STEP 5. Make the recovery percentage and the SummarizeExperiment
+    ####### STEP 5. Make the recovery percentage and the SummarizedExperiment
     
     
     #se tutti i data sono stati caricati

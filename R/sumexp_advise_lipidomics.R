@@ -51,7 +51,7 @@ sumexp_advise_lipidomics <- function(out){
     aux_assay_mean <- aux_assay_mean %>%
       dplyr::group_by(Sample) %>%
       dplyr::summarise(dplyr::across(where(is.double), mean, na.rm = T)) %>%
-      tibble::column_to_rownames("Sample") %>% t() %>% as.data.frame() #####aggiuta di as.data.frame()
+      tibble::column_to_rownames("Sample") %>% t() %>% as.data.frame()
   }
 
   message("Column annotations initialization...")

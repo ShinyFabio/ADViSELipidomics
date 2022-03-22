@@ -136,7 +136,7 @@ app_server <- function( input, output, session ) {
       
       data_updated = list()
       for(k in 1:length(data_list)){
-        name = gsub("nonlabeled_","",names(data_list[k]))
+        name = gsub("_nonlabeled","",names(data_list[k]))
         data_updated[k] = list(data_list[[k]] %>% dplyr::rename(!!name := "Area"))
       }
       

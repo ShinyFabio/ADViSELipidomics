@@ -34,18 +34,21 @@ steps based on your operating systems:
 -   **Windows (tested on Windows 10 64bit)** 
 
 Before installing the package you need also to install Rtools from the
-following link: <https://cran.r-project.org/bin/windows/Rtools>.
+following link:
+
+<https://cran.r-project.org/bin/windows/Rtools>.
 
 -   **MacOS**  
+    If you are on MacOs run the following codes in the console:
 
 ``` r
 brew install imagemagick@6
 brew install cairo
 ```
 
--   **Ubuntu (tested on su 18.04).**  
+-   **Ubuntu (tested on 18.04).**  
 
-<!-- -->
+If you are on Ubuntu run the following codes in the console:
 
     sudo apt install build-essential libcurl4-gnutls-dev libxml2-dev libssl-dev
     sudo apt-get install libcairo2-dev
@@ -54,21 +57,30 @@ brew install cairo
     sudo apt-get install libc6
     sudo apt-get install libnlopt-dev
 
-After that, open RStudio and launch this code. Make sure you already
-have installed the `{devtools}` package
+After that, open RStudio, check if you have already installed the
+`{devtools}` package and run the following code:
 
 ``` r
-devtools::install_github("ShinyFabio/ADViSELipidomics")
+if(!require("devtools")){
+  install.packages("devtools")
+}
+library(devtools)
+install_github("ShinyFabio/ADViSELipidomics")
 ```
 
-If R asks you to install packages that requires compilation, click on
-“No” otherwise the installation progress will take a lot.
+Be careful that if you need to install many packages and you …with
+compilation the process could take a lot depending on your hardware and
+operating system.
 
 ## Usage
 
-After the installation is completed, just run:
+Once the installation is completed, run:
 
 ``` r
 library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
+
+## Funding
+
+…ADViSE
