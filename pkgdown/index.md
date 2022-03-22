@@ -98,7 +98,7 @@ For **Metabolomics Workbench** you don't need to import anything, just choose th
 
 Before run ADViSELipidomics make sure that you have all the required files and that they are draw up properly. Apart of the output files from LipidSearch and LIQUID, ADViSELipidomics requires that the Excel files have a given structure with some mandatory columns. Here we provide a guide to the creation of these Excel files. 
 
-
+***
 
 ## 2.1 Data files (LipidSearch or LIQUID)
 
