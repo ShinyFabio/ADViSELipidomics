@@ -83,7 +83,7 @@ Hence, as can be seen, ADViSELipidomics requires different files that may change
   * Data files coming from LipidSearch related to your samples (.txt)
   * Calibration File for deuterated (.xlsx)
   * Calibration File for nonlabeled (.xlsx)
-  * Data files coming from LipidSearch related to the internal standard (.txt)
+  * Concentration files coming from LipidSearch related to the internal standard (.txt)
 * **LIQUID** 
   * Target file (.xlsx)
   * Internal Reference file (.xlxs)
@@ -98,7 +98,7 @@ For **Metabolomics Workbench** you don't need to import anything, just choose th
 
 Before run ADViSELipidomics make sure that you have all the required files and that they are draw up properly. Apart of the output files from LipidSearch and LIQUID, ADViSELipidomics requires that the Excel files have a given structure with some mandatory columns. Here we provide a guide to the creation of these Excel files. 
 
-***
+
 
 ## 2.1 Data files (LipidSearch or LIQUID)
 
@@ -127,11 +127,7 @@ The Target File is an Excel file that contains all the informations about your s
 
 
 * **SampleID (LipidSearch, LIQUID and User’s Excel)** this column contains the ID of each sample. To prevent errors, the best way to write the IDs is: "samplename_1" where in "samplename" you can write your sample name and "_1" represents the identification for the technical replicate. If your experiment doesn't have technical replicates, you can simply write "samplename". A good SampleID could be "AF-1C_1" if technical replicate are present, or "AF-1C" if not. A bad name could be "AF_1C_1" (with another underscore).
-
-
 *	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases for each sample there are two different file. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"**.
-
-
 * **Norm_factor (LipidSearch, LIQUID - optional)** If you need to normalize your data by a normalization factor, you can add this column and write a number (Be careful with decimal point) for each sample. If it's not present, data won’t be normalized.
 
 In the picture below there is a Target File example, enlightned in yellow the mandatory columns, and in green the optional column. You can fill the Target File with any other informative column, just try to avoid special characters like \^$.?*|+()[]{} and whitespace.You can use - or _ instead of whitespace.
@@ -179,7 +175,24 @@ The Internal Reference File example for the LIQUID option can be downloaded from
 
 
 ## 2.4 Calibration Files (LipidSearch with Internal Standards)
-In the case of LipidSearch, you can choose to use or not use Internal Standard if you have them. In the case you have Internal Standard and you want to use them, you need to upload also some Calibration Files which are two Excel files and the data files coming from LipidSearch. For the data files
+In the case of LipidSearch, if you have Internal Standard, you can choose to use or not them. In this case, you need to upload also some Calibration Files which are two Excel Files and the data files coming from LipidSearch (here called concentration files). The concentration files are the same .txt files described in chapter 2.1. Please, refer to that chapter if you need more informations about how to rename the files. Be sure that all the concentration files are inside a folder and they aren't mixed with the data files of the chapter 2.1. 
+Next, ADViSELipidomics, requires two Calibration Excel files, one for the Nonlabeled and the other for the Deuterated. They share the same structure:
+
+* **Concentration (ng/mL)** the concentration of the standard
+* **Class** the lipid classes used for that standard separated by a comma **,** **????????????** (e.g. *PG,PS,PI,PE,SM,PC,TG,DG* )
+* **Name** the name of the data files coming from LipidSearch. They have to match perfectly with the file names. If you have technical replicates, separate them by a comma **,** (for example in the deuterated: *ISMix_5ugmL_deuterated_1,ISMix_5ugmL_deuterated_2,ISMix_5ugmL_deuterated_3*)
+
+The picture below shows an example of a Calibration Excel file for the deuterated. 
+
+
+![Screenshot (203)](https://user-images.githubusercontent.com/78078351/159525426-c776cb28-fa19-420b-9569-2143775edca5.png)
+
+A toy example for the Calibration Deuterated and Calibration Nonlabeled Excel files can be downloaded here:
+
+[Calibration_Deuterated.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8326063/Calibration_Deuterated.xlsx)
+
+[Calibration_NonLabeled.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8326075/Calibration_NonLabeled.xlsx)
+
 
 ## 2.1Home section
 Home section contains general information about ADViSELipidomics like the citation, the link to the github page and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
