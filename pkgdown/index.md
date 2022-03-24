@@ -213,7 +213,7 @@ In the case of Metabolomics Workbench, you don't need to import anything, becaus
 ADViSELipidomics has a graphical user interface (GUI) implemented using the shiny and golem R packages. It has five main sections: Home, Data Import & Preprocessing, SumExp Visualization, Exploratory Analysis, and Statistical Analysis. Each section is accessible from a sidemenu on the left.
 
 
-## 3.1Home section
+## 3.1 Home section
 Home section contains general information about ADViSELipidomics like the citation, the link to the github page and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
 
 
@@ -227,12 +227,29 @@ The picture below shows the Data Import & Preprocessing section (with the differ
 
 **Rectangle A** allows the user to choose between LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). **Rectangle B** shows three different steps for Importing & Filtering: importing data, storing and reading data, filtering data. **Rectangle C** shows five additional steps for Calibration: importing calibration files, storing calibration files, selection of the folder for the results, selection of calibration options, application of recovery. Finally, **rectangle D** shows two different steps for Filtering and Missing Data imputation and creating the SummarizedExperiment object. Note that the layout of the Data Import & Preprocessing section and the required files depends on the type of input data format that the user chooses. Go to chapter 2 if you need help to gather all the required files.
 
-Since the option LipidSearch output with Internal Standard (IS) has the largest number of required file and of steps, here we provide a complete guide for this case. 
+Since the option LipidSearch output with Internal Standard (IS) has the largest number of required file and of steps, here we provide a complete guide for this case. Anyway, this guide applies also to LipidSearch without IS and to LIQUID: in these cases the only difference is that there isn't the CALIBRATION module (chapter 3.2.2).
 
 ### 3.2.1 LipidSearch (IS) EXAMPLE - IMPORTING & FILTERING module
 The first module is the IMPORTING & FILTERING module where the user can upload the Target File, the Internal Reference File and the Data file that come from LipidSearch.
 
 ![import filtering_module](https://user-images.githubusercontent.com/78078351/159956088-cb4bff48-7b78-4005-9dba-016ecca70e53.png)
 
-* **A.** The first files that you have to import are the Target File and the Internal Reference File (Rectangle A, steps 1 and 2). Next to each of them there is a button (yellow squared rectangle) that allows you to edit the Excel files. You can select only the columns that you need, filter the rows by one or more conditions and download the edited data. If you need to edit them, to apply the editing you have to enable the button next to the download button and click on the "Done" button (right top corner). Anyway an help button guide you through the editing options.
-* **B.** Here you have to choose the folder containing the data files coming from LipidSearch (only the data files related to the samples and NOT to the IS). After selected the folder, click on the "Read Data" button and ADViSELipidomics will start to read all the data files. A progress bar shows the percentage of completion.
+* **Step 1.** The first files that you have to import are the Target File and the Internal Reference File (Rectangle A, steps 1 and 2). Next to each of them there is a button (yellow squared rectangle) that allows you to edit the Excel files. You can select only the columns that you need, filter the rows by one or more conditions and download the edited data. If you need to edit them, to apply the editing you have to enable the button next to the download button and click on the "Done" button (right top corner). Anyway an help button guide you through the editing options.
+* **Step 2.** Here you choose the folder containing the data files coming from LipidSearch (only the data files related to the samples and NOT to the IS). After selected the folder, click on the "Read Data" button and ADViSELipidomics will start to read all the data files. A progress bar shows the percentage of completion. When the reading process is completed, you can perform a quality check on the area of each sample by clicking to the "Quality check" button.
+* **Step 3.** Finally, here you can filter non-informative lipids based on retention time in the range, number of carbon atoms in the range, even number of carbon atoms, number of double bonds in the range, duplicated lipids. From the two sliders you can choose the range for the carbon number and the double bound number, while the other filters come from the Internal Reference File. If there are duplicated lipids (same m/z values for lipid peaks), ADViSELipidomics takes only the lipids with the maximum peak area. The "Filter Data" button starts this process. At the end, you can check the filtered data for each sample.
+
+### 3.2.2  LipidSearch (IS) EXAMPLE - CALIBRATION module
+If the previous module is successfully completed, the CALIBRATION module appears next to it. The Calibration module creates the calibration curves and the calibration matrix. It uses the Internal Lipid Standards reported in the Internal Reference file, and the correspondence between the Concentration Files and the lipid classes declared in the Calibration File. This module extracts the relationships between peaks area and concentration values for each internal lipid standard, constructing the calibration curves with a linear model and plotting them. The linear regression model can be classical or robust, with zero or non-zero intercept. Finally, the calibration matrix resumes all the points from the calibration curves. After the calibration process, ADViSELipidomics stores slope and intercept values for the recovery module.
+As already stated, this module appears only if you are using LipidSearch output with Internal Standard (and you clicked on "Yes" in the radiobutton that asks *"you Do you have internal standard?"*). In this module, you need two Calibration Files (.xlsx, see chapter 2.4) and the Concentration files coming from LipidSearch related to the internal standard (.txt, see chapter 2.1). 
+
+![CALIBRATION module](https://user-images.githubusercontent.com/78078351/159966937-26f75ea8-5ac0-405c-a92b-019f868d06c5.png)
+
+* **Step. 1** Here you can upload the Calibration Files (.xlsx) for both Deuterated and Nonlabeled. This step is very similar to the Step 1. of the IMPORTING & FILTERING module. You can find further informations about these files in the chapter 2.4.
+* **Step. 2** Select the folder containing the Concentration files coming from LipidSearch and then click on "Read the concentration files". Also this step is very similar to the step 2 of the previous module.
+* **Step. 3** Here you can select the folder where saving the output from LipidSearch. ADViSELipidomics creates for you the folder structure.
+* **Step. 4** In this step you can choose some calibration options and visualize the calibration plot for each standard.
+* **Step. 5.** Finally, you can apply the recovery percentage on the concentration values for each lipid, considering the Internal Lipid Standards as lipid class reference. This normalization provides absolute concentration values for the lipids and the resulting concentration matrix can be seen by clicking on the "Check concentration matrix" button. Here it's possibile also to visualize the missing values(if applicable). Moreover, from the "Download LOL" button you can download a table containing all the lipids filtered because outside of the linearity range. 
+
+
+### 3.2.3 LipidSearch (IS) EXAMPLE - MISSING DATA & SUMMARIZED EXPERIMENT
+This is the last module of the preprocessing menu where you can filter and impute missing values (NAs) and build the SummarizedExperiment object. 
