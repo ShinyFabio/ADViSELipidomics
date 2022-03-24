@@ -303,4 +303,20 @@ Here's an example of a 2D plot for the PCA.
 ![PCA](https://user-images.githubusercontent.com/78078351/159980009-d4aa02bc-87a0-4bb0-a5af-8cc8f4df0171.png)
 
 ## 3.5 Statistical Analysis
-The Statistical Analysis step includes two modules: Differential Analysis and Enrichment Analysis.
+The Statistical Analysis menu includes two sub-menus: Differential Analysis and Enrichment Analysis.
+
+### 3.5.1 Differential Analysis
+
+
+![DA](https://user-images.githubusercontent.com/78078351/159989613-5ee22334-3777-4bda-a2b0-5e33c8cbf26e.png)
+
+
+The Differential Analysis sub-menu applies statistical algorithms to identify lipids with a different abundance among samples associated with experimental conditions (i.e., treatment versus control). 
+
+* **Rectangle A.** Here you can select between one of the two SE objects obtained from the previous steps (i.e., the one with the lipid abundance of all samples or where the technical replicates are averaged). It is possible to normalize the data matrix by a scaling factor at this stage ("Normalization between replicates or samples"). Moreover, when a data matrix has technical replicates, you can also incorporate the replicate effect in the model by checking the "Replicates effect" box.
+* **Rectangle B.** Here you can build your experimental designs. An ADViSELipidomics complex design can include up to two experimental conditions and at most two variables to consider as batch effects. First you can select a primary variable and, with the plus button, you can add a second variable. Next you can decide to consider the batch effect choosing up to two batch variables. More in detail, ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables or removing the batch effect before fitting the model. To handle the batch effect, ADViSELipidomics uses the removeBatchEffect function from the limma package, or the ComBat function (parametric or non-parametric method) from the SVA package. Finally, with the "Write contrasts" button it opens a box where you can generate the contrast list. This functionality works untile two total variables for example: primary variable + secondary variable ("Batch type" set to "remove"), or primary variable + primary batch variable with "Batch type" set to "fit".
+* 
+* 
+*   ADViSELipidomics has a very user-friendly module to write the contrast list and can be done up to two variables in total. Since 
+* 
+Then, the user can use linear models to compare each lipid abundance (in log scale) to several experimental factors. ADViSELipidomics uses the limma model for performing the statistical analysis and supports the user in defining the experimental design. Therefore, it allows fitting both simple and complex experimental designs. An ADViSELipidomics complex design can include up to two experimental conditions and at most two variables to consider as batch effects. Moreover, when a data matrix has technical replicates, the user can also incorporate the replicate effect in the model.  Note that the non-parametric ComBat approach can be very time-consuming. Before running the differential analysis, the user can define the contrasts list of interest (i.e., the conditions to compare) and select a threshold for the adjusted p-values. Then, ADViSELipidomics returns a table of results for each comparison, the MA-plot, and the Volcano plot. Moreover, ADViSELipidomics also performs pairwise comparisons between different contrasts using the Venn diagram and the Upset plot. Finally, it reports the list of common lipids in tabular form.
