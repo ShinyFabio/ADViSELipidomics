@@ -58,9 +58,6 @@ run_ADViSELipidomics()
 ```
 
 
-# 2. Guide
-
-ADViSELipidomics has a graphical user interface (GUI) implemented using the shiny and golem R packages. It has five main sections: Home, Data Import & Preprocessing, SumExp Visualization, Exploratory Analysis, and Statistical Analysis. Each section is accessible from a sidemenu on the left.
 
 # 2. Input Data
 
@@ -143,13 +140,13 @@ The example target file can be downloaded from here:
 In LipidSearch and LIQUID option, ADViSELipidomics requires also another Excel file here called Internal Reference File which contains the list of the Internal Standard lipids defined per class and adduct, upper/lower bounds for the number of carbon atoms, upper/lower bounds for the number of double bonds, nominal standard concentration, and upper/lower bounds for the concentration linearity in the calibration curves. This file has many mandatory columns that depends both on the external software (LipidSearch, LIQUID) and the presence of internal standard (only for LipidSearch).
 
 * **LipidSearch** 
-  - **Class** contains the lipid class (e.g. *DG* )
-  - **Ion** the ion of interested (e.g. *M-H* )
-  - **MinRt** minimum retention time (a number)
-  - **MaxRt** maximum retention time (a number)
+  - **Class** lipid class of interest according to the nomenclature of LipidSearch (e.g. *DG* )
+  - **Ion** the ion of interested written according to the nomenclature of LipidSearch(e.g. *M-H* )
+  - **MinRt** minimum retention time of the class (a number)
+  - **MaxRt** maximum retention time of the class (a number)
   - **InternalStandardLipidIon** lipid of .........????? (e.g. *Cer(d18:1_17:0)-H* )
-  - **MinLinearity** minimum value for the concentration linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
-  - **MaxLinearity** minimum value for the concentration linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
+  - **MinLinearity** minimum value for the range of linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
+  - **MaxLinearity** maximum value for the range of linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
 
 The picture below shows an Internal Reference File example in the case of LipidSearch and the presence of Internal Standards. In yellow the mandatory columns, and in green the columns needed only in the presence of Internal Standards.
 
@@ -160,10 +157,10 @@ The Internal Reference File example for the LipidSearch with Internal Standards 
 [Internal_Reference_file_LipidSearch_withIS.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325722/Internal_Reference_file_LipidSearch_withIS.xlsx)
 
 * **LIQUID**
-  - **Class** contains the lipid class (e.g. *DG* )
-  - **Adduct** the ion of interested (e.g. *[M-H]+* )
-  - **MinRt** minimum retention time (a number)
-  - **MaxRt** maximum retention time (a number)
+  - **Class** lipid class of interest according to the nomenclature of LIQUID (e.g. *DG* )
+  - **Adduct** the ion of interested written according to the nomenclature of LIQUID (e.g. *[M-H]+* )
+  - **MinRt** minimum retention time of the class (a number)
+  - **MaxRt** maximum retention time of the class (a number)
 
 The picture below shows an Internal Reference File example in the case of LIQUID. In yellow the mandatory columns.
 
@@ -179,7 +176,7 @@ In the case of LipidSearch, if you have Internal Standard, you can choose to use
 Next, ADViSELipidomics, requires two Calibration Excel files, one for the Nonlabeled and the other for the Deuterated. They share the same structure:
 
 * **Concentration (ng/mL)** the concentration of the standard
-* **Class** the lipid classes used for that standard separated by a comma **,** **????????????** (e.g. *PG,PS,PI,PE,SM,PC,TG,DG* )
+* **Class** the lipid classes of interest separated by a comma **,** (e.g. *PG,PS,PI,PE,SM,PC,TG,DG* )
 * **Name** the name of the data files coming from LipidSearch. They have to match perfectly with the file names. If you have technical replicates, separate them by a comma **,** (for example in the deuterated: *ISMix_5ugmL_deuterated_1,ISMix_5ugmL_deuterated_2,ISMix_5ugmL_deuterated_3*)
 
 The picture below shows an example of a Calibration Excel file for the deuterated. 
@@ -194,15 +191,48 @@ A toy example for the Calibration Deuterated and Calibration Nonlabeled Excel fi
 [Calibration_NonLabeled.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8326075/Calibration_NonLabeled.xlsx)
 
 
-## 2.1Home section
+## 2.5 User’s Excel File
+
+If you already have a  matrix file containing the abudance for each lipid, you need just two Excel files: the Target File and the Data Matrix File. Here the Target File has only one mandatory column, the SampleID. The Data Matrix (.xlsx file) must have the list of the lipids in the first column, that must be called *"Lipids"*, and then the samples (or replicates) in the following columns, with the column names that is the same of the *SampleID* of the Target File. It's not necessary that the matrix is full (i.e. without missing values) since after uploaded, it's possible to filter and impute NAs. The picture below shows an example of the Data Matrix.
+
+![Screenshot (204)](https://user-images.githubusercontent.com/78078351/159945580-ea7466b3-fb11-4e19-87a3-e3eb6a64eeb3.png)
+
+**NOTE:** the column names in the data matrix must follow the same rules of the SampleID for every Target File. Check chapter 2.2.
+
+## 2.6 SummarizedExperiment
+
+ADViSELipidomics allows the user to load a SummarizedExperiment (SE) object, saved as a .rds file, already prepared or previously downloaded after running ADViSELipidomics. Since the required SE object has a complex structure, we do not recommend the user to upload a SE object that wasn't download from ADViSELipidomics. The idea behind this option was that the user can save the SE object after the preprocessing steps and performs the exploratory and statistical analysis in another moment.
+
+
+## 2.7 Metabolomics Workbench
+
+In the case of Metabolomics Workbench, you don't need to import anything, because ADViSELipidomics downloads a selected Metabolomics Workbench experiment and converts it into an SE object.
+
+# 3. Guide
+
+ADViSELipidomics has a graphical user interface (GUI) implemented using the shiny and golem R packages. It has five main sections: Home, Data Import & Preprocessing, SumExp Visualization, Exploratory Analysis, and Statistical Analysis. Each section is accessible from a sidemenu on the left.
+
+
+## 3.1Home section
 Home section contains general information about ADViSELipidomics like the citation, the link to the github page and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
 
-## 2.2 Data Import & Preprocessing
-This section allows users to import and process lipidomics data from various sources. 
-When the user opens this section for the first time after launch, a message box appears and asks you to write your name and your company. These informations will be stored in the final output of ADViSELipidomics. By default, if you click on "Run", the following informations will be stored: User: "Name", Company: "Company". Next, the user can choose between different types of data i.e. LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). Based on your choice, the workflow can be different and requires different files. Here we describe all the required files for each typology.
+
+## 3.2 Data Import & Preprocessing
+This section allows to import and process lipidomics data from various sources. 
+When you open this section for the first time after launch, a message box appears and asks you to write your name and your company. These informations will be stored in the final output of ADViSELipidomics. By default, if you click on "Run", the User will be *"Name"* and the Company will be *"Company"*. 
+The picture below shows the Data Import & Preprocessing section (with the different parts enlightened with red rectangles). 
 
 
+![workflow_withbox](https://user-images.githubusercontent.com/78078351/159950379-e3885176-0ccc-4bf1-b1eb-9f4378d468e2.png)
 
+**Rectangle A** allows the user to choose between LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). **Rectangle B** shows three different steps for Importing & Filtering: importing data, storing and reading data, filtering data. **Rectangle C** shows five additional steps for Calibration: importing calibration files, storing calibration files, selection of the folder for the results, selection of calibration options, application of recovery. Finally, **rectangle D** shows two different steps for Filtering and Missing Data imputation and creating the SummarizedExperiment object. Note that the layout of the Data Import & Preprocessing section and the required files depends on the type of input data format that the user chooses. Go to chapter 2 if you need help to gather all the required files.
 
+Since the option LipidSearch output with Internal Standard (IS) has the largest number of required file and of steps, here we provide a complete guide for this case. 
 
+### 3.2.1 LipidSearch (IS) EXAMPLE - IMPORTING & FILTERING module
+The first module is the IMPORTING & FILTERING module where the user can upload the Target File, the Internal Reference File and the Data file that come from LipidSearch.
 
+![import filtering_module](https://user-images.githubusercontent.com/78078351/159956088-cb4bff48-7b78-4005-9dba-016ecca70e53.png)
+
+* **A.** The first files that you have to import are the Target File and the Internal Reference File (Rectangle A, steps 1 and 2). Next to each of them there is a button (yellow squared rectangle) that allows you to edit the Excel files. You can select only the columns that you need, filter the rows by one or more conditions and download the edited data. If you need to edit them, to apply the editing you have to enable the button next to the download button and click on the "Done" button (right top corner). Anyway an help button guide you through the editing options.
+* **B.** Here you have to choose the folder containing the data files coming from LipidSearch (only the data files related to the samples and NOT to the IS). After selected the folder, click on the "Read Data" button and ADViSELipidomics will start to read all the data files. A progress bar shows the percentage of completion.
