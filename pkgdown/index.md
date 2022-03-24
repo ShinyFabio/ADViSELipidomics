@@ -225,7 +225,10 @@ The picture below shows the Data Import & Preprocessing section (with the differ
 
 ![workflow_withbox](https://user-images.githubusercontent.com/78078351/159950379-e3885176-0ccc-4bf1-b1eb-9f4378d468e2.png)
 
-**Rectangle A** allows the user to choose between LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). **Rectangle B** shows three different steps for Importing & Filtering: importing data, storing and reading data, filtering data. **Rectangle C** shows five additional steps for Calibration: importing calibration files, storing calibration files, selection of the folder for the results, selection of calibration options, application of recovery. Finally, **rectangle D** shows two different steps for Filtering and Missing Data imputation and creating the SummarizedExperiment object. Note that the layout of the Data Import & Preprocessing section and the required files depends on the type of input data format that the user chooses. Go to chapter 2 if you need help to gather all the required files.
+* **Rectangle A** allows the user to choose between LipidSearch, LIQUID, Excel files, Summarized Experiment, and Metabolomics Workbench. Moreover, it is also possible to select between experiments with or without internal standards (this option is available only for LipidSearch import). 
+* **Rectangle B** shows three different steps for Importing & Filtering: importing data, storing and reading data, filtering data. 
+* **Rectangle C** shows five additional steps for Calibration: importing calibration files, storing calibration files, selection of the folder for the results, selection of calibration options, application of recovery. 
+* **Rectangle D** shows two different steps for Filtering and Missing Data imputation and creating the SummarizedExperiment object. Note that the layout of the Data Import & Preprocessing section and the required files depends on the type of input data format that the user chooses. Go to chapter 2 if you need help to gather all the required files.
 
 Since the option LipidSearch output with Internal Standard (IS) has the largest number of required file and of steps, here we provide a complete guide for this case. Anyway, this guide applies also to LipidSearch without IS and to LIQUID: in these cases the only difference is that there isn't the CALIBRATION module (chapter 3.2.2).
 
@@ -293,12 +296,11 @@ The Clustering sub-menu allows the user to cluster the data by lipids or samples
 The Dimensionality Reduction sub-menu allows the user to choose between unsupervised (PCA) and supervised approaches (PLS-DA, sPLS-DA) to represent the data in a two or three-dimensional space. It contains three panels PCA, PLS-DA, and sPLS-DA.
 
 * **PCA.** ADViSELipidomics computes the Principal Component Analysis (PCA), showing the results with different plots: a) 2D plot, b) biplot, c) scree plot, d) loadings plot, e) 3D plot. The user can highlight the features from the target file with different colors and select the number of components to use for the loading plots.
-
-![PCA](https://user-images.githubusercontent.com/78078351/159980009-d4aa02bc-87a0-4bb0-a5af-8cc8f4df0171.png)
-
 * **PLS-DA.** ADViSELipidomics computes the Partial Least Square - Discriminant Analysis,showing the results with a 2D plot and a Correlation Circle plot. The user can select the group variable and the number of components for the computation. The 2D plot can be customized from the red gear icon. Furthermore, ADViSELipidomics can perform a Cross-Validation in order to identify the best number of components. It may take a while.
 * **sPLS-DA.** ADViSELipidomics can compute also the sparse version of the PLS-DA. The panel is very similar to the PLS-DA panel but since it's a sparse version, it is possible to choose the number of variables to select on each component (called "KeepX"). Also here ADViSELipidomics can perform a Cross-Validation that helps the user to choose the best number of components and the best "KeepX". 
 
+Here's an example of a 2D plot for the PCA.
+![PCA](https://user-images.githubusercontent.com/78078351/159980009-d4aa02bc-87a0-4bb0-a5af-8cc8f4df0171.png)
 
 ## 3.5 Statistical Analysis
-
+The Statistical Analysis step includes two modules: Differential Analysis and Enrichment Analysis.
