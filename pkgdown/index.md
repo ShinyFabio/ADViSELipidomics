@@ -252,4 +252,18 @@ As already stated, this module appears only if you are using LipidSearch output 
 
 
 ### 3.2.3 LipidSearch (IS) EXAMPLE - MISSING DATA & SUMMARIZED EXPERIMENT
-This is the last module of the preprocessing menu where you can filter and impute missing values (NAs) and build the SummarizedExperiment object. 
+This is the last module of the preprocessing menu where you can filter and impute missing values (NAs), build the SummarizedExperiment object and download it. 
+
+![MISSING DATA & SUMMARIZED EXPERIMENT](https://user-images.githubusercontent.com/78078351/159970295-85bcb1fe-9fb1-4061-aa98-905c78933330.png)
+
+* **Step 1.** In the first step ADViSELipidomics computes the percentage of NAs, for each lipid (matrix rows) and each sample (matrix columns). Second, it allows retaining only lipids and/or samples with a percentage of missingness below thresholds chosen using the sliders. For example if you set *Max missing data percentage allowable on lipids* to 0.3 *Max missing data percentage allowable on samples* to 0.6 that means that only lipids (rows) with less than 30% of NAs and samples (columns) with less than 60% of NAs are stored. After that, by clicking on the "Check filtered NAs" button, ADViSELipidomics provides the missing data distributions and the data dimension before and after filtering NAs. 
+* **Step 2.** Next you can impute the remaining NAs with different imputation methods, three Not Model Based (mean, median and knn) and one Model Based (irmi).
+* **Step 3.** In the final step ADViSELipidomics build the SummarizedExperiment object and download it. By clicking on the "See the results" you will be redirected to the next menu, SumExp Visualization.
+
+## 3.3 SumExp Visualization
+Once you ended successfully the Preprocessing module, the first thing that you can do is check the just created SummarizedExperiment (SE) object. It can be done in SumExp Visualization menu. The complex structure of the SE object can be investigated by a red gear icon where you can choose what part of the SE object should be shown and to summarise the data (if you have technical replicates).
+
+![SumExp Visualization](https://user-images.githubusercontent.com/78078351/159973518-6b7fc106-020a-4185-8595-ff611671868d.png)
+
+In the picture above, it is shown the rowData part of the SE object containing the annotation on lipids. Each lipid in the "Lipids" contains an hyperlinks to the SwissLipids online repository to provide structural, biological, and analytic details.
+
