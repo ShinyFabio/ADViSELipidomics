@@ -267,3 +267,38 @@ Once you ended successfully the Preprocessing module, the first thing that you c
 
 In the picture above, it is shown the rowData part of the SE object containing the annotation on lipids. Each lipid in the "Lipids" contains an hyperlinks to the SwissLipids online repository to provide structural, biological, and analytic details.
 
+## 3.4 Exploratory Analysis
+The Exploratory Analysis menu includes three sub-menus: Plots, Clustering, and Dimensionality Reduction. 
+
+### 3.4.1 Plots
+This sub-menu allows the user to create different types of plots to show trend and behavior of data, exploring them from lipid and/or sample points of view. It has 4 panels: Lipids, Scatterplot, Heatmap and Quality plots.
+
+* **Lipid plots.** It is possible to 1) represent the lipid class distribution (counts of lipids per class) with a pie chart, boxplot, and spider plot; 2) visualize the percentage proportion of lipid class for each sample using a barplot, 3) compare the lipid species abundance for each condition; 4) inspect the abundance of a lipid, selected by the user, in relationship with a feature from the target file (e.g., treatment) using boxplots;
+* **Scatterplots.** It is possible to visualize the relationship between lipid abundance in two samples;
+* **Heatmap.** It provides a highly customizable heatmap to show possible clusters among lipids or samples. The user can select many parameters: a) row annotation with the feature from the target file, b) column annotation with the information from lipids parsing, c) dendrograms for lipids and/or samples, d) distance function (Euclidean, maximum, Canberra), e) clustering method (complete, average, median, Ward); f) number of clusters for lipids and/or samples. The user can select an area in the overall heatmap and have a detailed zoom of the area itself, with associated information;
+* **Quality plots.** It provides different typologies of plots (barplot, boxplot, density plot) to show the total amount of abundance (logarithmic scale) per sample, considering as reference a feature from the target file, to show possible unexpected behavior among samples or among replicates for the same sample.
+
+The picture below shows an example of the Lipid class proportion plot.
+![Lipid class proportion](https://user-images.githubusercontent.com/78078351/159976950-0e3220d2-dc21-40a2-a2a6-4256b30a5d14.png)
+
+
+
+### 3.4.2 Clustering
+The Clustering sub-menu allows the user to cluster the data by lipids or samples. The user can choose the number of clusters and the clustering method among the following algorithms: hierarchical clustering (using single, complete, Ward as linkage function) or partitioning clustering (k-means, PAM, Clara). If you choose a partitioning clustering, ADViSELipidomics performs first a PCA. Additional plots, such as the silhouette plot, can suggest the number of clusters to use.
+
+![Clustering](https://user-images.githubusercontent.com/78078351/159980474-1cc6dbe4-e745-44d5-87ce-72f636454d2a.png)
+
+
+### 3.4.3 Dimensionality Reduction
+The Dimensionality Reduction sub-menu allows the user to choose between unsupervised (PCA) and supervised approaches (PLS-DA, sPLS-DA) to represent the data in a two or three-dimensional space. It contains three panels PCA, PLS-DA, and sPLS-DA.
+
+* **PCA.** ADViSELipidomics computes the Principal Component Analysis (PCA), showing the results with different plots: a) 2D plot, b) biplot, c) scree plot, d) loadings plot, e) 3D plot. The user can highlight the features from the target file with different colors and select the number of components to use for the loading plots.
+
+![PCA](https://user-images.githubusercontent.com/78078351/159980009-d4aa02bc-87a0-4bb0-a5af-8cc8f4df0171.png)
+
+* **PLS-DA.** ADViSELipidomics computes the Partial Least Square - Discriminant Analysis,showing the results with a 2D plot and a Correlation Circle plot. The user can select the group variable and the number of components for the computation. The 2D plot can be customized from the red gear icon. Furthermore, ADViSELipidomics can perform a Cross-Validation in order to identify the best number of components. It may take a while.
+* **sPLS-DA.** ADViSELipidomics can compute also the sparse version of the PLS-DA. The panel is very similar to the PLS-DA panel but since it's a sparse version, it is possible to choose the number of variables to select on each component (called "KeepX"). Also here ADViSELipidomics can perform a Cross-Validation that helps the user to choose the best number of components and the best "KeepX". 
+
+
+## 3.5 Statistical Analysis
+
