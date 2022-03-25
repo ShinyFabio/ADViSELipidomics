@@ -79,7 +79,7 @@ mod_calibration_step_ui <- function(id){
                                            ),
                                            style = "text-align: center;"),
                                          
-                                         shinyBS::bsModal(ns("modalcalibnplots"), "Plot di calibrazione", trigger = ns("viewcalibplot"), size = "large",
+                                         shinyBS::bsModal(ns("modalcalibnplots"), "Calibration plot", trigger = ns("viewcalibplot"), size = "large",
                                                           fluidPage(
                                                             column(4, DT::DTOutput(ns("dtlistcalibplot"))),
                                                             column(8, imageOutput(ns("phcalibplot")))

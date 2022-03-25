@@ -8,6 +8,7 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-stable-succes.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![R-CMD-check](https://github.com/ShinyFabio/ADViSELipidomics/workflows/R-CMD-check/badge.svg)](https://github.com/ShinyFabio/ADViSELipidomics/actions)
+![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 <!-- badges: end -->
 
 ADViSELipidomics is a novel Shiny app for the preprocessing, analysis,
@@ -80,6 +81,10 @@ Once the installation is completed, run:
 library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
+
+## Update
+
+When a new ADViSELipidomics version is released, it can be updated with the same code for the installation.
 
 ## Funding
 

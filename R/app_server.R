@@ -1803,6 +1803,7 @@ app_server <- function( input, output, session ) {
 
   varsde = reactive({
     req(input$expdes_design_vars)
+    validate(need(input$expdes_design_vars != "", "Select a primary variable."))
     if(input$add2var %%2 == 1){
       vars = c(input$expdes_design_vars, input$expdes_design_vars2)
     }else{
@@ -1859,6 +1860,7 @@ app_server <- function( input, output, session ) {
   #first var
   firstvar = eventReactive(input$expdes_design_vars,{
     req(sumexpde_forcoldata()) #firstvariab
+    validate(need(input$expdes_design_vars != "", "Select a primary variable"))
     sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>% as.data.frame() %>%
       dplyr::select(input$expdes_design_vars) %>% unique()
   })

@@ -28,7 +28,7 @@
 #' (TRUE for RNAseq data). Default = FALSE.
 #' @param thresh Numerical value. Threshold on adjust P-value in order to consider a lipid
 #' differentially expressed or not. Default = 0.05.
-#' @param decide_met Character string specifying how genes and contrasts are to be combined
+#' @param decide_met Character string specifying how lipids and contrasts are to be combined
 #' in the multiple testing scheme. Choices are "separate", "global", "hierarchical" or "nestedF".
 #' More information in "limma' package. Default = "separate".
 #' @param batch_method Algorithm used for the batch effect. Choices are: "limma", "combat_nonparam" and "combat_param".

@@ -1008,15 +1008,17 @@ app_ui <- function(request) {
                 #contrast list
                 h4(strong("DA options")),
                 conditionalPanel(condition = "output.check_replicates == true",
-                  awesomeCheckbox("expdes_summar", "Summarize data", value = FALSE)
+                  column(6, style="padding-left: 0px;", awesomeCheckbox("expdes_summar", "Summarize data", value = FALSE)),
+                  conditionalPanel(condition = "input.expdes_summar == false",
+                                   column(6,awesomeCheckbox("expdes_repeffect", "Replicates effect", value = FALSE))
+                  )
                 ),
+                
                 awesomeRadio("expdes_bs_norm", "Normalization between replicates or samples", choices = "", inline = TRUE),
                 #awesomeCheckbox("expdes_bs_norm", "Normalization between replicates or samples", value = FALSE),
                 hr(),
                 h4(strong("Variables")),
-                conditionalPanel(condition = "input.expdes_summar == false && output.check_replicates == true",
-                                 awesomeCheckbox("expdes_repeffect", "Replicates effect", value = FALSE)
-                ),
+                
                 fluidRow(
                   column(8, selectInput("expdes_design_vars", "Select primary variable", choices = "")),
                   column(4, br(), bsButton("add2var", label = HTML("&nbsp;Add"), style="success", icon("plus")))
