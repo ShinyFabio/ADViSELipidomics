@@ -64,10 +64,10 @@ Finally, when a new ADViSELipidomics version is released, it can be updated with
 # 2. Input Data
 
 ADViSELipidomics allows the user to import files concerning different types of data:
-* LipidSearch or LIQUID. ADViSELipidomics deals with the data files containing information on chromatographic peak area or peak intensity per lipid, obtained as output from external software for identifying and quantifying lipids (i.e., ADViSELipidomics currently supports the output formats from LipidSearch or LIQUID). Moreover, it requires the Target File with details on samples (such as treatments or biological replicates), the Internal Reference File with bounds for the filtering step in the following modules. ADViSELipidomics shows a quality plot based on the sum of chromatographic peak area per sample (or replicate). In the case of LipidSearch output associated with internal lipid standards, ADViSELipidomics also requires all the Calibration Files for the construction of the calibration curves.
-* Metabolomics Workbench. ADViSELipidomics can download in real-time suitable selected lipidomic experiments from the online repository;
-* Excel. The user can upload two Excel files, the data matrix and the Target File;
-* SummarizedExperiment. The user can upload a SummarizedExperiment R object (SE), with several types of information (data matrix, information on lipids, information on samples, metadata if available).
+* **LipidSearch** or **LIQUID.** ADViSELipidomics deals with the data files containing information on chromatographic peak area or peak intensity per lipid, obtained as output from external software for identifying and quantifying lipids (i.e., ADViSELipidomics currently supports the output formats from LipidSearch or LIQUID). Moreover, it requires the Target File with details on samples (such as treatments or biological replicates), the Internal Reference File with bounds for the filtering step in the following modules. ADViSELipidomics shows a quality plot based on the sum of chromatographic peak area per sample (or replicate). In the case of LipidSearch output associated with internal lipid standards, ADViSELipidomics also requires all the Calibration Files for the construction of the calibration curves.
+* **Metabolomics Workbench.** ADViSELipidomics can download in real-time suitable selected lipidomic experiments from the online repository;
+* **Excel.** The user can upload two Excel files, the data matrix and the Target File;
+* **SummarizedExperiment.** The user can upload a SummarizedExperiment R object (SE), with several types of information (data matrix, information on lipids, information on samples, metadata if available).
 
 Hence, as can be seen, ADViSELipidomics requires different files that may change beetween the different types of data. To sum up, here is a list with all the required files for each data type:
 
