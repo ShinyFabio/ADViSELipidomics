@@ -53,9 +53,11 @@ We kindly suggest updating all the R packages requested during the installation 
 Finally to execute ADViSELipidomics the user can type the following code in the RStudio console:
 
 ``` r
-library("ADViSELipidomics")
+library(ADViSELipidomics)
 run_ADViSELipidomics()
 ```
+
+Finally, when a new ADViSELipidomics version is released, it can be updated with the same code for the installation.
 
 
 
@@ -93,7 +95,7 @@ Hence, as can be seen, ADViSELipidomics requires different files that may change
 
 For **Metabolomics Workbench** you don't need to import anything, just choose the  Metabolomics Workbench ID study.
 
-Before run ADViSELipidomics make sure that you have all the required files and that they are draw up properly. Apart of the output files from LipidSearch and LIQUID, ADViSELipidomics requires that the Excel files have a given structure with some mandatory columns. Here we provide a guide to the creation of these Excel files. 
+Before run ADViSELipidomics make sure that you have all the required files and that they are compiled properly. Apart of the output files from LipidSearch and LIQUID, ADViSELipidomics requires that the Excel files have a given structure with some mandatory columns. Here we provide a guide to the creation of these Excel files. 
 
 
 
@@ -115,19 +117,18 @@ In the choice of your sample name, it's better to avoid special characters and *
 
 ![datafile_names](https://user-images.githubusercontent.com/78078351/159508536-ee7bc3c2-59c2-4c11-bb32-782c7eb76696.png)
 
-Bad name: "Blood_bag_deuterated_1.txt"
-Good name: "Blood-bag_deuterated_1.txt"
+So a bad name could be "Blood_bag_deuterated_1.txt", while a good name is "Blood-bag_deuterated_1.txt".
 
 
 ## 2.2 Target File (LipidSearch, LIQUID, and User’s Excel File)
-The Target File is an Excel file that contains all the informations about your samples. It is the most important file since it is used for  LipidSearch import, LIQUID import, and User’s Excel File import. This file requires some mandatory columns that have to be filled with some criteria:
+The Target File is an Excel file that contains all the informations about your samples. It is the most important file since it is used for LipidSearch import, LIQUID import, and User’s Excel File import. This file requires some mandatory columns that have to be filled with some criteria:
 
 
 * **SampleID (LipidSearch, LIQUID and User’s Excel)** this column contains the ID of each sample. To prevent errors, the best way to write the IDs is: "samplename_1" where in "samplename" you can write your sample name and "_1" represents the identification for the technical replicate. If your experiment doesn't have technical replicates, you can simply write "samplename". A good SampleID could be "AF-1C_1" if technical replicate are present, or "AF-1C" if not. A bad name could be "AF_1C_1" (with another underscore).
 *	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases for each sample there are two different file. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"**.
 * **Norm_factor (LipidSearch, LIQUID - optional)** If you need to normalize your data by a normalization factor, you can add this column and write a number (Be careful with decimal point) for each sample. If it's not present, data won’t be normalized.
 
-In the picture below there is a Target File example, enlightned in yellow the mandatory columns, and in green the optional column. You can fill the Target File with any other informative column, just try to avoid special characters like \^$.?*|+()[]{} and whitespace.You can use - or _ instead of whitespace.
+In the picture below there is a Target File example where the mandatory columns are enlightned in yellow and the optional column in green. You can fill the Target File with any other informative column, just try to avoid special characters like \\^$.?\*/|+()[]{} and whitespace. You can use - or _ instead of whitespace.
 
 ![Screenshot (197)](https://user-images.githubusercontent.com/78078351/159510916-f0fac7fa-fa98-4bdb-a88a-505c0f6a6098.png)
 
@@ -235,7 +236,7 @@ Since the option LipidSearch output with Internal Standard (IS) has the largest 
 ### 3.2.1 LipidSearch (IS) EXAMPLE - IMPORTING & FILTERING module
 The first module is the IMPORTING & FILTERING module where the user can upload the Target File, the Internal Reference File and the Data file that come from LipidSearch.
 
-![import filtering_module](https://user-images.githubusercontent.com/78078351/159956088-cb4bff48-7b78-4005-9dba-016ecca70e53.png)
+![IMPORTING & FILTERING module](https://user-images.githubusercontent.com/78078351/160102565-67eadec1-8df0-40bb-91ab-7decb085ad26.png)
 
 * **Step 1.** The first files that you have to import are the Target File and the Internal Reference File (Rectangle A, steps 1 and 2). Next to each of them there is a button (yellow squared rectangle) that allows you to edit the Excel files. You can select only the columns that you need, filter the rows by one or more conditions and download the edited data. If you need to edit them, to apply the editing you have to enable the button next to the download button and click on the "Done" button (right top corner). Anyway an help button guide you through the editing options.
 * **Step 2.** Here you choose the folder containing the data files coming from LipidSearch (only the data files related to the samples and NOT to the IS). After selected the folder, click on the "Read Data" button and ADViSELipidomics will start to read all the data files. A progress bar shows the percentage of completion. When the reading process is completed, you can perform a quality check on the area of each sample by clicking to the "Quality check" button.
@@ -311,12 +312,25 @@ The Statistical Analysis menu includes two sub-menus: Differential Analysis and 
 ![DA](https://user-images.githubusercontent.com/78078351/159989613-5ee22334-3777-4bda-a2b0-5e33c8cbf26e.png)
 
 
-The Differential Analysis sub-menu applies statistical algorithms to identify lipids with a different abundance among samples associated with experimental conditions (i.e., treatment versus control). 
+The Differential Analysis sub-menu applies statistical algorithms to identify lipids with a different abundance among samples associated with experimental conditions (i.e., treatment versus control). It has two panels: **Build DA** and **Comparisons**. The first allows the user to build and run the differential analysis, while the second shows the "differential expressed" lipids with a Venn Diagramm and a Upset plot.
+
+The picture below shows the first panel, **Buil DA** with the different parts enlightned in red rectangles.
+
+![DA_box](https://user-images.githubusercontent.com/78078351/160097413-8f0bee68-75ae-45d5-b64d-b65c3d35c1be.png)
 
 * **Rectangle A.** Here you can select between one of the two SE objects obtained from the previous steps (i.e., the one with the lipid abundance of all samples or where the technical replicates are averaged). It is possible to normalize the data matrix by a scaling factor at this stage ("Normalization between replicates or samples"). Moreover, when a data matrix has technical replicates, you can also incorporate the replicate effect in the model by checking the "Replicates effect" box.
-* **Rectangle B.** Here you can build your experimental designs. An ADViSELipidomics complex design can include up to two experimental conditions and at most two variables to consider as batch effects. First you can select a primary variable and, with the plus button, you can add a second variable. Next you can decide to consider the batch effect choosing up to two batch variables. More in detail, ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables or removing the batch effect before fitting the model. To handle the batch effect, ADViSELipidomics uses the removeBatchEffect function from the limma package, or the ComBat function (parametric or non-parametric method) from the SVA package. Finally, with the "Write contrasts" button it opens a box where you can generate the contrast list. This functionality works untile two total variables for example: primary variable + secondary variable ("Batch type" set to "remove"), or primary variable + primary batch variable with "Batch type" set to "fit".
-* 
-* 
-*   ADViSELipidomics has a very user-friendly module to write the contrast list and can be done up to two variables in total. Since 
-* 
-Then, the user can use linear models to compare each lipid abundance (in log scale) to several experimental factors. ADViSELipidomics uses the limma model for performing the statistical analysis and supports the user in defining the experimental design. Therefore, it allows fitting both simple and complex experimental designs. An ADViSELipidomics complex design can include up to two experimental conditions and at most two variables to consider as batch effects. Moreover, when a data matrix has technical replicates, the user can also incorporate the replicate effect in the model.  Note that the non-parametric ComBat approach can be very time-consuming. Before running the differential analysis, the user can define the contrasts list of interest (i.e., the conditions to compare) and select a threshold for the adjusted p-values. Then, ADViSELipidomics returns a table of results for each comparison, the MA-plot, and the Volcano plot. Moreover, ADViSELipidomics also performs pairwise comparisons between different contrasts using the Venn diagram and the Upset plot. Finally, it reports the list of common lipids in tabular form.
+* **Rectangle B.** Here you can build your experimental designs. An ADViSELipidomics complex design can include up to two experimental conditions and at most two variables to consider as batch effects. First you can select a primary variable and, with the plus button, you can add a second variable. Next you can decide to consider the batch effect choosing up to two batch variables. More in detail, ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables or removing the batch effect before fitting the model. To handle the batch effect, ADViSELipidomics uses the removeBatchEffect function from the limma package, or the ComBat function (parametric or non-parametric method) from the SVA package. Finally, with the "Write contrasts" button it opens a box where you can generate the contrast list. This functionality works with up to two total variables (e.g. primary variable + secondary variable ("Batch type" set to "remove"), or primary variable + primary batch variable with "Batch type" set to "fit").
+* **Rectangle C.** Here you can select a threshold for the adjusted p-values and a method for the *decideTests* function (limma package) used to identify "differentially expressed" lipids. Finally, click on "Run DA" button to run the differential analysis. You can also check and download a table of results (TopTable).
+* **Rectangle D.** In this rectangle there are some plot options like the choice of the contrast, the threshold for the logFC and the possibility to add another plot. There are two different plots: a volcano plot and a MA plot, both interactive where you can change the fill variable and add labels to lipids of interest.
+ 
+ 
+After ADViSELipidomics performed the DA, you can go to the **Comparisons** panel to visualize the "differential expressed" lipids and perform pairwise comparisons between different contrasts using the Venn diagram and the Upset plot. Finally, it reports the list of common lipids in tabular form. These two plots are available only with at least two contrasts.
+
+![Venn](https://user-images.githubusercontent.com/78078351/160099334-d1d587d3-3ab3-4f65-823f-c608ec731b30.png)
+
+### 3.5.2 Enrichment Analysis
+
+The Enrichment Analysis sub-menu allows to build different lipid sets from the chemical features of the lipids: i.e., lipid classes, total chain length (the sum of all carbon atoms in the tails), total unsaturation (the sum of all the double bonds in the tails). Then, after defining a ranking for the lipids (i.e., logarithmic Fold Change, p-value, adjusted p-value, or B statistic), it identifies enriched sets of lipids using a permutation test. In order to achieve a robust result, it was necessary to perform few millions permutations, hence this process may take a while. 
+
+![Enrichment](https://user-images.githubusercontent.com/78078351/160098797-fc3ec3a3-c53c-4808-b59d-d5f9dc960455.png)
+
