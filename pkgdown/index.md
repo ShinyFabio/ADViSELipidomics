@@ -5,14 +5,7 @@ ADViSELipidomics is a novel Shiny app for the preprocessing, analysis, and visua
 
 # 1. Install
 ADViSELipidomics is a stand-alone Shiny application developed in RStudio IDE (RStudio > 1.4) and implemented using the R language (R > 4.0), available at the following GitHub page: https://github.com/ShinyFabio/ADViSELipidomics. ADViSELipidomics is multi-platform. We tested its functionalities on the main operating systems: Windows 10, Windows 11, macOS 12, Ubuntu 18, Ubuntu 20. 
-The user must first install R (https://www.r-project.org) and R studio (https://www.rstudio.com), if not yet available. Then, before installing ADViSELipidomics, the user might need to perform few supplementary steps that depend on the operating systems:
-
-
-ADViSELipidomics is a stand-alone application implemented using the R
-language (R > 4.0) and the Shiny libraries. It can be installed as any
-other R package on several operating systems (Windows, macOS and Linux).
-Before installing the package you have to perform few supplementary
-steps based on your operating systems:
+The user must first install R (https://www.r-project.org) and R studio (https://www.rstudio.com), if not yet available. Then, before installing ADViSELipidomics, the user might need to perform a few supplementary steps that depend on the operating systems:
 
 -   **Windows** Install Rtools, a collection of tools necessary for building R packages in Windows, and it is available at the following link: <https://cran.r-project.org/bin/windows/Rtools>
 
@@ -215,7 +208,7 @@ ADViSELipidomics has a graphical user interface (GUI) implemented using the shin
 
 
 ## 3.1 Home section
-The Home section contains general information about ADViSELipidomics like the citation, the link to the github page, and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
+The Home section contains general information about ADViSELipidomics like the citation, the link to the GitHub page, and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
 
 
 ## 3.2 Data Import & Preprocessing
@@ -330,7 +323,7 @@ After ADViSELipidomics performed the DA, you can go to the **Comparisons** panel
 
 ### 3.5.2 Enrichment Analysis
 
-The Enrichment Analysis sub-menu allows for building different lipid sets from the chemical features of the lipids: i.e., lipid classes, total chain length (the sum of all carbon atoms in the tails), total unsaturation (the sum of all the double bonds in the tails). Then, after defining a ranking for the lipids (i.e., logarithmic Fold Change, p-value, adjusted p-value, or B statistic), it identifies enriched sets of lipids using a permutation test. In order to achieve a robust result, it was necessary to perform a few million permutations, hence this process may take a while. 
+The Enrichment Analysis sub-menu allows for building different lipid sets from the chemical features of the lipids: i.e., lipid classes, total chain length (the sum of all carbon atoms in the tails), total unsaturation (the sum of all the double bonds in the tails). Then, after defining a ranking for the lipids (i.e., logarithmic Fold Change, p-value, adjusted p-value, or B statistic), it identifies enriched sets of lipids using a permutation test. To achieve a robust result, it was necessary to perform a few million permutations, hence this process may take a while. 
 
 ![Enrichment](https://user-images.githubusercontent.com/78078351/160098797-fc3ec3a3-c53c-4808-b59d-d5f9dc960455.png)
 
