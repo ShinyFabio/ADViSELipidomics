@@ -1,13 +1,23 @@
-# ADViSELipidomics 
-ADViSELipidomics is a novel Shiny app for the preprocessing, analysis, and visualization of lipidomics data. It copes with the outputs from LipidSearch and LIQUID for lipid identification and quantification, and with data available from the Metabolomics Workbench. ADViSELipidomics extracts information by parsing lipid species (using LIPID MAPS classification) and, together with information available on the samples, allows performing several exploratory and statistical analyses. In the presence of internal lipid standards in the experiment, ADViSELipidomics can normalize the data matrix, providing absolute values of concentration per lipid and sample. Moreover, it allows the identification of differentially abundant lipids in simple and complex experimental designs, dealing with batch effect correction.
+# ADViSELipidomics complete reference
 
+*Eugenio Del Prete, Ana Margarida Campos, Fabio Della Rocca, Angelo Fontana, Genoveffa Nuzzo and Claudia Angelini*
+
+*last revised on 28/03/2022*
+
+
+### About
+This is the documentation of the ADViSELipidomics package. ADViSELipidomics is a novel Shiny app for the preprocessing, analysis, and visualization of lipidomics data. It copes with the outputs from LipidSearch and LIQUID for lipid identification and quantification, and with data available from the Metabolomics Workbench. ADViSELipidomics extracts information by parsing lipid species (using LIPID MAPS classification) and, together with information available on the samples, allows performing several exploratory and statistical analyses. In the presence of internal lipid standards in the experiment, ADViSELipidomics can normalize the data matrix, providing absolute values of concentration per lipid and sample. Moreover, it allows the identification of differentially abundant lipids in simple and complex experimental designs, dealing with batch effect correction.
+
+If you use **ADViSELipidomics** in your publications, I am appreciated if you can cite:
+
+E. Del Prete *et al.* (2022) ADViSELipidomics: a workflow for the analysis of lipidomics data DOI: ............
 
 
 # 1. Install
 ADViSELipidomics is a stand-alone Shiny application developed in RStudio IDE (RStudio > 1.4) and implemented using the R language (R > 4.0), available at the following GitHub page: https://github.com/ShinyFabio/ADViSELipidomics. ADViSELipidomics is multi-platform. We tested its functionalities on the main operating systems: Windows 10, Windows 11, macOS 12, Ubuntu 18, Ubuntu 20. 
 The user must first install R (https://www.r-project.org) and R studio (https://www.rstudio.com), if not yet available. Then, before installing ADViSELipidomics, the user might need to perform a few supplementary steps that depend on the operating systems:
 
--   **Windows** Install Rtools, a collection of tools necessary for building R packages in Windows, and it is available at the following link: <https://cran.r-project.org/bin/windows/Rtools>
+-   **Windows** Install Rtools, a collection of tools necessary for building R packages in Windows, available at the following link: <https://cran.r-project.org/bin/windows/Rtools>
 
 
 
@@ -96,8 +106,9 @@ Before running ADViSELipidomics make sure that you have all the required files a
 
 The output of LipidSearch and LIQUID are some text files containing information on chromatographic peak area or peak intensity per lipid. If your data come from **LipidSearch** you should have a deuterated file and a non-labeled file for each sample (or replicate). The extension of these files should be .txt. If your data come from **LIQUID** you can have a positive and a negative file, with a .tsv extension. In any case, put your data file in a folder and rename each file with your sample id in a proper way. 
 
-**Example:** 
-your sample it's called "AF-1CM" and you have two technical replicates. Then, depending on the output software, the name of the data files should be:
+**Example:**  
+Your sample is called "AF-1CM" and you have two technical replicates. Then, depending on the output software, the name of the data files should be:
+
 * for LipidSearch: "AF-1C-M_deuterated_1.txt", "AF-1C-M_nonlabeled_1.txt" and "AF-1C-M_deuterated_2.txt" and "AF-1C-M_nonlabeled_2.txt"
 * for LIQUID: "AF-1C-M_positive_1", "AF-1C-M_negative_1" and "AF-1C-M_positive_2", "AF-1C-M_negative_2"
 
@@ -105,12 +116,14 @@ The last two characters (e.g. "_1") refer to the technical replicate. If you don
 
 
 
-**NOTE**
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/circle-exclamation.svg" width="15" height="15"> **NOTE**  
 In the choice of your sample name, it's better to avoid special characters and **DO NOT use underscores (_)**. This character is used by ADViSELipidomics to split the file name into three parts: the sample name, the type of file (deuterated/nonlabeled or positive/negative), and the technical replicate as shown in the following picture:
 
-![datafile_names](https://user-images.githubusercontent.com/78078351/159508536-ee7bc3c2-59c2-4c11-bb32-782c7eb76696.png)
 
-So a bad name could be "Blood_bag_deuterated_1.txt", while a good name is "Blood-bag_deuterated_1.txt".
+![datafile_names](https://user-images.githubusercontent.com/78078351/160425060-4c576fe4-f328-4024-88dc-838af935cf1f.png)
+
+
+For example, a bad name could be "Blood_bag_deuterated_1.txt", while a good name is "Blood-bag_deuterated_1.txt".
 
 
 ## 2.2 Target File (LipidSearch, LIQUID, and User’s Excel File)
@@ -121,13 +134,17 @@ The Target File is an Excel file that contains all the information about your sa
 *	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases, for each sample there are two different files. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"**.
 * **Norm_factor (LipidSearch, LIQUID - optional)** If you need to normalize your data by a normalization factor, you can add this column and write a number (be careful with decimal points) for each sample. If it's not present, data won’t be normalized.
 
-In the picture below there is a Target File example where the mandatory columns are enlightened in yellow and the optional column in green. You can fill the Target File with any other informative column, just try to avoid special characters like \\^$?\*/|+()[]{} and whitespace. You can use - or _ instead of whitespace.
+In the picture below there is a Target File example where the mandatory columns are enlightened in yellow and the optional column in green. You can fill the Target File with any other informative column, just try to avoid special characters like \\^$?\*/|+()[]{} and whitespace. You can use - or _ instead of whitespace. 
+
+
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/circle-exclamation.svg" width="15" height="15"> **NOTE**  
+If your Target File doesn't contain at least one informative column about the samples (e.g. Product, Model_type, etc.), you can't perform any exploratory or statistical analysis. 
 
 ![Screenshot (197)](https://user-images.githubusercontent.com/78078351/159510916-f0fac7fa-fa98-4bdb-a88a-505c0f6a6098.png)
 
 The example target file can be downloaded from here:
 
-[Targetfile_Lipidomics.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325363/Targetfile_Lipidomics_new.xlsx)
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Targetfile_Lipidomics.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325363/Targetfile_Lipidomics_new.xlsx)
 
 
 ##  2.3 Internal Reference File (LipidSearch, LIQUID)
@@ -148,7 +165,7 @@ The picture below shows an Internal Reference File example in the case of LipidS
 
 The Internal Reference File example for the LipidSearch with Internal Standards option can be downloaded from here:
 
-[Internal_Reference_file_LipidSearch_withIS.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325722/Internal_Reference_file_LipidSearch_withIS.xlsx)
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Internal_Reference_file_LipidSearch_withIS.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325722/Internal_Reference_file_LipidSearch_withIS.xlsx)
 
 * **LIQUID**
   - **Class** lipid class of interest according to the nomenclature of LIQUID (e.g. *DG* )
@@ -162,7 +179,7 @@ The picture below shows an Internal Reference File example in the case of LIQUID
 
 The Internal Reference File example for the LIQUID option can be downloaded from here:
 
-[Targetfile_Lipidomics_LIQUID.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325726/Targetfile_Lipidomics_LIQUID.xlsx)
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Internal_Reference_file_LIQUID.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8363693/Internal_Reference_file_LIQUID.xlsx)
 
 
 ## 2.4 Calibration Files (LipidSearch with Internal Standards)
@@ -180,9 +197,11 @@ The picture below shows an example of a Calibration Excel file for the deuterate
 
 A toy example for the Calibration Deuterated and Calibration Nonlabeled Excel files can be downloaded here:
 
-[Calibration_Deuterated.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8326063/Calibration_Deuterated.xlsx)
 
-[Calibration_NonLabeled.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8326075/Calibration_NonLabeled.xlsx)
+
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Calibration_Deuterated.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8363641/Calibration_Deuterated.xlsx)
+
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Calibration_NonLabeled.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8326075/Calibration_NonLabeled.xlsx)
 
 
 ## 2.5 User’s Excel File
@@ -191,7 +210,8 @@ If you already have a  matrix file containing the abundance for each lipid, you 
 
 ![Screenshot (204)](https://user-images.githubusercontent.com/78078351/159945580-ea7466b3-fb11-4e19-87a3-e3eb6a64eeb3.png)
 
-**NOTE:** the column names in the data matrix must follow the same rules of the SampleID for every Target File. Check chapter 2.2.
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/circle-exclamation.svg" width="15" height="15"> **NOTE** 
+The column names in the data matrix must follow the same rules of the SampleID for every Target File. Check chapter 2.2.
 
 ## 2.6 SummarizedExperiment
 
@@ -327,3 +347,11 @@ The Enrichment Analysis sub-menu allows for building different lipid sets from t
 
 ![Enrichment](https://user-images.githubusercontent.com/78078351/160098797-fc3ec3a3-c53c-4808-b59d-d5f9dc960455.png)
 
+
+# 4. Files Case Study #1
+
+If you want to test the software with a LipidSearch output, here we provide the files used in the Case Study #1 as described in the supplementary to our paper......inserire link. 
+
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Case_Study_#1.zip](https://github.com/ShinyFabio/ADViSELipidomics/files/8364223/Case_Study_.1.zip)
+
+Before use, please extract the files from the archive. Since this experiment uses internal standards, you can follow the example in chapter 3.2.
