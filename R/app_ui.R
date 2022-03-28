@@ -72,11 +72,10 @@ app_ui <- function(request) {
                      </h1>")),
             column(2, tags$img(src = "www/NewLogoAL.png", width = "140px"), style = "text-align: right"))),
           br(),fluidRow(column(12,wellPanel(
-             h3(strong("ADViSELipidomics")," is a Shiny app with a complete underneath workflow for the acquisition and 
-             the analysis of lipidomic data from different sources. After performing the identification 
-             and quantification steps on lipids with an external software, the user can upload the data 
-             files together with lipids and samples details, select filters and methods to perform on 
-             dataset, and obtain the results in form of tables and plots.",style = "color: #0e3d51;")
+             h3(strong("ADViSELipidomics")," is a Shiny app with a complete workflow preprocessing and analyzing 
+                lipidomics data from different sources. The user can upload the data files together with lipid 
+                and sample details, select filters and statistical methods to apply to the dataset, and obtain the 
+                results in the form of tables and interactive plots.",style = "color: #0e3d51;")
           ))),
           linebreaks(3),
           fluidRow(column(width = 12, style = "text-align:center",
@@ -91,15 +90,15 @@ app_ui <- function(request) {
                                   subtitle = "Please cite our article (E. Del Prete, A. M. Campos, 
                                     F. Della Rocca, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for the analysis of lipidomic data, ..., 2022) 
                                     when you publish using this tool. ", color = "aqua", fill = T),
-            shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
-                                    subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
-                                    color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T)
+          shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
+                                  subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
+                                  color = "aqua", href = "https://shinyfabio.github.io/ADViSELipidomics/", fill = T)
           ),
           linebreaks(2),
           column(6, offset = 3, wellPanel(
-                    h4("This package has been developed at IAC-CNR/ICB-CNR under the financial support of the Regione 
-                    Campania project: Piattaforma tecnologica per la lotta alle patologie oncologiche Antitumor 
-                    Drugs and Vaccines from the SEa (ADViSE)")))
+            h4("This work was supported by the project “Antitumor Drugs and Vaccines from the Sea 
+               (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania
+               FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer”—Action 1.2.1 and 1.2.2.")))
 
         ),
         
@@ -130,7 +129,7 @@ app_ui <- function(request) {
                                skipped and your final output will be an area matrix, otherwise lipids area are 
                                calibrated and the final output will be a concentration matrix."),
                           awesomeRadio("type_lipsearch",
-                                      label = "Do you have internal standard?", 
+                                      label = "Do you have internal standards?", 
                                       choices = c("Yes","No"), selected = "Yes")
                       )
                     ))
@@ -1009,11 +1008,19 @@ app_ui <- function(request) {
                 h4(strong("DA options")),
                 conditionalPanel(condition = "output.check_replicates == true",
                   column(6, style="padding-left: 0px;", awesomeCheckbox("expdes_summar", "Summarize data", value = FALSE)),
-                  conditionalPanel(condition = "input.expdes_summar == false",
-                                   column(6,awesomeCheckbox("expdes_repeffect", "Replicates effect", value = FALSE))
+                  conditionalPanel(
+                    condition = "input.expdes_summar == false",
+                    column(
+                      6,
+                      bsplus::bs_embed_tooltip(
+                        title = "If you have technical replicates, you can also incorporate the replicate 
+                        effect in the model by checking this box.",
+                        awesomeCheckbox("expdes_repeffect", "Replicates effect", value = FALSE))
+                      )
                   )
                 ),
                 
+
                 awesomeRadio("expdes_bs_norm", "Normalization between replicates or samples", choices = "", inline = TRUE),
                 #awesomeCheckbox("expdes_bs_norm", "Normalization between replicates or samples", value = FALSE),
                 hr(),
@@ -1033,8 +1040,19 @@ app_ui <- function(request) {
                 conditionalPanel(
                   condition = "input.expdes_batch_effect == true",
                   fluidRow(
-                    column(6, selectInput("expdes_batch_type", "Batch type", choices = c("remove", "fit"))),
-                    column(6, selectInput("batch_meth", "Batch method", choices = ""))
+                    column(
+                      6, 
+                      bsplus::bs_embed_tooltip(
+                        title = "ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables 
+                        or removing the batch effect before fitting the model. If you select 'fit', the software requires your batch variable
+                        also in the contrasts list. Remember that you can generate a contrasts list up to two variables.",
+                        selectInput("expdes_batch_type", "Batch type", choices = c("remove", "fit")))),
+                    column(
+                      6, 
+                      bsplus::bs_embed_tooltip(
+                        title = "Algorithm used for the batch effect. If 'limma',it will be used the 'removeBatchEffect' function, otherwhise
+                        the 'ComBat' function from SVA package (parametric or non-parametric)",
+                        selectInput("batch_meth", "Batch method", choices = "")))
                   ),
                   conditionalPanel(
                     condition = "input.expdes_batch_type == 'remove' || input.batch_meth == 'given'",
@@ -1107,7 +1125,8 @@ app_ui <- function(request) {
                 ),
                 
                 prettyRadioButtons("expdes_thresh", "p-value threshold", choices = c(0.001, 0.01, 0.05), inline = TRUE, selected = 0.05),
-                selectInput("expdes_decide_met", "Select method", choices = c("separate", "global", "hierarchical", "nestedF"), selected = "separate"),
+                bsplus::bs_embed_tooltip(title = "A method for the decideTests function (limma package) used to identify 'differentially expressed' lipids.",
+                selectInput("expdes_decide_met", "Select method", choices = c("separate", "global", "hierarchical", "nestedF"), selected = "separate")),
                 fluidRow(
                   column(
                     6,

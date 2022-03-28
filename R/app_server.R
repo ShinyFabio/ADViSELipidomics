@@ -58,9 +58,9 @@ app_server <- function( input, output, session ) {
   query_modal <- modalDialog(
     h3(strong("Welcome to ADViSELipidomics"), style = "text-align: center"),
     br(),
-    h4("Before start, please enter your name and your company."),
-    textInput("indata_analyst", list(HTML("&nbsp;"), icon("user"), HTML("&nbsp;Enter your name")), value = "Name"),
-    textInput("inlab_analyst", list(HTML("&nbsp;"), icon("building"), HTML("&nbsp;Enter your company")), value = "Company"),
+    h4("Before start, please enter your name and your company. These informations will be saved in the metadata of your SumExp output."),
+    textInput("indata_analyst", list(HTML("&nbsp;"), icon("user"), HTML("&nbsp;Enter your name")), value = "User"),
+    textInput("inlab_analyst", list(HTML("&nbsp;"), icon("building"), HTML("&nbsp;Enter your institute")), value = "Institute"),
     easyClose = F,
     footer = tagList(
       actionButton("run", "Run")
@@ -69,11 +69,11 @@ app_server <- function( input, output, session ) {
 
   
   
-  # Show the model on start up ...
-  observeEvent(input$sidebarmenu,{
-    req(input$sidebarmenu == "rawsub")
-    showModal(query_modal)
-  },ignoreInit = TRUE, once = TRUE)
+  # # Show the model on start up ...
+  # observeEvent(input$sidebarmenu,{
+  #   req(input$sidebarmenu == "rawsub")
+  #   showModal(query_modal)
+  # },ignoreInit = TRUE, once = TRUE)
   
 
   # ... or when user wants to change query
@@ -87,7 +87,7 @@ app_server <- function( input, output, session ) {
   
   output$nome = renderText({
     if(is.null(input$indata_analyst)){
-      "Name"
+      "User"
     }else{
       input$indata_analyst
     }
@@ -207,7 +207,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    x = readxl::read_xlsx(input$targetfile_liquid$datapath)
+    x = readxl::read_xlsx(input$targetfile_liquid$datapath, na = c("", "NA"))
     #x$Exp_date = lubridate::as_date(x$Exp_date)
     return(x)
   })
@@ -224,7 +224,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    readxl::read_xlsx(input$internalstdpath_liquid$datapath)
+    readxl::read_xlsx(input$internalstdpath_liquid$datapath, na = c("", "NA"))
   })
   
   internalstd_edit_liquid = mod_edit_data_server("edit_internal_liquid", data_input = internalstd_to_edit_liquid)
@@ -590,7 +590,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    readxl::read_xlsx(input$coldatainput$datapath)
+    readxl::read_xlsx(input$coldatainput$datapath, na = c("", "NA"))
   })
   
   
@@ -629,7 +629,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    readxl::read_xlsx(input$assayinput$datapath)
+    readxl::read_xlsx(input$assayinput$datapath, na = c("", "NA"))
   })
   
   

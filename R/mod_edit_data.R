@@ -192,7 +192,8 @@ mod_edit_data_server <- function(id, data_input){
     dataOutputServer("output-active",
                      data = reactive({values$data_active}),
                      hover_text = "save selection \n to file",
-                     write_fun = readr::write_excel_csv)
+                     write_fun = openxlsx::write.xlsx,
+                     save_as = paste0(Sys.Date(),"_edited.xlsx"))
     
 
     # DONE

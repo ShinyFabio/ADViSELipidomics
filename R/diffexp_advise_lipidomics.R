@@ -19,7 +19,7 @@
 #' @param batch_vars Character vector, with the names of the variables from the target file,
 #' considered as batch effects for the entire experiment. Default = "".
 #' @param batch_type Character string. Different methodologies to cope with the eventual presence
-#' of batch effects: "none", "remove", "fit". Default = "fit".
+#' of batch effects: "remove", "fit". Default = "remove".
 #' @param eb_robust Logical value for inner use of empirical Bayes moderation of the
 #' standard errors towards a global value. More information in "limma' package
 #' (TRUE for RNAseq data). Default = FALSE.

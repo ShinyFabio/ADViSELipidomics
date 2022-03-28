@@ -11,18 +11,7 @@ experimental](https://img.shields.io/badge/lifecycle-stable-succes.svg)](https:/
 ![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 <!-- badges: end -->
 
-ADViSELipidomics is a novel Shiny app for the preprocessing, analysis,
-and visualization of lipidomics data. It copes with the outputs from
-LipidSearch and LIQUID for lipid identification and quantification, and
-with data available from the Metabolomics Workbench. ADViSELipidomics
-extracts information by parsing lipid species (using LIPID MAPS
-classification) and, together with information available on the samples,
-allows performing several exploratory and statistical analyses. In the
-presence of internal lipid standards in the experiment, ADViSELipidomics
-can normalize the data matrix, providing absolute values of
-concentration per lipid and sample. Moreover, it allows the
-identification of differentially abundant lipids in simple and complex
-experimental designs, dealing with batch effect correction.
+ADViSELipidomics is a novel Shiny app for the preprocessing, analysis, and visualization of lipidomics data. It copes with the outputs from LipidSearch and LIQUID for lipid identification and quantification, and with data available from the Metabolomics Workbench. ADViSELipidomics extracts information by parsing lipid species (using LIPID MAPS classification) and, together with information available on the samples, allows performing several exploratory and statistical analyses. In the presence of internal lipid standards in the experiment, ADViSELipidomics can normalize the data matrix, providing absolute values of concentration per lipid and sample. Moreover, it allows the identification of differentially abundant lipids in simple and complex experimental designs, dealing with batch effect correction.
 
 ## Installation
 
@@ -32,7 +21,7 @@ other R package on several operating systems (Windows, macOS and Linux).
 Before installing the package you have to perform few supplementary
 steps based on your operating systems:
 
--   **Windows (tested on Windows 10 64bit)** 
+-   **Windows (tested on Windows 10 64bit)**
 
 Before installing the package you need also to install Rtools from the
 following link:
@@ -88,4 +77,4 @@ When a new ADViSELipidomics version is released, it can be updated with the same
 
 ## Funding
 
-…ADViSE
+This work was supported by the project “Antitumor Drugs and Vaccines from the Sea (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer”—Action 1.2.1 and 1.2.2.

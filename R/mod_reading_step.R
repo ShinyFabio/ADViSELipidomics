@@ -120,7 +120,7 @@ mod_reading_step_server <- function(id, analysis, int_std){
         shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
       }
       validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-      x = readxl::read_xlsx(input$targetfilepath$datapath)
+      x = readxl::read_xlsx(input$targetfilepath$datapath, na = c("", "NA"))
       #x$Exp_date = lubridate::as_date(x$Exp_date)
       return(x)
     })
@@ -137,7 +137,7 @@ mod_reading_step_server <- function(id, analysis, int_std){
         shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
       }
       validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-      readxl::read_xlsx(input$internalstdpath$datapath)
+      readxl::read_xlsx(input$internalstdpath$datapath, na = c("", "NA"))
     })
     
     internalstd_edit = mod_edit_data_server("edit_internal", data_input = internalstd_to_edit)

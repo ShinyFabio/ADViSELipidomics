@@ -151,7 +151,7 @@ mod_calibration_step_server <- function(id, stepc){
         shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
       }
       validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-      readxl::read_xlsx(input$calibdeuteratedpath$datapath)
+      readxl::read_xlsx(input$calibdeuteratedpath$datapath, na = c("", "NA"))
     })
     
     calibdeu_edit <- DataEditR::dataEditServer("editedcalibeu", data = calibdeu_to_edit())
@@ -167,7 +167,7 @@ mod_calibration_step_server <- function(id, stepc){
         shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
       }
       validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-      readxl::read_xlsx(input$calibnonlabelpath$datapath)
+      readxl::read_xlsx(input$calibnonlabelpath$datapath, na = c("", "NA"))
     })
     
     caliblab_edit <- DataEditR::dataEditServer("editedcalilab", data = caliblab_to_edit())

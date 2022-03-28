@@ -33,7 +33,7 @@ or samples. Possible options are "none", "scale" and "quantile" (only if it isn'
 Default = "none".}
 
 \item{batch_type}{Character string. Different methodologies to cope with the eventual presence
-of batch effects: "none", "remove", "fit". Default = "fit".}
+of batch effects: "remove", "fit". Default = "remove".}
 
 \item{batch_method}{Algorithm used for the batch effect. Choices are: "limma", "combat_nonparam" and "combat_param".}
 
@@ -51,7 +51,7 @@ standard errors towards a global value. More information in "limma' package
 \item{thresh}{Numerical value. Threshold on adjust P-value in order to consider a lipid
 differentially expressed or not. Default = 0.05.}
 
-\item{decide_met}{Character string specifying how genes and contrasts are to be combined
+\item{decide_met}{Character string specifying how lipids and contrasts are to be combined
 in the multiple testing scheme. Choices are "separate", "global", "hierarchical" or "nestedF".
 More information in "limma' package. Default = "separate".}
 }
