@@ -65,10 +65,6 @@ ADViSELipidomics allows the user to import files concerning different types of d
 Hence, as can be seen, ADViSELipidomics requires different files that may change between the different types of data. To sum up, here is a list with all the required files for each data type:
 
 
-* **LipidSearch without Internal Standard lipid:** 
-  * Target file (.xlsx)
-  * Internal Reference file (.xlxs)
-  * Data files coming from LipidSearch related to your samples (.txt)
 * **LipidSearch with Internal Standard lipid:** 
   * Target file (.xlsx)
   * Internal Reference file (.xlxs)
@@ -76,6 +72,10 @@ Hence, as can be seen, ADViSELipidomics requires different files that may change
   * Calibration File for deuterated (.xlsx)
   * Calibration File for nonlabeled (.xlsx)
   * Concentration files coming from LipidSearch related to the internal standard (.txt)
+* **LipidSearch without Internal Standard lipid:** 
+  * Target file (.xlsx)
+  * Internal Reference file (.xlxs)
+  * Data files coming from LipidSearch related to your samples (.txt)
 * **LIQUID** 
   * Target file (.xlsx)
   * Internal Reference file (.xlxs)
@@ -121,7 +121,7 @@ The Target File is an Excel file that contains all the information about your sa
 *	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases, for each sample there are two different files. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"**.
 * **Norm_factor (LipidSearch, LIQUID - optional)** If you need to normalize your data by a normalization factor, you can add this column and write a number (be careful with decimal points) for each sample. If it's not present, data won’t be normalized.
 
-In the picture below there is a Target File example where the mandatory columns are enlightened in yellow and the optional column in green. You can fill the Target File with any other informative column, just try to avoid special characters like \\^$.?\*/|+()[]{} and whitespace. You can use - or _ instead of whitespace.
+In the picture below there is a Target File example where the mandatory columns are enlightened in yellow and the optional column in green. You can fill the Target File with any other informative column, just try to avoid special characters like \\^$?\*/|+()[]{} and whitespace. You can use - or _ instead of whitespace.
 
 ![Screenshot (197)](https://user-images.githubusercontent.com/78078351/159510916-f0fac7fa-fa98-4bdb-a88a-505c0f6a6098.png)
 
