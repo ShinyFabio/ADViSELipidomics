@@ -153,25 +153,28 @@ In LipidSearch and LIQUID option, ADViSELipidomics requires also another Excel f
 * **LipidSearch** 
   - **Class** lipid class of interest according to the nomenclature of LipidSearch (e.g. *DG* )
   - **Ion** the ion of interest written according to the nomenclature of LipidSearch(e.g. *M-H* )
-  - **MinRt** minimum retention time of the class (a number)
-  - **MaxRt** maximum retention time of the class (a number)
-  - **InternalStandardLipidIon** lipid of .........????? (e.g. *Cer(d18:1_17:0)-H* )
-  - **MinLinearity** minimum value for the range of linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
-  - **MaxLinearity** maximum value for the range of linearity in the calibration curves. (a number) ONLY IF YOU USE INTERNAL STANDARD
+  - **MinRt** minimum retention time of the class (numeric)
+  - **MaxRt** maximum retention time of the class (numeric)
+  - **InternalStandardLipidIon** name of each internal lipid standard according to the nomenclature of LipidSearch (e.g. *Cer(d18:1_17:0)-H* )
+  - **MinLinearity** minimum value for the range of linearity in the calibration curves. (numeric) ONLY IF YOU USE INTERNAL STANDARD
+  - **MaxLinearity** maximum value for the range of linearity in the calibration curves. (numeric) ONLY IF YOU USE INTERNAL STANDARD
+  - **NominalStdConcentration** concentration of of each internal lipid standard initially spiked into the sample (numeric) ONLY IF YOU USE INTERNAL STANDARD
 
-The picture below shows an Internal Reference File example in the case of LipidSearch and the presence of Internal Standards. In yellow are the mandatory columns, and in green the columns needed only in the presence of Internal Standards.
+The picture below shows an Internal Reference File example in the case of LipidSearch and the presence of Internal Standards. In yellow are the mandatory columns, and in green the columns needed only in the presence of Internal Standards. The "Unit_measure" column is not used but can be useful to check that each standard concentration has the same unit measure. If you have different units measure, convert them to the same.
 
-![Screenshot (199)](https://user-images.githubusercontent.com/78078351/159517154-aca32f9c-1c0f-4299-9937-b49fa1b3b028.png)
+![Screenshot (223)](https://user-images.githubusercontent.com/78078351/160590351-652867af-a00f-434b-b0e2-67aa767c06c3.png)
 
 The Internal Reference File example for the LipidSearch with Internal Standards option can be downloaded from here:
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Internal_Reference_file_LipidSearch_withIS.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8325722/Internal_Reference_file_LipidSearch_withIS.xlsx)
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Internal_Reference_file_LipidSearch_withIS.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8370364/Internal_Reference_file_LipidSearch_withIS.xlsx)
+
+
 
 * **LIQUID**
   - **Class** lipid class of interest according to the nomenclature of LIQUID (e.g. *DG* )
   - **Adduct** the ion of interested written according to the nomenclature of LIQUID (e.g. *[M-H]+* )
-  - **MinRt** minimum retention time of the class (a number)
-  - **MaxRt** maximum retention time of the class (a number)
+  - **MinRt** minimum retention time of the class (numeric)
+  - **MaxRt** maximum retention time of the class (numeric)
 
 The picture below shows an Internal Reference File example in the case of LIQUID. In yellow are the mandatory columns.
 
@@ -195,8 +198,7 @@ The picture below shows an example of a Calibration Excel file for the deuterate
 
 ![Screenshot (203)](https://user-images.githubusercontent.com/78078351/159525426-c776cb28-fa19-420b-9569-2143775edca5.png)
 
-A toy example for the Calibration Deuterated and Calibration Nonlabeled Excel files can be downloaded here:
-
+An example for the Calibration Deuterated and Calibration Nonlabeled Excel files can be downloaded here:
 
 
 <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Calibration_Deuterated.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8363641/Calibration_Deuterated.xlsx)
@@ -206,12 +208,18 @@ A toy example for the Calibration Deuterated and Calibration Nonlabeled Excel fi
 
 ## 2.5 User’s Excel File
 
-If you already have a  matrix file containing the abundance for each lipid, you need just two Excel files: the Target File and the Data Matrix File. Here the Target File has only one mandatory column, the SampleID. The Data Matrix (.xlsx file) must have the list of the lipids in the first column, which must be called *"Lipids"*, and then the samples (or replicates) in the following columns, with the column names that is the same of the *SampleID* of the Target File. It's not necessary that the matrix is full (i.e. without missing values) since after uploaded, it's possible to filter and impute NAs. The picture below shows an example of the Data Matrix.
+If you already have a  matrix file containing the abundance for each lipid, you need just two Excel files: a Target File and a Data Matrix File. Here the Target File has only one mandatory column, the SampleID. The Data Matrix (.xlsx file) must have the list of the lipids in the first column, which must be called *"Lipids"*, and then the samples (or replicates) in the following columns, with the column names that is the same of the *SampleID* from the Target File. It is not necessary that the matrix is full (i.e. without missing values) since after uploaded, it is possible to filter and impute NAs. The picture below shows an example of a Data Matrix Excel file.
 
-![Screenshot (204)](https://user-images.githubusercontent.com/78078351/159945580-ea7466b3-fb11-4e19-87a3-e3eb6a64eeb3.png)
+![Excel_data_matrix](https://user-images.githubusercontent.com/78078351/160581333-cd7bf4ec-53ec-4c12-9bcc-d007d2dfbbe1.png)
+
 
 <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/circle-exclamation.svg" width="15" height="15"> **NOTE** 
-The column names in the data matrix must follow the same rules of the SampleID for every Target File. Check chapter 2.2.
+The column names in the data matrix must follow the same SampleID rules described in chapter 2.2.
+
+An example for the Data Matrix can be download from here:
+
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Excel_Data_Matrix.xlsx](https://github.com/ShinyFabio/ADViSELipidomics/files/8370052/Excel_Data_Matrix.xlsx)
+
 
 ## 2.6 SummarizedExperiment
 
@@ -352,6 +360,6 @@ The Enrichment Analysis sub-menu allows for building different lipid sets from t
 
 If you want to test the software with a LipidSearch output, here we provide the files used in the Case Study #1 as described in the supplementary to our paper......inserire link. 
 
-<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Case_Study_#1.zip](https://github.com/ShinyFabio/ADViSELipidomics/files/8364223/Case_Study_.1.zip)
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20"> [Case_Study_#1.zip](https://github.com/ShinyFabio/ADViSELipidomics/files/8370373/Case_Study_.1.zip)
 
 Before use, please extract the files from the archive. Since this experiment uses internal standards, you can follow the example in chapter 3.2.
