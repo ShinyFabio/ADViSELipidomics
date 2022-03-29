@@ -110,7 +110,7 @@ The output of LipidSearch and LIQUID are some text files containing information 
 Your sample is called "AF-1CM" and you have two technical replicates. Then, depending on the output software, the name of the data files should be:
 
 * for LipidSearch: "AF-1C-M_deuterated_1.txt", "AF-1C-M_nonlabeled_1.txt" and "AF-1C-M_deuterated_2.txt" and "AF-1C-M_nonlabeled_2.txt"
-* for LIQUID: "AF-1C-M_positive_1", "AF-1C-M_negative_1" and "AF-1C-M_positive_2", "AF-1C-M_negative_2"
+* for LIQUID: "AF-1C-M_positive_1.tsv", "AF-1C-M_negative_1.tsv" and "AF-1C-M_positive_2.tsv", "AF-1C-M_negative_2.tsv"
 
 The last two characters (e.g. "_1") refer to the technical replicate. If you don't have technical replicates just remove these two last characters (so for example in the case of LipidSearch you should have "AF-1C-M_deuterated.txt" and "AF-1C-M_nonlabeled.txt").
 
@@ -140,7 +140,7 @@ In the picture below there is a Target File example where the mandatory columns 
 <img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/circle-exclamation.svg" width="15" height="15"> **NOTE**  
 If your Target File doesn't contain at least one informative column about the samples (e.g. Product, Model_type, etc.), you can't perform any exploratory or statistical analysis. 
 
-![Screenshot (197)](https://user-images.githubusercontent.com/78078351/159510916-f0fac7fa-fa98-4bdb-a88a-505c0f6a6098.png)
+![target_file_image](https://user-images.githubusercontent.com/78078351/160630507-503a7b95-ce60-407b-bdf6-f3ae428f428b.png)
 
 The example target file can be downloaded from here:
 
