@@ -580,7 +580,7 @@ app_server <- function( input, output, session ) {
     shinydashboard::updateTabItems(session, "sidebarmenu", "seedatatab")
   })
   
-######### Create sumexp object from csv #####
+######### Create sumexp object from excel #####
   
   ###### COLDATA
   cold = reactive({

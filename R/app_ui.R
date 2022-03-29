@@ -88,7 +88,7 @@ app_ui <- function(request) {
             color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T),
           shinydashboard::infoBox(width = 6, icon = icon("newspaper"), title = "Citation",
                                   subtitle = "Please cite our article (E. Del Prete, A. M. Campos, 
-                                    F. Della Rocca, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for the analysis of lipidomic data, ..., 2022) 
+                                    F. Della Rocca, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for the analysis of lipidomic data, Bioinformatics..., 2022) 
                                     when you publish using this tool. ", color = "aqua", fill = T),
           shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
                                   subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
@@ -1043,10 +1043,10 @@ app_ui <- function(request) {
                     column(
                       6, 
                       bsplus::bs_embed_tooltip(
+                        selectInput("expdes_batch_type", "Batch type", choices = c("remove", "fit")),
                         title = "ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables 
                         or removing the batch effect before fitting the model. If you select 'fit', the software requires your batch variable
-                        also in the contrasts list. Remember that you can generate a contrasts list up to two variables.",
-                        selectInput("expdes_batch_type", "Batch type", choices = c("remove", "fit")))),
+                        also in the contrasts list. Remember that you can generate a contrasts list up to two variables.")),
                     column(
                       6, 
                       bsplus::bs_embed_tooltip(

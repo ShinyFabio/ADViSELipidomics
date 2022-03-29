@@ -70,9 +70,28 @@ recovery_advise_lipidomics <- function(out,
                            dplyr::select(LipidIon,Area) %>% fun_g %>%
                            dplyr::filter(!is.na(ConcExpPerc)))
 
+
+  #check if there are both deuterated and nonlabeled
+  if(sum(grepl("deuterated", names(aux_rec_perc)), na.rm = TRUE) == sum(grepl("nonlabeled", names(aux_rec_perc)), na.rm = TRUE)){
+    step_for = 2
+    #if one of them doesn't contain nonlabeled OR deuterated
+  }else if(sum(grepl("deuterated", names(aux_rec_perc)), na.rm = TRUE) == 0 || sum(grepl("nonlabeled", names(aux_rec_perc)), na.rm = TRUE) == 0){
+    step_for = 1
+  }else{
+    stop("Something wrong in the recovery percentage. Error 88")
+  }
+
+  
   rec_perc <- list()
-  for(k in seq(1,length(aux_rec_perc),by = 2)){
-    rec_perc[[k]] <- rbind(aux_rec_perc[[k]],aux_rec_perc[[k+1]])
+  for(k in seq(1,length(aux_rec_perc),by = step_for)){
+    
+    #if step_for == 1 just copy aux_rec_perc to recperc without merging deuterated and nonlabeled (since exists only one)
+    if(step_for == 2){
+      rec_perc[[k]] <- rbind(aux_rec_perc[[k]],aux_rec_perc[[k+1]])
+    }else{
+      rec_perc[[k]] = aux_rec_perc[[k]]
+    }
+    
     aux_code <- unlist(strsplit(names(aux_rec_perc)[k],split = "_"))[c(1,3)]
     if(!is.na(aux_code[2])){
       names(rec_perc)[k] <- paste0(aux_code[1],"_",aux_code[2])
@@ -80,7 +99,11 @@ recovery_advise_lipidomics <- function(out,
       names(rec_perc)[k] <- aux_code[1]
     }
   }
-  rec_perc <- rec_perc[-(seq(1,length(rec_perc),by = 2)+1)]
+  
+  if(step_for == 2){
+    rec_perc <- rec_perc[-(seq(1,length(rec_perc),by = 2)+1)]
+  }
+  
   rec_perc <- lapply(rec_perc,function(x) x %>%
                        dplyr::select(Class,LipidIon,ConcExpPerc) %>%
                        dplyr::rename(InternalStandardLipidIon = LipidIon) %>%
