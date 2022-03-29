@@ -228,7 +228,7 @@ ADViSELipidomics has a graphical user interface (GUI) implemented using the shin
 
 
 ## 3.1 Home section
-The Home section contains general information about ADViSELipidomics like the citation, the link to the GitHub page, and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
+The Home section includes general information about ADViSELipidomics like the citation, the link to the GitHub page, and the link to this manual. From the "Start!" button it is possible to go to the following section where the user can upload the lipidomic data.
 
 
 ## 3.2 Data Import & Preprocessing
