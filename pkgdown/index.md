@@ -8,7 +8,7 @@
 ### About
 This is the documentation of the ADViSELipidomics package. ADViSELipidomics is a novel Shiny app for the preprocessing, analysis, and visualization of lipidomics data. It copes with the outputs from LipidSearch and LIQUID for lipid identification and quantification, and with data available from the Metabolomics Workbench. ADViSELipidomics extracts information by parsing lipid species (using LIPID MAPS classification) and, together with information available on the samples, allows performing several exploratory and statistical analyses. In the presence of internal lipid standards in the experiment, ADViSELipidomics can normalize the data matrix, providing absolute values of concentration per lipid and sample. Moreover, it allows the identification of differentially abundant lipids in simple and complex experimental designs, dealing with batch effect correction.
 
-If you use **ADViSELipidomics** in your publications, I am appreciated if you can cite:
+If you use **ADViSELipidomics** in your publications, we appreciate if you can cite:
 
 E. Del Prete *et al.* (2022) ADViSELipidomics: a workflow for the analysis of lipidomics data DOI: ............
 
@@ -131,7 +131,7 @@ The Target File is an Excel file that contains all the information about your sa
 
 
 * **SampleID (LipidSearch, LIQUID, and User’s Excel)** this column contains the ID of each sample. To prevent errors, the best way to write the IDs is: "samplename_1" where in "samplename" you can write your sample name and "_1" represents the identification for the technical replicate. If your experiment doesn't have technical replicates, you can simply write "samplename". A good SampleID could be "AF-1C_1" if technical replicates are present, or "AF-1C" if not. A bad name could be "AF_1C_1" (with another underscore).
-*	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases, for each sample there are two different files. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"**.
+*	**File_name (LipidSearch, LIQUID)** this column contains the name of the data files coming from LipidSearch or LIQUID. In both cases, for each sample there are two different files. In LipidSearch you have a "deuterated" and a "nonlabeled" file, while in LIQUID you have a "positive" and a "negative" file. Depending on your data type, write both file names in the corresponding cell separated by a **semicolon ";"** without any space.
 * **Norm_factor (LipidSearch, LIQUID - optional)** If you need to normalize your data by a normalization factor, you can add this column and write a number (be careful with decimal points) for each sample. If it's not present, data won’t be normalized.
 
 In the picture below there is a Target File example where the mandatory columns are enlightened in yellow and the optional column in green. You can fill the Target File with any other informative column, just try to avoid special characters like \\^$?\*/|+()[]{} and whitespace. You can use - or _ instead of whitespace. 
@@ -189,14 +189,14 @@ The Internal Reference File example for the LIQUID option can be downloaded from
 In the case of LipidSearch, if you have Internal Standard, you can choose to use them or not. In this case, you need to upload also some Calibration Files which are two Excel Files and the data files coming from LipidSearch (here called concentration files). The concentration files are the same .txt files described in chapter 2.1. Please, refer to that chapter if you need more information about how to rename the files. Be sure that all the concentration files are inside a folder and they aren't mixed with the data files of chapter 2.1. 
 Next, ADViSELipidomics, requires two Calibration Excel files, one for the Nonlabeled and the other for the Deuterated. They share the same structure:
 
-* **Concentration (ng/mL)** the concentration of the standard
+* **Concentration (ng/mL)** the concentration of the standard (numeric)
 * **Class** the lipid classes of interest separated by a comma **,** (e.g. *PG,PS,PI,PE,SM,PC,TG,DG* )
-* **Name** the name of the data files coming from LipidSearch. They have to match perfectly with the file names. If you have technical replicates, separate them by a comma **,** (for example in the deuterated: *ISMix_5ugmL_deuterated_1,ISMix_5ugmL_deuterated_2,ISMix_5ugmL_deuterated_3*)
+* **Name** the name of the data files coming from LipidSearch. They have to match perfectly with the file names. If you have technical replicates, separate them by a **semicolon ";"** without any space. (for example in the deuterated: *ISMix_5ugmL_deuterated_1.txt;ISMix_5ugmL_deuterated_2.txt;ISMix_5ugmL_deuterated_3.txt*)
 
 The picture below shows an example of a Calibration Excel file for the deuterated. 
 
+![example_calibration_deuterated](https://user-images.githubusercontent.com/78078351/161043392-9f9f3038-95eb-4e30-a465-1780fa6220d5.png)
 
-![Screenshot (203)](https://user-images.githubusercontent.com/78078351/159525426-c776cb28-fa19-420b-9569-2143775edca5.png)
 
 An example for the Calibration Deuterated and Calibration Nonlabeled Excel files can be downloaded here:
 
