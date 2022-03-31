@@ -14,7 +14,6 @@
 #' @import dplyr
 #' @import shiny
 #' @importFrom readxl read_xlsx
-#' @importFrom tools file_path_sans_ext
 #' @importFrom readr read_delim
 #' @importFrom tibble as_tibble rownames_to_column
 #' @importFrom tidyr pivot_wider
@@ -47,12 +46,10 @@ caliblist_advise_lipidomics <- function(out,
     showNotification(tagList(icon("cogs"), HTML("&nbsp;Reading", "<b>", info, "</b>", "calibration targetfile...")), type = "default")
   }
   
-  name_file <- list.files(calibration_path)
-  
 
   calibration = calibration_targetfile
-  calibration$Class = strsplit(calibration$Class, split = ",")
-  calibration$Name = strsplit(calibration$Name, split = ",")
+  calibration$Class = strsplit(calibration$Class, split = ";")
+  calibration$Name = strsplit(calibration$Name, split = ";")
   calibration_list = list()
   
   # Creating calibration list
@@ -72,7 +69,7 @@ caliblist_advise_lipidomics <- function(out,
     conc_temp <- calibration[k,]
     our_file <- unlist(conc_temp$Name)
 
-    if (!all(our_file %in% tools::file_path_sans_ext(name_file))){
+    if (!all(our_file %in% list.files(calibration_path))){
       if(shiny::isRunning()){
         showNotification(tagList(icon("times-circle"), HTML("&nbsp;Calibration file missing!")), type = "error")
       }
@@ -80,7 +77,7 @@ caliblist_advise_lipidomics <- function(out,
       
     } else {
       for(kk in our_file){
-        conc_list[[kk]] <- readr::read_delim(paste0(calibration_path,kk,".txt"), "\t",
+        conc_list[[kk]] <- readr::read_delim(paste0(calibration_path,kk), "\t",
                                              escape_double = FALSE, trim_ws = TRUE, skip = 5, n_max = 1000000) ###aggiunta nmax
         conc_list[[kk]] <- conc_list[[kk]] %>% 
           dplyr::mutate(Area = if(class(conc_list[[kk]]$Area) == "character") {readr::parse_number(Area)}else{Area}) %>%

@@ -25,11 +25,17 @@ app_ui <- function(request) {
     
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "www/custom_notifications.css")),
     
+    #custom infobox with height fixed (for the citation)
+    tags$head(tags$style(HTML('.info-box {height: 90px;}'))),
+    
+    tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "www/custom_dashboardheader_title.css")),
 
     # Your application UI logic 
 
     dashboardPage(
-      dashboardHeader(title = "ADViSELipidomics", tags$li(class = "dropdown", actionBttn("jumptohome", icon = icon("home"), style = "stretch", size = "lg"))),
+      dashboardHeader(title = span(
+                                   tagList(tags$img(src = "www/NewLogoAL.png", width = "32px",style="margin-right: 4px;"), "ADViSELipidomics")),
+                      tags$li(class = "dropdown", actionBttn("jumptohome", icon = icon("home"), style = "stretch", size = "lg"))),
       
       
     dashboardSidebar(
@@ -75,12 +81,12 @@ app_ui <- function(request) {
              h3(strong("ADViSELipidomics")," is a Shiny app with a complete workflow preprocessing and analyzing 
                 lipidomics data from different sources. The user can upload the data files together with lipid 
                 and sample details, select filters and statistical methods to apply to the dataset, and obtain the 
-                results in the form of tables and interactive plots.",style = "color: #0e3d51;")
+                results as tables and interactive plots.",style = "color: #0e3d51;")
           ))),
           linebreaks(3),
           fluidRow(column(width = 12, style = "text-align:center",
                           actionButton("gotoimport", "Start!", icon = icon("rocket"),class = "btn btn-primary btn-lg", 
-                                       width = "250px", style='padding:10px; font-size:250%; font-weight: bold;'))),
+                                       width = "290px", style='padding:10px; font-size:310%; font-weight: bold;'))),
           linebreaks(5),
           fluidRow(
             shinydashboard::infoBox(width = 3, icon = icon("github"), title = "Bug reports", 
