@@ -58,8 +58,8 @@ Imports:
     cicerone,
     statmod,
     ggrepel,
-    ComplexHeatmap,
-    InteractiveComplexHeatmap,
+    ComplexHeatmap (>= 2.11.0),
+    InteractiveComplexHeatmap (>= 1.3.0),
     circlize,
     grid,
     dendextend,
@@ -85,9 +85,10 @@ biocViews:
     sva,
     fgsea,
     mixOmics,
-    metabolomicsWorkbenchR,
-    ComplexHeatmap,
-    InteractiveComplexHeatmap
+    metabolomicsWorkbenchR
+Remotes:
+	  github::jokergoo/ComplexHeatmap,
+	  github::jokergoo/InteractiveComplexHeatmap
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.1.2
