@@ -92,16 +92,17 @@ app_ui <- function(request) {
             shinydashboard::infoBox(width = 3, icon = icon("github"), title = "Bug reports", 
             subtitle = "If you encounter a bug or a problem click here and go to the GitHub page.", 
             color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T),
-          shinydashboard::infoBox(width = 6, icon = icon("newspaper"), title = "Citation",
-                                  subtitle = "Please cite our article (E. Del Prete, A. M. Campos, 
-                                    F. Della Rocca, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for the analysis of lipidomic data, Bioinformatics..., 2022) 
-                                    when you publish using this tool. ", color = "aqua", fill = T),
+          shinydashboard::infoBox(
+            width = 6, icon = icon("newspaper"), title = "Citation", color = "aqua", fill = T,
+            subtitle = "Please cite our article (E. Del Prete, A. M. Campos, 
+            F. Della Rocca, C. Gallo, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for the analysis of lipidomic data, 
+            Submitted to Bioinformatics, 2022) when you publish using this tool."),
           shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
                                   subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
                                   color = "aqua", href = "https://shinyfabio.github.io/ADViSELipidomics/", fill = T)
           ),
           linebreaks(2),
-          column(6, offset = 3, wellPanel(
+          column(8, offset = 2, wellPanel(
             h4("This work was supported by the project “Antitumor Drugs and Vaccines from the Sea 
                (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania
                FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer”—Action 1.2.1 and 1.2.2.")))
