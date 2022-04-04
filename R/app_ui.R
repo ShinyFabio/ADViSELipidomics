@@ -103,9 +103,9 @@ app_ui <- function(request) {
           ),
           linebreaks(2),
           column(8, offset = 2, wellPanel(
-            h4("This work was supported by the project “Antitumor Drugs and Vaccines from the Sea 
-               (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania
-               FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer”—Action 1.2.1 and 1.2.2.")))
+            h4("This work was supported by the project 'Antitumor Drugs and Vaccines from the Sea 
+               (ADViSE)' project (CUP B43D18000240007-SURF 17061BP000000011) funded by POR Campania
+               FESR 2014-2020 'Technology Platform for Therapeutic Strategies against Cancer'-Action 1.2.1 and 1.2.2.")))
 
         ),
         
