@@ -70,6 +70,8 @@ Once the installation is completed, run:
 library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
+A complete user guide is available at the following link:
+https://shinyfabio.github.io/ADViSELipidomics_book/
 
 ## Update
 
