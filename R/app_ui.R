@@ -99,7 +99,7 @@ app_ui <- function(request) {
             Submitted to Bioinformatics, 2022) when you publish using this tool."),
           shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
                                   subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
-                                  color = "aqua", href = "https://shinyfabio.github.io/ADViSELipidomics/", fill = T)
+                                  color = "aqua", href = "https://shinyfabio.github.io/ADViSELipidomics_book/", fill = T)
           ),
           linebreaks(2),
           column(8, offset = 2, wellPanel(
