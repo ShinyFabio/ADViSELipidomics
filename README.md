@@ -70,12 +70,20 @@ Once the installation is completed, run:
 library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
-A complete user guide is available at the following link:
+A complete **user guide** is available at the following link:
 https://shinyfabio.github.io/ADViSELipidomics_book/
 
 ## Update
 
 When a new ADViSELipidomics version is released, it can be updated with the same code for the installation.
+
+
+## Preview video
+
+A quick tour of ADViSELipidomics is available at the following link:
+
+[![Watch the video](https://img.youtube.com/vi/BumHf8gmH6I/hqdefault.jpg)](https://youtu.be/BumHf8gmH6I)
+
 
 ## Funding
 
