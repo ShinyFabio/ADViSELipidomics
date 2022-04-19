@@ -1192,12 +1192,12 @@ app_server <- function( input, output, session ) {
   ##### lipid species distribution barplot #####
   
   
-  observeEvent(sumexpdatamean(),{
+  observeEvent(data_for_taxa(),{
     #lipids class
-    updateSelectInput(session, "class_spec_dist", choices = unique(SummarizedExperiment::rowData(sumexpdatamean())$Class))
+    updateSelectInput(session, "class_spec_dist", choices = unique(SummarizedExperiment::rowData(data_for_taxa())$Class))
     
     #fill var
-    coln = sumexpdatamean() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% dplyr::select(!where(is.numeric)) %>% colnames()
+    coln = data_for_taxa() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% dplyr::select(!where(is.numeric)) %>% colnames()
     if("Product_Batch" %in% coln){
       sel = "Product_Batch"
     }else{sel = coln[1]}
@@ -1207,16 +1207,16 @@ app_server <- function( input, output, session ) {
   
   
   output$lipspec_barplot = renderPlotly({
-    req(sumexpdatamean())
+    req(data_for_taxa())
     
-    ass_mean = SummarizedExperiment::assay(sumexpdatamean())
+    ass_mean = SummarizedExperiment::assay(data_for_taxa())
     
-    rowd = SummarizedExperiment::rowData(sumexpdatamean()) %>% as.data.frame() %>% dplyr::select(Lipids, Class)
+    rowd = SummarizedExperiment::rowData(data_for_taxa()) %>% as.data.frame() %>% dplyr::select(Lipids, Class)
     ass_mean2 = ass_mean %>% as.data.frame() %>% tibble::rownames_to_column("Lipids") %>% dplyr::left_join(rowd, by = "Lipids")
     
     
     #filter by class
-    cold_mean = SummarizedExperiment::colData(sumexpdatamean()) %>% as.data.frame()
+    cold_mean = SummarizedExperiment::colData(data_for_taxa()) %>% as.data.frame()
     
     ass_mean_filt = ass_mean2 %>% dplyr::filter(Class == input$class_spec_dist) %>% dplyr::select(-Class) %>% 
       tibble::column_to_rownames("Lipids") %>% t() %>% as.data.frame() %>% tibble::rownames_to_column("SampleID") %>% 

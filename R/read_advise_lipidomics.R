@@ -68,7 +68,10 @@ read_advise_lipidomics <- function(out,
     if(data_type == "LipidSearch"){
       raw_list <- lapply(aux_name, function(x) {
         percentage <<- percentage + 1/length(file_list)*100
-        incProgress(1/length(file_list), detail = paste0("Progress: ",round(percentage,0), " %"))
+        if(shiny::isRunning()){
+          incProgress(1/length(file_list), detail = paste0("Progress: ",round(percentage,0), " %"))
+        }
+        
         temp_file = readr::read_delim(x, "\t", escape_double = FALSE, trim_ws = TRUE, skip = 5, n_max = 1000000)
         temp_file %>% dplyr::mutate(Area = if(class(temp_file$Area) == "character") {readr::parse_number(Area)}else{Area}) %>%
           dplyr::mutate(Area = replace(Area, Area <= 0 , NA))
@@ -83,11 +86,14 @@ read_advise_lipidomics <- function(out,
       if(sum(nas$NAs) > 0){
         if(shiny::isRunning()){
           showNotification(duration = 8, tagList(icon("exclamation-circle"), 
-                                 HTML("&nbsp;Some lipid areas (",sum(nas$NAs),"in total) are equal or less than 0 and will be replaced with NA. 
-                                      Check the console to see where NAs are introduced.")), type = "warning")
+                                 HTML("&nbsp;Some lipid areas (",sum(nas$NAs),"in total) are equal or less than 0 and will be removed. 
+                                      Check the console to see where.")), type = "warning")
+          message(paste0("Some lipid areas (",sum(nas$NAs)," in total) are equal or less than 0 and will be removed. Check the console to see where."))
         }
-        cat(crayon::bgYellow(crayon::red("NAs are introduced in the following samples.")))
+        cat(crayon::bgYellow(crayon::red("Some lipid areas are removed in the following samples.")))
         print(nas)
+        raw_list = lapply(raw_list, function(x) x %>% dplyr::filter(!is.na(Area)))
+        data_list = lapply(data_list, function(x) x %>% dplyr::filter(!is.na(Area)))
       }
 
     }

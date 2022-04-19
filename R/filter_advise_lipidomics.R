@@ -199,7 +199,7 @@ filter_advise_lipidomics <- function(out,
         max_dup = list()
         for(k in 1:length(dup)){
           all_dup[[k]] <- f[f$ObsMz == dup[k],]
-          max_dup[[k]] <- all_dup[[k]] %>% slice_max(Area,n = 1,with_ties = FALSE)
+          max_dup[[k]] <- all_dup[[k]] %>% dplyr::slice_max(Area,n = 1,with_ties = FALSE)
         }
         all_dup_df <- as.data.frame(do.call(rbind, all_dup))
         max_dup_df <- as.data.frame(do.call(rbind, max_dup))

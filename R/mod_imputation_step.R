@@ -172,15 +172,20 @@ mod_imputation_step_server <- function(id,parent, stepg, data_type){
       filterstep()$concentration_matrix_filt %>% dplyr::select(-1) %>% VIM::aggr(combined = input$vimopz_filt, cex.axis = 0.7, cex.lab = 0.7)
     })
     
-    #box table dimensions after na filtering
+    #box table dimensions before na filtering
     output$nadim1 = shinydashboard::renderInfoBox({
-      dim = dim(filterstep()$concentration_matrix[,-1])
+      data = filterstep()$concentration_matrix[,-1]
+      #remove rows all NAs
+      data = data[rowSums(is.na(data)) != ncol(data), ]
+      
+      dim = dim(data)
       shinydashboard::infoBox(
         title = div(HTML(paste0("Table dimension", br(), "before filtering")), style = "color:white; font-size:100%;"),
         value = div(paste0(dim[1], " x ", dim[2]), style = "font-size:140%"),
         icon = icon("table"), color = "yellow", fill = TRUE)
     })
     
+    #box table dimensions after na filtering
     output$nadim2 = shinydashboard::renderInfoBox({
       dim = dim(filterstep()$concentration_matrix_filt[,-1])
       shinydashboard::infoBox(
