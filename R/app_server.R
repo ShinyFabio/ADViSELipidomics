@@ -952,7 +952,7 @@ app_server <- function( input, output, session ) {
     }
     g = try(stats::prcomp(data, scale = input$scalepcalc))
     if(class(g) == "try-error"){
-      showNotification("Error in performing PCA. Too many NAs.", type = "error")
+      showNotification(paste0("Error in performing PCA. ",g[1]), type = "error")
       return(NULL)
     }else{
       showNotification("PCA performed.")
@@ -1754,9 +1754,10 @@ app_server <- function( input, output, session ) {
       } else {
         clust = cluster::clara(sumexpde_forclust(), k = input$selnumclust)
       }
-      factoextra::fviz_cluster(clust, data = sumexpde_forclust(), ellipse.type = "t", palette = "jco", ggtheme = theme_minimal())
+      factoextra::fviz_cluster(clust, data = sumexpde_forclust(), stand = FALSE, 
+                               ellipse.type = "t", palette = "jco", ggtheme = theme_minimal())
     } else {
-      hcluster = factoextra::eclust(sumexpde_forclust(), "hclust", hc_method = input$selhclustmeth, k = input$selnumclust)
+      hcluster = factoextra::eclust(sumexpde_forclust(), "hclust", stand = FALSE, hc_method = input$selhclustmeth, k = input$selnumclust)
       p1 = factoextra::fviz_dend(hcluster, palette = "jco", rect = TRUE, show_labels = T, cex = 0.7, ggtheme = theme_minimal())
       p2 = factoextra::fviz_silhouette(hcluster)
       gridExtra::grid.arrange(p1, p2, ncol = 2)
