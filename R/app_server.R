@@ -1203,6 +1203,12 @@ app_server <- function( input, output, session ) {
     }else{sel = coln[1]}
     
     updateSelectInput(session, "fill_spec_dist", choices = coln, selected = sel)
+    
+    coln2 = data_for_taxa() %>% SummarizedExperiment::colData() %>% as.data.frame()%>% colnames()
+    if("Product_Batch" %in% coln2){
+      sel2 = "Product_Batch"
+    }else{sel2 = coln2[1]}
+    updateSelectInput(session, "facet_spec_var", choices = coln2, selected = sel2)
   })
   
   
@@ -1220,8 +1226,8 @@ app_server <- function( input, output, session ) {
     
     ass_mean_filt = ass_mean2 %>% dplyr::filter(Class == input$class_spec_dist) %>% dplyr::select(-Class) %>% 
       tibble::column_to_rownames("Lipids") %>% t() %>% as.data.frame() %>% tibble::rownames_to_column("SampleID") %>% 
-      dplyr::left_join(dplyr::select(cold_mean, SampleID, input$fill_spec_dist), by = "SampleID") %>% 
-      tidyr::pivot_longer(cols = !c(input$fill_spec_dist, SampleID), names_to = "Lipids", values_to = "Value")
+      dplyr::left_join(dplyr::select(cold_mean, SampleID, input$fill_spec_dist,input$facet_spec_var), by = "SampleID") %>% 
+      tidyr::pivot_longer(cols = !c(input$fill_spec_dist, input$facet_spec_var, SampleID), names_to = "Lipids", values_to = "Value")
     
 
     if(input$summ_spec_dist == TRUE){
@@ -1236,7 +1242,10 @@ app_server <- function( input, output, session ) {
         geom_col(position = position_dodge2(preserve = "single")) + ylab(sumexp_all()$data_type) +
         theme(axis.text.x = element_text(angle = 315, hjust = 0), legend.title = element_blank())
     }
-
+    
+    if(input$facet_spec_dist == TRUE){
+      temp2 = temp2 + facet_grid(~get(input$facet_spec_var), scales = "free", switch = "x")
+    }
 
 
     plotly::ggplotly(temp2)

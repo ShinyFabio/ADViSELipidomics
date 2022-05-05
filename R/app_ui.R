@@ -530,7 +530,11 @@ app_ui <- function(request) {
                   condition = "input.selplotlip1 == 'Lipid species distribution'",
                   selectInput("class_spec_dist", "Select a lipid class", choices = ""),
                   selectInput("fill_spec_dist", "Select a fill variable", choices = ""),
-                  awesomeCheckbox("summ_spec_dist", "Summarise by fill variable", value = TRUE)
+                  awesomeCheckbox("summ_spec_dist", "Summarise by fill variable", value = TRUE),
+                  awesomeCheckbox("facet_spec_dist", "Faceting with a variable", value = FALSE),
+                  conditionalPanel(
+                    condition = "input.facet_spec_dist == true",
+                    selectInput("facet_spec_var", "Faceting variable", choices = ""))
                 ),
                 
                 #boxplot
@@ -725,7 +729,7 @@ app_ui <- function(request) {
                 conditionalPanel(
                   condition = "input.type_qualplots == 'Samples'",
                   conditionalPanel(condition = "input.selplot_samp == 'Barplot'",
-                                   shinycssloaders::withSpinner(plotly::plotlyOutput("concbarplot_samp"))
+                                   shinycssloaders::withSpinner(plotly::plotlyOutput("concbarplot_samp", height = "650px"))
                   ),
                   conditionalPanel(condition = "input.selplot_samp == 'Boxplot'",
                                    shinycssloaders::withSpinner(plotly::plotlyOutput("boxplot_density",height = "800px"))
@@ -739,7 +743,7 @@ app_ui <- function(request) {
                   condition = "input.type_qualplots == 'Lipids'",
                   #barplot
                   conditionalPanel(condition = "input.selplot_lip == 'Barplot'",
-                                   shinycssloaders::withSpinner(plotly::plotlyOutput("concbarplot_lip"))
+                                   shinycssloaders::withSpinner(plotly::plotlyOutput("concbarplot_lip",height = "500px"))
                   ),
                   
                   #boxplot
