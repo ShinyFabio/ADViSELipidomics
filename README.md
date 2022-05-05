@@ -58,8 +58,7 @@ library(devtools)
 install_github("ShinyFabio/ADViSELipidomics")
 ```
 
-Be careful that if you need to install many packages and you …with
-compilation the process could take a lot depending on your hardware and
+Be careful that if you need to install many packages and you decide to use compilation, the process could take a lot depending on your hardware and
 operating system.
 
 ## Usage
