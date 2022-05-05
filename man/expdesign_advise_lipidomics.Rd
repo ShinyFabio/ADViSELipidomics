@@ -33,7 +33,7 @@ batch_type = "fit". It can be "given" or "estimate". Default = "given".}
 (FALSE) or the dataset with the samples (TRUE). Default = FALSE.}
 
 \item{file_contrast}{Character string. It is the name of the file with the list of the
-comparisons (contrasts) of interest. Default = ""contrast_list.txt".}
+comparisons (contrasts) of interest. Default = "contrast_list.txt".}
 }
 \value{
 res: a list with results from the Summarized Experiment step, updated with the

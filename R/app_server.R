@@ -1430,10 +1430,17 @@ app_server <- function( input, output, session ) {
 
     ### LIPIDS
     #boxplot lipids
-    updateSelectInput(session, "concbox_samp", choices = substr(SummarizedExperiment::colData(sumexpdata())$SampleID, 1, nchar(SummarizedExperiment::colData(sumexpdata())$SampleID)-2))
+    
+    if(sumexp_all()$replicates == TRUE){
+      samples_id = SummarizedExperiment::colData(sumexpdatamean())$SampleID
+    }else{
+      samples_id = SummarizedExperiment::colData(sumexpdata())$SampleID
+    }
+    updateSelectInput(session, "concbox_samp", choices = samples_id)
+    
     updateSelectInput(session, "concbox_sampfill", choices = c("Class", colnames(SummarizedExperiment::colData(sumexpdata()))))
 
-    updateSelectInput(session, "concbox_samp2", choices = substr(SummarizedExperiment::colData(sumexpdata())$SampleID, 1, nchar(SummarizedExperiment::colData(sumexpdata())$SampleID)-2))
+    updateSelectInput(session, "concbox_samp2", choices = samples_id)
     updateSelectInput(session, "concbox_sampfill2", choices = c("Class", colnames(SummarizedExperiment::colData(sumexpdata()))))
   })
   
@@ -1602,7 +1609,7 @@ app_server <- function( input, output, session ) {
     box_data <- cbind(box_data, Class = sapply(strsplit(box_data$Lipid,"\\("), `[`, 1))
 
     bx_data2 = dplyr::filter(box_data, Sample == input$concbox_samp)
-    
+
     if(input$concbox_points == FALSE){
      plot = ggplot2::ggplot(bx_data2, aes_string(x = "Class", y = "Conc", fill = input$concbox_sampfill)) +geom_boxplot() +
       labs(y = y_box, title = paste0(sumexp_all()$data_type, " Boxplot (Lipids)")) 
@@ -1611,7 +1618,6 @@ app_server <- function( input, output, session ) {
         geom_point() + geom_jitter(width = 0.2) + labs( y = y_box, title = paste0(sumexp_all()$data_type, " Boxplot (Lipids)")) 
     }
 
-    
     plotly::ggplotly(plot)
 
   })

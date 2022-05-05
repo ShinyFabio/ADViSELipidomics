@@ -14,7 +14,7 @@
 #' @param rep_mean Logical value. It is for the selection of the dataset with the replicates
 #' (FALSE) or the dataset with the samples (TRUE). Default = FALSE.
 #' @param file_contrast Character string. It is the name of the file with the list of the
-#' comparisons (contrasts) of interest. Default = ""contrast_list.txt".
+#' comparisons (contrasts) of interest. Default = "contrast_list.txt".
 #'
 #' @return res: a list with results from the Summarized Experiment step, updated with the
 #' design matrix, the contrast matrix and the contrast vector (comparisons).
