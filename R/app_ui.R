@@ -534,7 +534,9 @@ app_ui <- function(request) {
                   awesomeCheckbox("facet_spec_dist", "Faceting with a variable", value = FALSE),
                   conditionalPanel(
                     condition = "input.facet_spec_dist == true",
-                    selectInput("facet_spec_var", "Faceting variable", choices = ""))
+                    selectInput("facet_spec_var", "Faceting variable", choices = "")),
+                  awesomeCheckbox("flip_spec", "Reverse axis", value = FALSE)
+                  
                 ),
                 
                 #boxplot

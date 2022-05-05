@@ -1246,6 +1246,10 @@ app_server <- function( input, output, session ) {
     if(input$facet_spec_dist == TRUE){
       temp2 = temp2 + facet_grid(~get(input$facet_spec_var), scales = "free", switch = "x")
     }
+    
+    if(input$flip_spec == TRUE){
+      temp2 = temp2 + coord_flip()
+    }
 
 
     plotly::ggplotly(temp2)
