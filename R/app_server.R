@@ -1027,7 +1027,7 @@ app_server <- function( input, output, session ) {
       data = log2(data)
     }
     g = try(stats::prcomp(data, scale = input$scalepcalc))
-    if(class(g) == "try-error"){
+    if(inherits(g, "try-error")){
       showNotification(paste0("Error in performing PCA. ",g[1]), type = "error")
       return(NULL)
     }else{
@@ -2015,7 +2015,7 @@ app_server <- function( input, output, session ) {
     }else{
       clust = try(factoextra::eclust(sumexpde_forclust(), "hclust", stand = FALSE,  k = 2))
       }
-    ifelse("try-error" %in% class(clust), TRUE, FALSE)
+    inherits(clust, "try-error")
   })
   outputOptions(output, "check_clustering", suspendWhenHidden = FALSE)
 

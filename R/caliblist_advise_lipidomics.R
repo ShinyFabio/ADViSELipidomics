@@ -80,7 +80,7 @@ caliblist_advise_lipidomics <- function(out,
         conc_list[[kk]] <- readr::read_delim(paste0(calibration_path,kk), "\t",
                                              escape_double = FALSE, trim_ws = TRUE, skip = 5, n_max = 1000000) ###aggiunta nmax
         conc_list[[kk]] <- conc_list[[kk]] %>% 
-          dplyr::mutate(Area = if(class(conc_list[[kk]]$Area) == "character") {readr::parse_number(Area)}else{Area}) %>%
+          dplyr::mutate(Area = if(inherits(conc_list[[kk]]$Area, "character")) {readr::parse_number(Area)}else{Area}) %>%
           dplyr::mutate(Area = replace(Area, Area <= 0 , NA)) %>%
           dplyr::select(LipidIon,Class,FattyAcid,Ion,ObsMz,TopRT,Area) %>%
           dplyr::filter(Class %in% calibration$Class[[k]]) %>%

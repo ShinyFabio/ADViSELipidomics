@@ -73,7 +73,7 @@ read_advise_lipidomics <- function(out,
         }
         
         temp_file = readr::read_delim(x, "\t", escape_double = FALSE, trim_ws = TRUE, skip = 5, n_max = 1000000)
-        temp_file %>% dplyr::mutate(Area = if(class(temp_file$Area) == "character") {readr::parse_number(Area)}else{Area}) %>%
+        temp_file %>% dplyr::mutate(Area = if(inherits(temp_file$Area, "character")) {readr::parse_number(Area)}else{Area}) %>%
           dplyr::mutate(Area = replace(Area, Area <= 0 , NA))
         })
       
