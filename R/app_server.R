@@ -462,7 +462,8 @@ app_server <- function( input, output, session ) {
     #not_na = sum(!is.na(x))
     if(num_na != 0){
       shinyWidgets::sendSweetAlert(session, title = "Missing values!", type = "warning", width = "600px",
-                                   text = div("There are some missing values. You should filter and imputate 
+                                   text = div("There are some missing values. Clustering, Dimensionality reduction and 
+                                              Enrichment Analysis may not work.You should filter and impute 
                      them in order to prevent errors.", style = "font-weight: bold;"))
       TRUE
     }
@@ -658,7 +659,8 @@ app_server <- function( input, output, session ) {
     num_na = sum(is.na(x))
     if(num_na != 0){
       shinyWidgets::sendSweetAlert(session, title = "Missing values!", type = "warning", width = "600px",
-                                   text = div("There are some missing values. You should filter and imputate 
+                                   text = div("There are some missing values. Clustering, Dimensionality reduction and 
+                                              Enrichment Analysis may not work.You should filter and impute 
                      them in order to prevent errors.", style = "font-weight: bold;"))
       TRUE
     }
@@ -826,7 +828,7 @@ app_server <- function( input, output, session ) {
   
 
   
-  sumexp_all = reactive({
+  sumexp_all_2 = reactive({
     checksumimport = tryCatch({sumexp_import()
       FALSE
     },shiny.silent.error = function(e) {TRUE})
@@ -870,6 +872,78 @@ app_server <- function( input, output, session ) {
     }
   })
   
+  observeEvent(sumexp_all_2(),{
+    updateSelectInput(session, "filt_by_target", choices = colnames(SummarizedExperiment::colData(sumexp_all_2()$sumexp_data)))
+    updateSelectInput(session, "filt_by_lipids", choices = unique(SummarizedExperiment::rowData(sumexp_all_2()$sumexp_data)$Class))
+  })
+  
+  observeEvent(input$filt_by_target,{
+    if(!is.null(sumexp_all_2())){
+      updateSelectInput(session, "filt_by_target_values", choices = unique(SummarizedExperiment::colData(sumexp_all_2()$sumexp_data)[,input$filt_by_target]))
+    }
+  })
+  
+  
+
+  sumexp_filt = eventReactive(input$gofilt_sumexp,{
+    req(sumexp_all_2())
+    
+    if(is.null(input$filt_by_target_values) && is.null(input$filt_by_lipids)){
+      shinyWidgets::show_alert(title = "Nothing to filter!", type = "warning", width = "600px",
+                               text = div("Please select something in the sample filtering or in the lipid class filtering.",
+                                          style = "font-weight: bold;"))
+      return(NULL)
+    }else{
+      filter_sumexp(data = sumexp_all_2(),
+                    filt_targ = input$filt_by_target,
+                    value_targ = input$filt_by_target_values,
+                    filt_class = input$filt_by_lipids)
+    }
+  })
+  
+  observe({
+    if(!is.null(sumexp_filt())){
+      print("ci sta il filtrato")
+    }else{
+      print("ci sta il default")
+    }
+  })
+  
+  
+  output$check_filt = reactive({
+    tryCatch({is.null(sumexp_filt())},
+                        shiny.silent.error = function(e) {
+                          return(TRUE)
+                        })
+  })
+  outputOptions(output, "check_filt", suspendWhenHidden = FALSE)
+  
+  sumexp_all = reactive({
+    req(sumexp_all_2())
+    check_filt = tryCatch({is.null(sumexp_filt())},
+             shiny.silent.error = function(e) {
+               return(TRUE)
+             })
+    if(check_filt == FALSE){
+      sumexp_filt()
+    }else{
+      sumexp_all_2()
+    }
+  })
+  
+
+  #### Download handler for the download button
+  output$down_filtsumexp <- downloadHandler(
+    #put the file name with also the file extension
+    filename = function() {
+      paste0("summ_EXP_filtered_", Sys.Date(), ".rds")
+    },
+
+    # This function should write data to a file given to it by the argument 'file'.
+    content = function(file) {
+      saveRDS(sumexp_filt(), file)
+    }
+  )
   
 
 
@@ -902,7 +976,8 @@ app_server <- function( input, output, session ) {
     if(input$sumexpselectobj == "colData"){
       SummarizedExperiment::colData(x) %>% as.data.frame()
     }else if(input$sumexpselectobj == "assays"){
-      SummarizedExperiment::assay(x) %>% as.data.frame()
+      SummarizedExperiment::assay(x) %>% as.data.frame() %>% 
+        DT::datatable(options = list(lengthMenu = c(10, 15, 25, 50), pageLength = 15, scrollX = TRUE, scrollY = 700))
     }else if(input$sumexpselectobj == "rowData"){
       row = SummarizedExperiment::rowData(x) %>% as.data.frame()
       temp = gsub(").*", ")", row$Lipids)
@@ -920,6 +995,7 @@ app_server <- function( input, output, session ) {
       )
       DT::datatable(row, rownames = T, 
                 options = list(
+                  lengthMenu = c(10, 15, 25, 50), pageLength = 15, scrollX = TRUE, scrollY = 700,
                   columnDefs = list(
                     list(targets = 1, render = DT::JS(render)),
                     list(targets = "_all", className = "dt-center")
@@ -929,7 +1005,7 @@ app_server <- function( input, output, session ) {
     }else{
       x@metadata %>% as.data.frame()
     }
-  },options = list(scrollX = TRUE, scrollY = "700px"))
+  },options = list(scrollX = TRUE, scrollY = 700, scrollCollapse = TRUE, lengthMenu = c(10, 15, 25, 50), pageLength = 15))
 
 
 
@@ -1055,20 +1131,43 @@ app_server <- function( input, output, session ) {
     updateSelectInput(session, "col3dlc", choices = data)
   })
 
+  ###### DA FARE L'UPDATE DI SLIDERINPUT
+  observeEvent(pcadata(),{
+    updateSliderInput(session, "N_filt_biplot", min = 1, max = length(pcadata()$center))
+  })
+  
   ###biplot
   output$biplotlc = plotly::renderPlotly({
     req(pcadata(), input$colbiplotlc)
     data_info = pcadata_info()
+    pcadata = pcadata()
+    
     data_info[,input$shpbiplotlc] = as.factor(data_info[,input$shpbiplotlc])
     data_info[,input$colbiplotlc] = as.factor(data_info[,input$colbiplotlc])
     x_axs = as.numeric(gsub("PC", "", input$firstPC))
     y_axs = as.numeric(gsub("PC", "", input$secondPC))
     
     if(input$selbiplotlc == "Biplot"){
-      temp = autoplot(pcadata(), x = x_axs, y = y_axs, data = data_info, shape = input$shpbiplotlc, colour = input$colbiplotlc, loadings = TRUE, loadings.colour = 'blue',
-                      loadings.label = TRUE, loadings.label.size = 4, title = "Biplot") + theme(legend.title = element_blank())
+      
+      #reduce the number of arrows
+      if(input$filt_biplot == TRUE){
+        loadpca = as.data.frame(pcadata$rotation[, c(x_axs,y_axs)]) #invece di loadings ci sono i rotation
+        pc1 = rownames(dplyr::arrange(loadpca, desc(abs(loadpca[,1])))[1:input$N_filt_biplot,])
+        pc2 = rownames(dplyr::arrange(loadpca, desc(abs(loadpca[,2])))[1:input$N_filt_biplot,])
+        lipids = unique(c(pc1,pc2))
+        
+        pcadata$rotation = as.data.frame(pcadata$rotation) %>% tibble::rownames_to_column("Lipids") %>% dplyr::filter(Lipids %in% lipids) %>%
+          tibble::column_to_rownames("Lipids")
+        pcadata$center = pcadata$center[lipids]
+        pcadata$scale = pcadata$scale[lipids]
+      }
+
+      
+      
+      temp = autoplot(pcadata, x = x_axs, y = y_axs, data = data_info, shape = input$shpbiplotlc, colour = input$colbiplotlc, loadings = TRUE, loadings.colour = 'blue',
+                      loadings.label = TRUE, loadings.label.size = 3, title = "Biplot") + theme(legend.title = element_blank())
     }else{
-      temp = autoplot(pcadata(), x = x_axs, y = y_axs, title = "Plot", data = data_info, shape = input$shpbiplotlc, colour = input$colbiplotlc) +
+      temp = autoplot(pcadata, x = x_axs, y = y_axs, title = "Plot", data = data_info, shape = input$shpbiplotlc, colour = input$colbiplotlc) +
         theme(legend.title = element_blank())
     }
 
@@ -1166,7 +1265,7 @@ app_server <- function( input, output, session ) {
       dplyr::mutate(Lipids = gsub("\\(.*", "", Lipids)) %>% dplyr::rename(Class = Lipids)
     
     taxa_long = taxabar %>% tidyr::pivot_longer(cols = 2:length(taxabar), names_to = "SampleID", values_to = "Concentration")
-    taxa_long2 = taxa_long %>% dplyr::group_by(Class, SampleID) %>% dplyr::summarise(dplyr::across(Concentration, sum))
+    taxa_long2 = taxa_long %>% dplyr::group_by(Class, SampleID) %>% dplyr::summarise(dplyr::across(Concentration, ~sum(.x, na.rm = TRUE)))
     
     if(input$annot_taxa != "No"){
       
@@ -1176,7 +1275,7 @@ app_server <- function( input, output, session ) {
 
       taxa = ggplot(taxa_long2, aes(x = SampleID, y = Concentration, fill = Class)) + geom_col(position = "fill") + 
         scale_y_continuous(breaks = scales::pretty_breaks(n = 10)) + ggtitle("Lipid class proportion") + 
-        facet_grid(~get(input$annot_taxa), scales = "free", switch = "x") + ylab(paste(sumexp_all()$data_type, "proportion")) +
+        facet_wrap(~get(input$annot_taxa), scales = "free_x", strip.position =  "top") + ylab(paste(sumexp_all()$data_type, "proportion")) +
         theme(axis.text.x = element_text(angle = 315, hjust = 0, size = size, margin=margin(t=30)),legend.title = element_blank())
     }else{
       taxa = ggplot(taxa_long2, aes(x = SampleID, y = Concentration, fill = Class)) + geom_col(position = "fill") + 
@@ -1189,6 +1288,19 @@ app_server <- function( input, output, session ) {
   })
 
 
+  output$taxabarplot_ui = renderUI({
+    req(data_for_taxa())
+    height = "650px"
+    
+    
+    if(input$annot_taxa != "No"){
+      n_coldata = data_for_taxa() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+        dplyr::pull(input$annot_taxa) %>% unique() %>% length()
+      if(n_coldata > 3){height = "850px"}
+    }
+    plotly::plotlyOutput("taxabarplot", height = height)
+    
+  })
   ##### lipid species distribution barplot #####
   
   
@@ -1210,6 +1322,7 @@ app_server <- function( input, output, session ) {
     }else{sel2 = coln2[1]}
     updateSelectInput(session, "facet_spec_var", choices = coln2, selected = sel2)
   })
+  
   
   
   output$lipspec_barplot = renderPlotly({
@@ -1244,7 +1357,8 @@ app_server <- function( input, output, session ) {
     }
     
     if(input$facet_spec_dist == TRUE){
-      temp2 = temp2 + facet_grid(~get(input$facet_spec_var), scales = "free", switch = "x")
+      
+      temp2 = temp2 + facet_wrap(~get(input$facet_spec_var), strip.position = "top") #scales = "free",
     }
     
     if(input$flip_spec == TRUE){
@@ -1369,6 +1483,25 @@ app_server <- function( input, output, session ) {
     sliderInput("sliderrowheat", "Row cluster number:", min = 2, max = len, value = 2, step = 1)
   })
   
+  
+  
+  #second filtering
+  output$checkadd2filt_heat = reactive({
+    if(input$add2filter_heat %%2 == 0){
+      "onevar"
+    }else{"twovar"}
+  })
+  outputOptions(output, "checkadd2filt_heat", suspendWhenHidden = FALSE)
+  
+  observeEvent(input$add2filter_heat,{
+    if(input$add2filter_heat %%2 == 1){
+      updateButton(session, "add2filter_heat",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
+    }else{
+      updateButton(session, "add2filter_heat", label = HTML("&nbsp;Add"), style="success", icon("plus"))
+    }
+  })
+  
+  
   observeEvent(dataforheatmap(),{
     if("Product_Batch" %in% colnames(SummarizedExperiment::colData(dataforheatmap()))){
       sel = "Product_Batch"
@@ -1387,23 +1520,136 @@ app_server <- function( input, output, session ) {
     #filtering
     filtcols = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
       dplyr::select(where(~length(unique(.))>1)) %>% colnames()
-    updateSelectInput(session, "filtheatmapcol",  choices = c("none", filtcols))
+    updateSelectInput(session, "filtheatmapcol",  choices =  filtcols)
+    
+    updateSelectInput(session, "filtheatmapcol2",  choices =  filtcols)
   })
   
 
   observeEvent(input$filtheatmapcol,{
-    if(input$filtheatmapcol != "none"){
+    if(input$filtheatmapcol != "" && !is.null(input$filtheatmapcol)){
       vals = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
         dplyr::pull(input$filtheatmapcol) %>% unique()%>% as.character()
       updateSelectInput(session, "filtheatmapval",  choices = vals)
     }
   })
-
-  dataheat = reactive({
+  
+  observeEvent(input$filtheatmapcol2,{
+    if(input$filtheatmapcol2 != "" && !is.null(input$filtheatmapcol2) && !is.null(input$filtheatmapval)){
+      vals = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+        dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval) %>% 
+        dplyr::pull(input$filtheatmapcol2) %>% unique()%>% as.character()
+      updateSelectInput(session, "filtheatmapval2",  choices = vals)
+    }
+  })
+  
+  
+  
+  observeEvent(input$gofilter_heat,{
+    if(!is.null(dataforheatmap()) && !is.null(input$filtheatmapval)){
+      coldata = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+        dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval)
+      
+      #second filtering
+      if(input$add2filter_heat %%2 == 1 && !is.null(input$filtheatmapval2)){
+        coldata = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+          dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval & !!sym(input$filtheatmapcol2) %in% input$filtheatmapval2)
+      }
+      
+      assay = dataforheatmap() %>% SummarizedExperiment::assay() %>% dplyr::select(rownames(coldata))
+      if(dim(assay)[2] <= 1){
+        shinyWidgets::show_alert(title ="Warning!",type = "warning",
+                                 text = "Your filter returns a matrix with only one column. Dendrograms and scaling on column are disabled.")
+        updateSelectInput(session, "selscaleheat", choices = c("None" = "none", "By row" = "row"))
+        updateMaterialSwitch(session, "rowdend", value = FALSE)
+        updateMaterialSwitch(session, "columndend", value = FALSE)
+        shinyjs::disable("rowdend")
+        shinyjs::disable("columndend")
+      }else{
+        shinyWidgets::show_alert(title ="Filter applied!",type = "success",
+                                 text = "Your filter is correctly applied.")
+        updateSelectInput(session, "selscaleheat", choices = c("None" = "none", "By row" = "row", "By column" = "column"))
+        shinyjs::enable("rowdend")
+        shinyjs::enable("columndend")
+      }
+    }
+  })
+  
+  observeEvent(input$filter_heatmap,{
+    if(input$filter_heatmap == FALSE){
+      updateSelectInput(session, "selscaleheat", choices = c("None" = "none", "By row" = "row", "By column" = "column"))
+    }
+  })
+  
+  
+  dataforheatmap_filtered = eventReactive(input$gofilter_heat,{
     req(dataforheatmap())
+    if(is.null(input$filtheatmapval)){
+      showNotification(tagList(icon("times-circle"), HTML("&nbsp;Select at least one value in the 'Value filtering'.")), type = "error")
+    }
+    validate(need(!is.null(input$filtheatmapval), "Select at least one value in the Value filtering."))
+    coldata = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+      dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval)
+    
+    #second filtering
+    if(input$add2filter_heat %%2 == 1){
+      if(is.null(input$filtheatmapval2)){
+        showNotification(tagList(icon("times-circle"), HTML("&nbsp;Select at least one value in the 'Value filtering' (2).")), type = "error")
+      }else{
+        validate(need(!is.null(input$filtheatmapval2), "Select at least one value in the Value filtering (2)."))
+        coldata = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+          dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval & !!sym(input$filtheatmapcol2) %in% input$filtheatmapval2)
+      }
+    }
+
+    
+    assay = dataforheatmap() %>% SummarizedExperiment::assay() %>% dplyr::select(rownames(coldata))
+    list(coldata = coldata, 
+         assay = assay, 
+         rowdata = dataforheatmap() %>% SummarizedExperiment::rowData())
+  })
+
+
+  
+  dataheat = eventReactive(input$makeheatmap,{
+    req(dataforheatmap())
+    #filter data?
+    if(input$filter_heatmap == TRUE){
+      validate(need(!is.null(input$filtheatmapval), "Select at least one value in the 'Value filtering'."))
+      
+      #check if gofilter_heat is clicked again
+      coldata2 = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+        dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval)
+      
+      #second filtering
+      if(input$add2filter_heat %%2 == 1 && !is.null(input$filtheatmapval2)){
+        validate(need(!is.null(input$filtheatmapval2), "Select at least one value in the 'Value filtering' (2)."))
+        coldata2 = dataforheatmap() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
+          dplyr::filter(!!sym(input$filtheatmapcol) %in% input$filtheatmapval & !!sym(input$filtheatmapcol2) %in% input$filtheatmapval2)
+      }
+      
+      check_heatfilt = tryCatch({is.null(dataforheatmap_filtered())},
+      shiny.silent.error = function(e) {return(TRUE)})
+
+      if(check_heatfilt){
+        show_alert("Warning!", "If you want to use a filter on data, be sure to apply it by clicking on the 'Apply filtering' button", type = "warning")
+        return(NULL)
+      }else if(!isTRUE(all.equal(coldata2, dataforheatmap_filtered()$coldata))){
+        show_alert("Warning!", "You changed something in the data filtering without apply changes. Please click on the 'Apply filtering' button", type = "warning")
+        return(NULL)
+      }else{
+        data_heat = dataforheatmap_filtered()
+      }
+      
+    }else{
+      data_heat = list(coldata = as.data.frame(SummarizedExperiment::colData(dataforheatmap())), 
+           assay = SummarizedExperiment::assay(dataforheatmap()), 
+           rowdata = dataforheatmap() %>% SummarizedExperiment::rowData())
+    }
+    
     make_heatmap(
-      data = dataforheatmap(),
-      filter = c(input$filtheatmapcol, input$filtheatmapval),
+      data = data_heat,
+      #filter = c(input$filtheatmapcol, input$filtheatmapval),
       add_rowannot = input$selectannot_row,
       add_colannot = input$selectannot_col,
       log_data = input$logheat,
@@ -1420,9 +1666,11 @@ app_server <- function( input, output, session ) {
     )
   })
 
-  
-  observeEvent(input$makeheatmap,{
-    InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(input, output, session, dataheat(), heatmap_id  = "heatmap_output")
+
+  observeEvent(dataheat(),{
+    if(!is.null(dataheat())){
+      InteractiveComplexHeatmap::makeInteractiveComplexHeatmap(input, output, session, dataheat(), heatmap_id  = "heatmap_output")
+    }
   })
   
   
@@ -1483,7 +1731,7 @@ app_server <- function( input, output, session ) {
     }
     se_data = SummarizedExperiment::assay(se_data1)
     
-    sum_data <- data.frame(Sum_conc = apply(se_data, 2, function(x) sum(x)))
+    sum_data <- data.frame(Sum_conc = apply(se_data, 2, function(x) sum(x, na.rm = T)))
     if(input$plotsamp_log == TRUE){
       sum_data = log2(sum_data)
       y_sm = paste0("Log2(", sumexp_all()$data_type, " Sum)")
@@ -1500,6 +1748,7 @@ app_server <- function( input, output, session ) {
       geom_bar(stat = "identity") +
       labs(x = "Samples", y = y_sm, title = paste0(sumexp_all()$data_type, " Barplot (Samples)")) +
       theme(axis.text.x = element_text(angle = -90, vjust = 0.5))
+    
 
     plotly::ggplotly(sample_barplot)
 
@@ -1570,6 +1819,9 @@ app_server <- function( input, output, session ) {
   
   ####### LIPIDS #_______________________________________________________________
   
+    observeEvent(sumexpdata(),{
+      updateSelectInput(session, "filtclass_concbar", choices = unique(SummarizedExperiment::rowData(sumexpdata())$Class))
+    })
     
   # Concentration Barplot (Lipids)
   output$concbarplot_lip = renderPlotly({
@@ -1583,17 +1835,41 @@ app_server <- function( input, output, session ) {
       cv_data = se_data
       y_cv = paste0("% CV ",sumexp_all()$data_type)
     }
-    cv_data <- data.frame(cv_conc = apply(cv_data, 1, function(x) sd(as.numeric(x))/mean(as.numeric(x)) * 100))
+    cv_data <- data.frame(cv_conc = apply(cv_data, 1, function(x) sd(as.numeric(x),na.rm = T)/mean(as.numeric(x), na.rm = T) * 100))
     cv_data$Lipid <- factor(rownames(cv_data), levels = rownames(cv_data))
     cv_data$Class <- SummarizedExperiment::rowData(sumexpdata())$Class
-
+    if(!is.null(input$filtclass_concbar)){
+      cv_data <- cv_data %>% dplyr::filter(Class %in% input$filtclass_concbar)
+    }
+    
     plot = ggplot2::ggplot(cv_data, aes(x = forcats::fct_rev(Lipid), y = cv_conc, fill = Class)) +
-      geom_bar(stat = "identity") + labs(x = "Lipids", y = y_cv, title = paste0(sumexp_all()$data_type, " Barplot (Lipids)")) +
-      theme(axis.text.x = element_text(angle = -90, size = 7))
+      geom_bar(stat = "identity") + labs(x = "Lipids", y = y_cv, title = paste0(sumexp_all()$data_type, " Barplot (Lipids)"))
+    
+    if(input$flip_concbar == TRUE){
+      plot = plot + coord_flip() + theme(axis.text.y = element_text(size = 7))
+    }else{
+      plot = plot +theme(axis.text.x = element_text(angle = -90, size = 7))
+    }
+    
     plotly::ggplotly(plot)
 
   })
 
+  output$concbarplot_lip_UI = renderUI({
+    
+    if(input$flip_concbar == TRUE){
+      classes = SummarizedExperiment::rowData(sumexpdata()) %>% as.data.frame() 
+      if(!is.null(input$filtclass_concbar)){
+        classes <- classes %>% dplyr::filter(Class %in% input$filtclass_concbar)
+      }
+      nbars = dim(classes)[1]
+      size_plot = 84 + (640*nbars)/(55 + nbars/10) #640 found with html inspect when 50 prod are shown.
+      
+      plotly::plotlyOutput("concbarplot_lip", height = paste0(size_plot,"px"))
+    }else{
+      plotly::plotlyOutput("concbarplot_lip", height = "600px")
+    }
+  })
   
   #Plots: Concentration Boxplot (Lipids)
   output$concboxplot_samp = renderPlotly({
@@ -1729,6 +2005,19 @@ app_server <- function( input, output, session ) {
     }else{data}
   })
   
+
+
+  #check if distance matrix can be calculated
+  output$check_clustering = reactive({
+    req(sumexpde_forclust())
+    if(input$selclustmethod == "Partitioning"){
+      clust = try(stats::kmeans(sumexpde_forclust(), centers = 2, nstart = 25))
+    }else{
+      clust = try(factoextra::eclust(sumexpde_forclust(), "hclust", stand = FALSE,  k = 2))
+      }
+    ifelse("try-error" %in% class(clust), TRUE, FALSE)
+  })
+  outputOptions(output, "check_clustering", suspendWhenHidden = FALSE)
 
   
   # plots for clusters number choice
@@ -2109,8 +2398,11 @@ app_server <- function( input, output, session ) {
 
 
   observeEvent(expdesign(), {
-    updateSelectInput(session, "expdes_colmaplot", choices = colnames(expdesign()$contrast_matrix))
-    updateSelectInput(session, "sel_toptable", choices = colnames(expdesign()$contrast_matrix))
+    contrast = c(colnames(expdesign()$contrast_matrix))
+    names(contrast) = gsub("vs"," vs ", contrast)
+    
+    updateSelectInput(session, "expdes_colmaplot", choices = contrast)
+    updateSelectInput(session, "sel_toptable", choices = contrast)
   })
   
   output$toptable = DT::renderDT({
@@ -2154,7 +2446,9 @@ app_server <- function( input, output, session ) {
 
 
   observeEvent(expdesign(),{
-    updateSelectInput(session, "venncontrast", choices = colnames(expdesign()$test_result), selected = colnames(expdesign()$test_result))
+    contrast = c(colnames(expdesign()$test_result))
+    names(contrast) = gsub("vs"," vs ", contrast)
+    updateSelectInput(session, "venncontrast", choices = contrast, selected = contrast)
   })
 
 # Differential expressed lipids Venn diagram
@@ -2247,7 +2541,7 @@ output$upsetplot = renderPlot({
     need(all(expdesign()$test_result == 0) == FALSE, "No DC Lipids into the contrasts.")
   )
 
-  comb_mat <- ComplexHeatmap::make_comb_mat(expdesign()$test_result)
+  comb_mat <- ComplexHeatmap::make_comb_mat(abs(expdesign()$test_result))
   cs = ComplexHeatmap::comb_size(comb_mat)
   cm_degree = ComplexHeatmap::comb_degree(comb_mat)
   aux_color <- grDevices::colorRampPalette(RColorBrewer::brewer.pal(12,"Paired"))
@@ -2264,7 +2558,7 @@ output$upsetplot = renderPlot({
                ),
                annotation_name_side = "left",
                annotation_name_rot = 0),
-             right_annotation = ComplexHeatmap::upset_right_annotation(comb_mat, add_numbers = TRUE),
+             right_annotation = ComplexHeatmap::upset_right_annotation(comb_mat, add_numbers = TRUE)
   )
   ht = ComplexHeatmap::draw(ht)
   od = ComplexHeatmap::column_order(ht)
@@ -2279,7 +2573,9 @@ output$upsetplot = renderPlot({
 
 ##### Enrichment ####
 observeEvent(expdesign(),{
-  updateSelectInput(session, "enrich_selcont", choices = names(expdesign()$limma_result))
+  contrast = c(names(expdesign()$limma_result))
+  names(contrast) = gsub("vs"," vs ", contrast)
+  updateSelectInput(session, "enrich_selcont", choices = contrast)
 })
 
 output$enrich_plot = renderPlot({
@@ -2366,7 +2662,7 @@ output$plotindiv_pls = renderPlot({
 output$plotvar_pls = renderPlot({
   req(plsda())
   validate(need(input$plsda_ncomp > 1, "PLS-DA plots require at least 2 components."))
-  mixOmics::plotVar(plsda())
+  mixOmics::plotVar(plsda(), cex = 3.5)
 })
 
 perf.plsda = eventReactive(input$gotunepls,{

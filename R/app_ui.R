@@ -346,7 +346,7 @@ app_ui <- function(request) {
                 ### ASSAY
                 conditionalPanel(condition = "output.checkcold == false",
                   hr(),
-                  fileInput("assayinput", "File assay (.xlsx)", accept = ".xlsx"),
+                  fileInput("assayinput", "Data matrix (.xlsx)", accept = ".xlsx"),
                   conditionalPanel(condition = "output.checkassay == false",
                       selectInput("typedata_assay", choices = c("Concentration", "Area", "Peak intensity"),
                                   label = tags$span("Select the assay measure", 
@@ -481,17 +481,49 @@ app_ui <- function(request) {
               column(
                 width = 7, style="padding-left: 0px;",
                 dropdownButton(
+                  circle = TRUE, status = "danger", icon = icon("cog"), width = "300px",
+                  #tooltip only works if the text is in one line
+                  tooltip = tooltipOptions(title = "Here you can decide which part of the Summarized Experiment to show and also generate a filtered version of it (both filtering on lipids and samples)."),
                   selectInput("sumexpselectobj", "Select what to show", choices = c("colData", "rowData", "assays",  "metadata"), multiple = FALSE),
                   conditionalPanel(condition = "output.check_replicates == true",
                                    h5(strong("Summarized data")),
                                    materialSwitch("summ_viewtable", value = FALSE, status = "primary")
                   ),
-                  circle = TRUE, status = "danger", icon = icon("cog"), width = "300px",
-                  tooltip = tooltipOptions(title = "Click to see inputs !"))
+                  div(actionButton("filt_yourdata", "Filter data", icon("edit"), style ="font-size:120%"), style = "text-align:center")
+                )
                 )
               )),
             
-            shinycssloaders::withSpinner(DT::DTOutput("dtsumexp"))
+            shinyBS::bsModal(
+              "filt_yourdata_modal", "Filter data", trigger = "filt_yourdata", size = "large",
+              fluidRow(
+                column(
+                  6,
+                  box(
+                    width = NULL, status = "primary", title = "Filter samples", solidHeader = TRUE,
+                    fluidRow(
+                      column(6, selectInput("filt_by_target", "Select a variable", choices = "")),
+                      column(6, selectInput("filt_by_target_values", "Select the value(s)", choices = "", multiple = TRUE))
+                    )
+                  )
+                ),
+                column(
+                  6,
+                  box(width = NULL, status = "primary", title = "Filter lipids", solidHeader = TRUE,
+                    selectInput("filt_by_lipids", "Filter by lipid class", choices = "", multiple = TRUE)
+                  )
+                )
+              ),
+              
+              fluidRow(
+                column(4,offset = 2, actionButton("gofilt_sumexp", "Apply filter", icon("cogs"), style='font-size:140%; font-weight: bold;')),
+                column(4, offset = 2, conditionalPanel(
+                  condition = "output.check_filt == false", downloadButton("down_filtsumexp", "Download", style='font-size:140%; font-weight: bold;')
+                ))
+              )
+                             
+            ),
+            DT::DTOutput("dtsumexp")
             
             ),
         
@@ -558,7 +590,7 @@ app_ui <- function(request) {
               column(width=9, offset = 1, shinycssloaders::withSpinner(uiOutput("lipidsplot")))
             ),
             conditionalPanel(condition = "input.selplotlip1 == 'Lipid class proportion'",
-              column(10, shinycssloaders::withSpinner(plotly::plotlyOutput("taxabarplot",height = "650px"))),
+              column(10, shinycssloaders::withSpinner(uiOutput("taxabarplot_ui"))),
             ),
             conditionalPanel(
               condition = "input.selplotlip1 == 'Lipid species distribution'",
@@ -596,15 +628,31 @@ app_ui <- function(request) {
         tabPanel("Heatmap",
           sidebarLayout(
             sidebarPanel(width = 3,
-              div(actionButton("makeheatmap", label = "Make Heatmap", class = "btn btn-primary btn-lg", width = "140px", style='padding:5px; font-size:130%; font-weight: bold;'), align= "center"),
+              div(actionButton("makeheatmap", label = "Make Heatmap", icon = icon("cogs"),class = "btn btn-primary btn-lg", width = "190px", style='padding:5px; font-size:140%; font-weight: bold;'), align= "center"),
               br(),
               h4(strong("Preprocessing")),
-              fluidRow(
-              column(6, selectInput("filtheatmapcol", "Column filtering", choices = "none")),
-              column(6, conditionalPanel(
-                condition = "input.filtheatmapcol != 'none'",
-                selectInput("filtheatmapval","Value filtering", choices = "")
-              ))),
+              awesomeCheckbox("filter_heatmap", "Filter data", value = FALSE),
+              
+              conditionalPanel(
+                condition = "input.filter_heatmap == true",
+                fluidRow(
+                  column(6, selectInput("filtheatmapcol", "Column filtering", choices = "")),
+                  column(6, selectInput("filtheatmapval", "Value filtering", choices = "", multiple = TRUE))
+                ),
+                
+                fluidRow(
+                  conditionalPanel(
+                    condition = "output.checkadd2filt_heat == 'twovar'",
+                    column(6, selectInput("filtheatmapcol2", "Column filtering", choices = "")),
+                    column(6, selectInput("filtheatmapval2", "Value filtering", choices = "", multiple = TRUE)))
+                ),
+                fluidRow(
+                  column(5,offset = 1, bsButton("add2filter_heat", label = HTML("&nbsp;Add"), style="success", icon("plus"))),
+                  column(6, actionButton("gofilter_heat", "Apply filtering"))
+                )
+              ),
+
+              hr(),
               awesomeCheckbox("logheat", "Log2 scale", value = FALSE),
               fluidRow(
                 column(6,
@@ -624,9 +672,9 @@ app_ui <- function(request) {
               ),
               
               hr(),
-              h4(strong("Dendrogramm options")),
+              h4(strong("Dendrogram options")),
               ###dendrogramm on column or row?
-              h5(strong("Where to show dendrogramm")),
+              h5(strong("Where to show dendrograms")),
               fluidRow(
                 column(6, materialSwitch(inputId = "rowdend", label = "Row",  value = TRUE, status = "primary", width = "90%")),
                 column(6, materialSwitch(inputId = "columndend", label = "Column",  value = TRUE, status = "primary", width = "90%"))
@@ -702,6 +750,8 @@ app_ui <- function(request) {
                   conditionalPanel(
                     condition = "input.selplot_lip == 'Barplot'",
                     awesomeCheckbox("concbar_log", "Log scale", value = TRUE),
+                    selectInput("filtclass_concbar", "Filter by lipid class", choices = "", multiple = TRUE),
+                    awesomeCheckbox("flip_concbar", "Reverse axis", value = FALSE),
                   ),
                   
                   #boxplots
@@ -745,7 +795,7 @@ app_ui <- function(request) {
                   condition = "input.type_qualplots == 'Lipids'",
                   #barplot
                   conditionalPanel(condition = "input.selplot_lip == 'Barplot'",
-                                   shinycssloaders::withSpinner(plotly::plotlyOutput("concbarplot_lip",height = "500px"))
+                                   shinycssloaders::withSpinner(uiOutput("concbarplot_lip_UI"))
                   ),
                   
                   #boxplot
@@ -786,7 +836,18 @@ app_ui <- function(request) {
                 div(actionButton("gopca", "Perform PCA", icon("cogs")), style = "text-align:center;"),
                 hr(),
                 selectInput("firstPC", "First PC", choices = ""),
-                selectInput("secondPC", "Second PC", choices = "")
+                selectInput("secondPC", "Second PC", choices = ""),
+                conditionalPanel(
+                  condition = "input.selbiplotlc == 'Biplot'",
+                  awesomeCheckbox("filt_biplot", "Filter first N lipids (biplot)", value = TRUE),
+                  conditionalPanel(
+                    condition = "input.filt_biplot == true",
+                    bsplus::bs_embed_tooltip(
+                      sliderInput("N_filt_biplot", "N lipids", value = 15, min = 1, max = 50),
+                      "Biplot will show the first N lipids (arrows) for each PC in descending order of loadings."
+                    )
+                  )
+                )
               ),
               
               mainPanel(width = 10,
@@ -998,8 +1059,15 @@ app_ui <- function(request) {
                         selectInput("selhclustmeth", "Agglomeration method", choices = c("single", "complete", "ward.D", "ward.D2"), selected = "ward.D2"))
                   )
                 )
-              ), 
-              fluidRow(shinycssloaders::withSpinner(plotOutput("plotcluster", height = "600px")))
+              ),
+              conditionalPanel(
+                condition = "output.check_clustering == true",
+                h3(strong("Error in clustering! Probably there are too many missing values.", style = "color:red"))
+              ),
+              conditionalPanel(
+                condition = "output.check_clustering == false",
+                fluidRow(shinycssloaders::withSpinner(plotOutput("plotcluster", height = "600px")))
+              )
             )
           )
         )

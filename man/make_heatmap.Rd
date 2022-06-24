@@ -6,7 +6,6 @@
 \usage{
 make_heatmap(
   data,
-  filter = "none",
   add_rowannot = "Product_Batch",
   add_colannot = "Class",
   log_data = FALSE,
@@ -26,8 +25,6 @@ make_heatmap(
 }
 \arguments{
 \item{data}{A summarizedexperiment object. Tested only on sumexp averaged}
-
-\item{filter}{Character vector. The filtering on column by value. For example: c(input$filtheatmapcol, input$filtheatmapval).}
 
 \item{add_rowannot}{A column used for the left (row) annotation (e.g. "Product_Batch")}
 
@@ -58,6 +55,8 @@ make_heatmap(
 \item{col_label_size}{Size of the column labels. By default col_label_size = 10.}
 
 \item{padding}{padding for the heatmap in mm. By default padding = c(2,2,2,15).}
+
+\item{filter}{Character vector. The filtering on column by value. For example: c(input$filtheatmapcol, input$filtheatmapval).}
 }
 \description{
 This function render a Heatmap using ComplexHeatmap package.

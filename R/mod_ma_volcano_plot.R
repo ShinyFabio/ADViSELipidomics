@@ -65,7 +65,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = 0) +
             geom_hline(yintercept = logfc_val(), linetype = "dotted", size = 1) +  #qui ci stava lfc
             geom_hline(yintercept = -logfc_val(), linetype = "dotted", size = 1) +  #anche qui lfc
-            ggtitle(paste("MA Plot:", contrast())) + theme(legend.title = element_blank())
+            ggtitle(paste("MA Plot:", gsub("vs"," vs ",contrast()))) + theme(legend.title = element_blank())
           plotly::ggplotly(ma_plot2) %>% plotly::layout(legend = list(title = list(text = "DC, Class")))
           
         }else{
@@ -76,7 +76,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = 0) +
             geom_hline(yintercept = logfc_val(), linetype = "dotted", size = 1) +  #qui ci stava lfc
             geom_hline(yintercept = -logfc_val(), linetype = "dotted", size = 1) +  #anche qui lfc
-            ggtitle(paste("MA Plot:", contrast())) + theme(legend.title = element_blank())
+            ggtitle(paste("MA Plot:", gsub("vs"," vs ",contrast()))) + theme(legend.title = element_blank())
           plotly::ggplotly(ma_plot) %>% plotly::layout(legend = list(title = list(text = "DC")))
         }
       }else{
@@ -88,7 +88,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = -log10(as.numeric(thresh())), linetype = "dotted", size = 1) +
             geom_vline(xintercept = logfc_val(), linetype = "dotted", size = 1) +
             geom_vline(xintercept = -logfc_val(), linetype = "dotted", size = 1) +
-            ggtitle(paste("Volcano Plot:", contrast())) +
+            ggtitle(paste("Volcano Plot:", gsub("vs"," vs ",contrast()))) +
             labs(shape = "DC", colour = "Class") + theme(legend.title = element_blank())
           plotly::ggplotly(volcano_plot2) %>% plotly::layout(legend = list(title = list(text = "DC, Class")))
         }else{
@@ -100,7 +100,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = -log10(as.numeric(thresh())), linetype = "dotted", size = 1) +
             geom_vline(xintercept = logfc_val(), linetype = "dotted", size = 1) +
             geom_vline(xintercept = -logfc_val(), linetype = "dotted", size = 1) +
-            ggtitle(paste("Volcano Plot:", contrast())) + theme(legend.title = element_blank())
+            ggtitle(paste("Volcano Plot:", gsub("vs"," vs ",contrast()))) + theme(legend.title = element_blank())
           plotly::ggplotly(volcano_plot1) %>% plotly::layout(legend = list(title = list(text = "DC")))
         }
       }
@@ -119,7 +119,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = 0) +
             geom_hline(yintercept = logfc_val(), linetype = "dotted", size = 1) +  #qui ci stava lfc
             geom_hline(yintercept = -logfc_val(), linetype = "dotted", size = 1) +  #anche qui lfc
-            ggtitle(paste("MA Plot:", contrast())) + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
+            ggtitle(paste("MA Plot:", gsub("vs"," vs ",contrast()))) + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
           
         }else{
           #MA plot con DE
@@ -129,7 +129,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = 0) +
             geom_hline(yintercept = logfc_val(), linetype = "dotted", size = 1) +  #qui ci stava lfc
             geom_hline(yintercept = -logfc_val(), linetype = "dotted", size = 1) +  #anche qui lfc
-            ggtitle(paste("MA Plot:", contrast())) + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
+            ggtitle(paste("MA Plot:", gsub("vs"," vs ",contrast()))) + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
         }
       }else{
         if(input$expdes_fillplot == "Class"){
@@ -140,7 +140,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = -log10(as.numeric(thresh())), linetype = "dotted", size = 1) +
             geom_vline(xintercept = logfc_val(), linetype = "dotted", size = 1) +
             geom_vline(xintercept = -logfc_val(), linetype = "dotted", size = 1) +
-            ggtitle(paste("Volcano Plot:", contrast())) +
+            ggtitle(paste("Volcano Plot:", gsub("vs"," vs ",contrast()))) +
             labs(shape = "DC", colour = "Class") + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
         }else{
           #Volcano plot con DE
@@ -151,7 +151,7 @@ mod_ma_volcano_plot_server <- function(id, data_input, contrast, logfc_val, thre
             geom_hline(yintercept = -log10(as.numeric(thresh())), linetype = "dotted", size = 1) +
             geom_vline(xintercept = logfc_val(), linetype = "dotted", size = 1) +
             geom_vline(xintercept = -logfc_val(), linetype = "dotted", size = 1) +
-            ggtitle(paste("Volcano Plot:", contrast())) + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
+            ggtitle(paste("Volcano Plot:", gsub("vs"," vs ",contrast()))) + ggrepel::geom_label_repel(aes(label = Lipids), data = filtered)
         }
       }
     })

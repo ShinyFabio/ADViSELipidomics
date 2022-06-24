@@ -19,7 +19,7 @@
 #'
 #' @export
 #'
-#' @details WRITE SOMETHING
+#' @details This function takes the output from limma and performs the enrichment analysis.
 #'
 #' @note Last change 17/11/2021
 

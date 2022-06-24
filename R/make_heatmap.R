@@ -34,7 +34,7 @@
 
 
 make_heatmap = function(data,
-                        filter = "none",
+                        #filter = "none",
                         add_rowannot = "Product_Batch",
                         add_colannot = "Class",
                         log_data = FALSE,
@@ -50,15 +50,22 @@ make_heatmap = function(data,
                         unit_legend = "ug/ml",
                         col_label_size = 8, 
                         padding = c(2,2,2,15)){
+
+coldata = data$coldata
+assay = data$assay
+# if(!"none" %in% filter){
+#   coldata = coldata %>% dplyr::filter(!!sym(filter[1]) == filter[2])
+#   assay = assay %>% dplyr::select(rownames(coldata))
+#   # if(dim(assay)[2] <= 1){
+#   #   if(shiny::isRunning()){
+#   #     shinyWidgets::show_alert(title ="Warning!",type = "warning",
+#   #                              text = "Your filter returns a matrix with only one column. Dendrograms and scaling on column are disabled.")
+#   #   }
+#   #   message("Your filter returns a matrix with only one column. Dendrograms and scaling on column are disabled.")
+#   # }
+# }
   
-coldata = data %>% SummarizedExperiment::colData() %>% as.data.frame()
-assay = SummarizedExperiment::assay(data)
-if(!"none" %in% filter){
-  coldata = coldata %>% dplyr::filter(!!sym(filter[1]) == filter[2])
-  assay = assay %>% dplyr::select(rownames(coldata))
-}
-  
-temp = assay  %>% t()
+temp = assay %>% t()
 
 
 
@@ -81,6 +88,7 @@ if(order_data == TRUE){
 if(log_data == TRUE){
   temp = log2(temp)
 }
+
 
 #scale none, row, column
 if(scale_data == "column"){
@@ -105,8 +113,30 @@ if(scale_data == "none"){
   legend_col = circlize::colorRamp2(c(-max_legend, 0, max_legend), c("blue", "white", "red"))
 }
 
+
 #dendrogram = none', 'row', 'column' or 'both' 
 if(row_dend == TRUE){
+  row_dend2 = tryCatch({
+    temp %>% stats::dist(method = dist_method) %>% stats::hclust(method = clust_method) %>% stats::as.dendrogram()
+  },error = function(err){
+    str(err)
+    if(err$message == "NA/NaN/Inf in foreign function call (arg 10)"){
+      if(shiny::isRunning()){
+        shinyWidgets::show_alert(title ="Error in row dendrogramm!",
+                                 text = "There are too many NAs. Distance matrix cannot be calculated. 
+                                 Try to remove the dendrogram on rows or impute NAs.", type = "error")
+      }
+      message("There are too many NAs. Distance matrix cannot be calculated. Try to remove the dendrogram on rows or impute NAs.")
+    }else{
+      if(shiny::isRunning()){
+        shinyWidgets::show_alert(title ="Error in row dendrogramm!",
+                                 text = "Something wrong in the clustering. Maybe too many NAs? Try to remove the dendrogram on rows or impute NAs.", type = "error")
+      }
+      message("Something wrong in the clustering. Maybe too many NAs? Try to remove the dendrogram on rows or impute NAs.")
+      cat(crayon::bgYellow(crayon::red(err$message)))
+    }
+  })
+  if(is.null(row_dend2)){return(NULL)}
   row_dend2 = temp %>% stats::dist(method = dist_method) %>% stats::hclust(method = clust_method) %>% stats::as.dendrogram()
   row_dend2 = dendextend::color_branches(row_dend2, k = row_nclust)
   row_split = row_nclust
@@ -117,7 +147,26 @@ if(row_dend == TRUE){
 }
 
 if(col_dend == TRUE){
-  col_dend2 = temp %>% t() %>% stats::dist(method = dist_method) %>% stats::hclust(method = clust_method) %>% stats::as.dendrogram()
+  col_dend2 = tryCatch({
+    temp %>% t() %>% stats::dist(method = dist_method) %>% stats::hclust(method = clust_method) %>% stats::as.dendrogram()
+  },error = function(err){
+    if(err$message == "NA/NaN/Inf in foreign function call (arg 10)"){
+      if(shiny::isRunning()){
+        shinyWidgets::show_alert(title ="Error in column dendrogramm!",
+                                 text = "There are too many NAs. Distance matrix cannot be calculated. 
+                                 Try to remove the dendrogram on columns or impute NAs.", type = "error")
+      }
+      message("There are too many NAs. Distance matrix cannot be calculated. Try to remove the dendrogram on columns or impute NAs.")
+    }else{
+      if(shiny::isRunning()){
+        shinyWidgets::show_alert(title ="Error in column dendrogramm!",
+                                 text = "Something wrong in the clustering. ? Try to remove the dendrogram on columns or impute NAs.", type = "error")
+      }
+      message("Something wrong in the clustering. Maybe too many NAs? Try to remove the dendrogram on columns or impute NAs.")
+      cat(crayon::bgYellow(crayon::red(err$message)))
+    }
+  })
+  if(is.null(col_dend2)){return(NULL)}
   col_dend2 = dendextend::color_branches(col_dend2, k = col_nclust)
   col_split = col_nclust
 } else {
@@ -139,7 +188,7 @@ colorannot_row = stats::setNames(list(colorannot_row), paste(add_rowannot))
 row_ha = ComplexHeatmap::HeatmapAnnotation(df = annotdata_row, which = "row", col = colorannot_row, border = TRUE)
 
 #col annotation
-annotdata_col = data %>% SummarizedExperiment::rowData() %>% as.data.frame() %>% dplyr::select(add_colannot)
+annotdata_col = data$rowdata %>% as.data.frame() %>% dplyr::select(add_colannot)
 leng_col = annotdata_col %>% table() %>% length()
 colorannot_col = stats::setNames(getPalette(leng_col), c(row.names(table(annotdata_col))))
 colorannot_col = stats::setNames(list(colorannot_col), paste(add_colannot))

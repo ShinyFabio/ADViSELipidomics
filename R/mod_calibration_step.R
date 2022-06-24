@@ -383,7 +383,7 @@ mod_calibration_step_server <- function(id, stepc){
     
     
     
-    ####### STEP 5. Make the recovery percentage and the SummarizedExperiment
+    ####### STEP 5. Make the recovery percentage
     
     
     #se tutti i data sono stati caricati

@@ -1,6 +1,6 @@
 Package: ADViSELipidomics
 Title: ADViSELipidomics: a workflow for analyzing lipidomics data
-Version: 1.0.0
+Version: 1.1.0
 Authors@R: c(person("Eugenio", "Del Prete", email = "e.delprete@na.iac.cnr.it",
                  role = "aut", comment = c(ORCID = "0000-0003-3214-9021")),
             person("Fabio", "Della Rocca", email = "fabiodellarocca94@gmail.com",

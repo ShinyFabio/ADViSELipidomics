@@ -270,8 +270,12 @@ mod_imputation_step_server <- function(id,parent, stepg, data_type){
       g1 = sum$sumexp_data %>% SummarizedExperiment::assay() %>% t()
       g = try(stats::prcomp(g1))
       if(class(g) == "try-error"){
-        shinyWidgets::sendSweetAlert(session, title = "Too many NAs", type = "warning", width = "600px",
-                                     text = "If you will proceed, PCA won't work.")
+        # shinyWidgets::sendSweetAlert(session, title = "Too many NAs", type = "warning", width = "600px",
+        #                              text = "If you will proceed, PCA won't work.")
+        shinyWidgets::sendSweetAlert(session, title = "Missing values!", type = "warning", width = "600px",
+                                     text = div("There are some missing values. Clustering, Dimensionality reduction and 
+                                              Enrichment Analysis may not work.You should filter and impute 
+                     them in order to prevent errors.", style = "font-weight: bold;"))
       }
       return(sum)
     })
