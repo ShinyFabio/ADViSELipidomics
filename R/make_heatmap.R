@@ -16,7 +16,6 @@
 #' @param unit_legend An unit label for the legend. If data are scaled will be "Z-score" otherwise will be the input.
 #' @param col_label_size Size of the column labels. By default col_label_size = 10.
 #' @param padding padding for the heatmap in mm. By default padding = c(2,2,2,15).
-#' @param filter Character vector. The filtering on column by value. For example: c(input$filtheatmapcol, input$filtheatmapval).
 #' @param log_data Logical value. Set to TRUE to perform a log2 scaling.
 #' @param order_data Logical value. Set to TRUE if you want to performin the ordering based on the add_rowannot value.
 #'
@@ -34,7 +33,6 @@
 
 
 make_heatmap = function(data,
-                        #filter = "none",
                         add_rowannot = "Product_Batch",
                         add_colannot = "Class",
                         log_data = FALSE,
