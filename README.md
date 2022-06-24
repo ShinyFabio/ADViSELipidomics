@@ -8,10 +8,20 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-stable-succes.svg)](https://www.tidyverse.org/lifecycle/#stable)
 [![R-CMD-check](https://github.com/ShinyFabio/ADViSELipidomics/workflows/R-CMD-check/badge.svg)](https://github.com/ShinyFabio/ADViSELipidomics/actions)
-![version](https://img.shields.io/badge/version-1.0.0-blue.svg)
 <!-- badges: end -->
 
-ADViSELipidomics is a novel Shiny app for the preprocessing, analysis, and visualization of lipidomics data. It copes with the outputs from LipidSearch and LIQUID for lipid identification and quantification, and with data available from the Metabolomics Workbench. ADViSELipidomics extracts information by parsing lipid species (using LIPID MAPS classification) and, together with information available on the samples, allows performing several exploratory and statistical analyses. In the presence of internal lipid standards in the experiment, ADViSELipidomics can normalize the data matrix, providing absolute values of concentration per lipid and sample. Moreover, it allows the identification of differentially abundant lipids in simple and complex experimental designs, dealing with batch effect correction.
+ADViSELipidomics is a novel Shiny app for the preprocessing, analysis,
+and visualization of lipidomics data. It copes with the outputs from
+LipidSearch and LIQUID for lipid identification and quantification, and
+with data available from the Metabolomics Workbench. ADViSELipidomics
+extracts information by parsing lipid species (using LIPID MAPS
+classification) and, together with information available on the samples,
+allows performing several exploratory and statistical analyses. In the
+presence of internal lipid standards in the experiment, ADViSELipidomics
+can normalize the data matrix, providing absolute values of
+concentration per lipid and sample. Moreover, it allows the
+identification of differentially abundant lipids in simple and complex
+experimental designs, dealing with batch effect correction.
 
 ## Installation
 
@@ -21,7 +31,7 @@ other R package on several operating systems (Windows, macOS and Linux).
 Before installing the package you have to perform few supplementary
 steps based on your operating systems:
 
--   **Windows (tested on Windows 10 64bit)**
+-   **Windows (tested on Windows 10 64bit)** 
 
 Before installing the package you need also to install Rtools from the
 following link:
@@ -51,14 +61,13 @@ After that, open RStudio, check if you have already installed the
 `{devtools}` package and run the following code:
 
 ``` r
-if(!require("devtools")){
-  install.packages("devtools")
-}
-library(devtools)
-install_github("ShinyFabio/ADViSELipidomics")
+devtools::install_github("ShinyFabio/ADViSELipidomics")
 ```
 
-Be careful that if you need to install many packages and you decide to use compilation, the process could take a lot depending on your hardware and
+We kindly suggest updating all the R packages requested during the
+installation process of ADViSELipidomics Shiny application. Be careful
+that if you need to install many packages and you decide to use
+compilation, the process could take a lot depending on your hardware and
 operating system.
 
 ## Usage
@@ -69,26 +78,17 @@ Once the installation is completed, run:
 library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
-A complete **user guide** is available at the following link:
-https://shinyfabio.github.io/ADViSELipidomics_book/
 
-## Update
-
-When a new ADViSELipidomics version is released, it can be updated with the same code for the installation.
-
-
-## Preview video
-
-A quick tour of ADViSELipidomics is available at the following link:
-
-[![Watch the video](https://img.youtube.com/vi/BumHf8gmH6I/hqdefault.jpg)](https://youtu.be/BumHf8gmH6I)
-
+Depending on the screen size and especially the resolution of your
+monitor, ADViSELipidomics interface can be a bit different from how it
+was thought and built. Try to reduce or increment the zoom using
+**Ctrl** + **+** (plus) or **Ctrl** + **-** (minus) for Windows users or
+…. for Mac users.
 
 ## Funding
 
-This work was supported by the project “Antitumor Drugs and Vaccines from the Sea (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer”—Action 1.2.1 and 1.2.2.
-
-## License
-MIT @ Fabio Della Rocca
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+This work was supported by the project “Antitumor Drugs and Vaccines
+from the Sea (ADViSE)” project (CUP B43D18000240007–SURF
+17061BP000000011) funded by POR Campania FESR 2014-2020 “Technology
+Platform for Therapeutic Strategies against Cancer” - Action 1.2.1 and
+1.2.2.

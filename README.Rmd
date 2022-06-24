@@ -59,7 +59,7 @@ After that, open RStudio, check if you have already installed the ```{devtools}`
 ``` r
 devtools::install_github("ShinyFabio/ADViSELipidomics")
 ```
-Be careful that if you need to install many packages and you ...with compilation the process could take a lot depending on your hardware and operating system.
+We kindly suggest updating all the R packages requested during the installation process of ADViSELipidomics Shiny application. Be careful that if you need to install many packages and you decide to use compilation, the process could take a lot depending on your hardware and operating system.
 
 
 ## Usage
@@ -70,5 +70,7 @@ library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
 
+Depending on the screen size and especially the resolution of your monitor, ADViSELipidomics interface can be a bit different from how it was thought and built. Try to reduce or increment the zoom using **Ctrl** + **+** (plus) or **Ctrl** + **-** (minus) for Windows users or .... for Mac users.
+
 ## Funding
-...ADViSE
+This work was supported by the project “Antitumor Drugs and Vaccines from the Sea (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer” - Action 1.2.1 and 1.2.2.

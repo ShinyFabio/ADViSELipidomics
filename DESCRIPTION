@@ -84,7 +84,8 @@ Imports:
     data.table,
     knitr,
     tibble,
-    scales
+    scales,
+    S4Vectors
 biocViews:
     SummarizedExperiment,
     limma,
