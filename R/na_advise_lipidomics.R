@@ -100,7 +100,7 @@ na_advise_lipidomics <- function(out,
     sample_filt <- aux_conc_mat %>%
       dplyr::filter(na_perc_sam > na_filter_sam) %>%
       rownames()
-    aux_conc_mat <- aux_conc_mat %>% dplyr::filter(na_perc_sam < na_filter_sam)
+    aux_conc_mat <- aux_conc_mat %>% dplyr::filter(na_perc_sam <= na_filter_sam)
     aux_conc_mat <- aux_conc_mat[,-ncol(aux_conc_mat)]
     aux_conc_mat <- as.data.frame(t(aux_conc_mat))
 
