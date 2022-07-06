@@ -114,7 +114,7 @@ app_server <- function( input, output, session ) {
   stepc = mod_reading_step_server("reading_step_lipsearch", analysis = analysis, int_std = reactive(input$type_lipsearch))
   
 
-  
+
   ######### STEP CALIBRATION ##########
   
   ###check end of filtering box
@@ -2579,6 +2579,14 @@ observeEvent(expdesign(),{
 })
 
 output$enrich_plot = renderPlot({
+  check = tryCatch({
+    is.null(expdesign())
+  },
+  shiny.silent.error = function(e) {
+    TRUE
+  })
+  
+  validate(need(check == FALSE, "Enrichment Analysis requires the output from Differential Analysis. Please run first the Differential Analysis."))
   req(expdesign())
   enrichment_advise_lipidomics(
     out = expdesign(),
