@@ -1257,7 +1257,7 @@ app_server <- function( input, output, session ) {
   
   output$taxabarplot = plotly::renderPlotly({
     req(data_for_taxa())
-    size = ifelse(input$summ_taxabar == TRUE, 10, 8)
+    size = ifelse(input$summ_taxabar == TRUE, 10, 7.5)
 
     data1 = data_for_taxa()
 
