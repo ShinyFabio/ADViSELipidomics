@@ -95,7 +95,7 @@ app_ui <- function(request) {
           shinydashboard::infoBox(
             width = 6, icon = icon("newspaper"), title = "Citation", color = "aqua", fill = T,
             subtitle = c("Please cite our article  when you publish using this tool: 
-            E. Del Prete et al. (2022) ADViSELipidomics: a workflow for analyzing lipidomics data. Bioinformatics, 2022, 1–3.
+            E. Del Prete et al. (2022) ADViSELipidomics: a workflow for analyzing lipidomics data. Bioinformatics, 2022, 1-3.
             The paper is available", strong(a(href = "https://doi.org/10.1093/bioinformatics/btac706", "here.", .noWS = "after"))
             )),
           shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
