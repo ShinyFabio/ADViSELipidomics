@@ -94,9 +94,8 @@ app_ui <- function(request) {
             color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T),
           shinydashboard::infoBox(
             width = 6, icon = icon("newspaper"), title = "Citation", color = "aqua", fill = T,
-            subtitle = "Please cite our article (E. Del Prete, A. M. Campos, 
-            F. Della Rocca, C. Gallo, A. Fontana, G. Nuzzo, C. Angelini, ADViSELipidomics: a workflow for analyzing lipidomics data, 
-            Submitted to Bioinformatics, 2022) when you publish using this tool."),
+            subtitle = "Please cite our article  when you publish using this tool: 
+            E. Del Prete et al. (2022) ADViSELipidomics: a workflow for analyzing lipidomics data. Bioinformatics, 2022, 1–3"),
           shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
                                   subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
                                   color = "aqua", href = "https://shinyfabio.github.io/ADViSELipidomics_book/", fill = T)

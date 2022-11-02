@@ -70,7 +70,32 @@ library("ADViSELipidomics")
 run_ADViSELipidomics()
 ```
 
-Depending on the screen size and especially the resolution of your monitor, ADViSELipidomics interface can be a bit different from how it was thought and built. Try to reduce or increment the zoom using **Ctrl** + **+** (plus) or **Ctrl** + **-** (minus) for Windows users or .... for Mac users.
+Depending on the screen size and especially the resolution of your monitor, ADViSELipidomics interface can be a bit different from how it was thought and built. Try to reduce or increment the zoom using **Ctrl** + **+** (plus) or **Ctrl** + **-** (minus) for Windows or Linux users, or **Command** + **+** (plus) or **Command** + **-** (minus) for Mac users.
+
+An **user manual** is available at the following link: https://shinyfabio.github.io/ADViSELipidomics_book/
+
+
+## Update
+When a new ADViSELipidomics version is released, it can be updated with the same code for the installation.
+
+
+## Data Availability
+The software is intended as a tool for analyzing lipidomic data, nevertheless is it possible to test it with two different case studies as described in the supplementary to our paper [Supplementary](https://oup.silverchair-cdn.com/oup/backfile/Content_public/Journal/bioinformatics/PAP/10.1093_bioinformatics_btac706/1/btac706_supplementary_data.docx?Expires=1670405997&Signature=EPy4KG1w03cnGUWoa8jsEHbFRiyhKHX9Wf56yylPM2baQYjwB9oA0HoR3WUIPpWNBv2zfPRGrVm7b3Nj5aAacJ7qLmUSd9su20P4cmDuCiJbYx8ddv4P7cDzIIyeAMqmBEMscOBzWsGhB~Ql~Y8LjLXzxOlsjML8KaciMcFtZztK3Psf3wCnCxlKg9iZZ4mab0hZdA8rn048xbTk6534syqjx4KfAm2lcrDbnEC29dSmcfNyAj22CACWfOrhHHeHueNKbSu6hZeyIukQOdGKzGhTiG2D4VO4ZqH9dQ3JX-G~kAczQhQGwic-vm8hK-YcOIQrxgxnlWTaur~PV2mSww__&Key-Pair-Id=APKAIE5G5CRDK6RD3PGA).
+
+If you want to test the software with a LipidSearch output, here we provide the files used in the Case Study 1. Before use, please extract the files from the archive.
+<p>
+<img src="https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/svgs/solid/download.svg" width="20" height="20">  
+<a href="https://github.com/ShinyFabio/ADViSELipidomics_book/raw/main/data_example/Case_Study_1.zip/">Case_Study_1.zip</a>
+</p>
+
+It is also possible to test it with a Metabolomics Workbench lipidomic experiment. ADViSELipidomics can download in real-time suitable selected lipidomic experiments from the online repository using the ```do_query()``` function from the ```{metabolomicsWorkbenchR}``` package. Internet connection is required.
+
+
+## Citation
+If you use ADViSELipidomics in your publications, we appreciate if you can cite us:
+
+*E. Del Prete et al. (2022) ADViSELipidomics: a workflow for analyzing lipidomics data. Bioinformatics, 2022, 1–3*
+
 
 ## Funding
 This work was supported by the project “Antitumor Drugs and Vaccines from the Sea (ADViSE)” project (CUP B43D18000240007–SURF 17061BP000000011) funded by POR Campania FESR 2014-2020 “Technology Platform for Therapeutic Strategies against Cancer” - Action 1.2.1 and 1.2.2.
