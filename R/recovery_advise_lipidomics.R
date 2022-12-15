@@ -138,7 +138,7 @@ recovery_advise_lipidomics <- function(out,
   if(intercept_flag == FALSE){
     aux_conc_mat <- lapply(aux_conc_mat,function(x) {x %>%
                              dplyr::mutate(Conc = (Area/m)) %>% 
-                             dplyr::left_join(dplyr::select(out$targets$internal_standard, MinLinearity,	MaxLinearity,InternalStandardLipidIon), by = "InternalStandardLipidIon") %>% 
+                             dplyr::left_join(dplyr::distinct(dplyr::select(out$targets$internal_standard, MinLinearity,	MaxLinearity,InternalStandardLipidIon)), by = "InternalStandardLipidIon") %>% 
                              dplyr::mutate(Conc = dplyr::case_when(Conc < MinLinearity | Conc > MaxLinearity ~ 0, TRUE ~ Conc)) %>% 
                              dplyr::mutate(Conc = replace(Conc, Conc == 0 , NA)) %>%
                              dplyr::mutate(ConcExpPerc = replace(ConcExpPerc, ConcExpPerc == 0 , NA)) %>%
@@ -148,7 +148,7 @@ recovery_advise_lipidomics <- function(out,
   } else {
     aux_conc_mat <- lapply(aux_conc_mat,function(x) x %>%
                              dplyr::mutate(Conc = ((Area-q)/m)) %>% 
-                             dplyr::left_join(dplyr::select(out$targets$internal_standard, MinLinearity,	MaxLinearity,InternalStandardLipidIon), by = "InternalStandardLipidIon") %>% 
+                             dplyr::left_join(dplyr::distinct(dplyr::select(out$targets$internal_standard, MinLinearity,	MaxLinearity,InternalStandardLipidIon)), by = "InternalStandardLipidIon") %>% 
                              dplyr::mutate(Conc = dplyr::case_when(Conc < MinLinearity | Conc > MaxLinearity ~ 0, TRUE ~ Conc)) %>% 
                              dplyr::mutate(Conc = replace(Conc, Conc == 0 , NA)) %>%
                              dplyr::mutate(ConcExpPerc = replace(ConcExpPerc, ConcExpPerc == 0 , NA)) %>%

@@ -1,6 +1,6 @@
 default:
   golem_name: ADViSELipidomics
-  golem_version: 1.1.0
+  golem_version: 1.2.0
   app_prod: no
 production:
   app_prod: yes

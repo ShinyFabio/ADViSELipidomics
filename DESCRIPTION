@@ -1,6 +1,6 @@
 Package: ADViSELipidomics
-Title: ADViSELipidomics: a workflow for analyzing lipidomics data
-Version: 1.1.0
+Title: Shinyapp for the acquisition and the analysis of lipidomics data
+Version: 1.2.0
 Authors@R: c(person("Eugenio", "Del Prete", email = "e.delprete@na.iac.cnr.it",
                  role = "aut", comment = c(ORCID = "0000-0003-3214-9021")),
             person("Fabio", "Della Rocca", email = "fabiodellarocca94@gmail.com",
@@ -16,7 +16,7 @@ Authors@R: c(person("Eugenio", "Del Prete", email = "e.delprete@na.iac.cnr.it",
             person("Claudia", "Angelini", email = "claudia.angelini@cnr.it",
                  role = c("ctb","fnd"), comment = c(ORCID = "0000-0001-8350-8464"))
             )
-Description: ADViSELipidomics is suitable for the acquisition of LipidSearch files, the computation
+Description: ADViSELipidomics is suitable for the acquisition of LipidSearch and LIQUID files, the computation
              of the recovery percentages, the creation of the feature matrix (lipid species 
              concentration) and the statistical analysis of the feature matrix.
 License: MIT + file LICENSE
@@ -97,5 +97,6 @@ biocViews:
     InteractiveComplexHeatmap
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.1.2
-URL: https://shinyfabio.github.io/ADViSELipidomics/
+RoxygenNote: 7.2.1
+URL: https://github.com/ShinyFabio/ADViSELipidomics
+BugReports: https://github.com/ShinyFabio/ADViSELipidomics/issues

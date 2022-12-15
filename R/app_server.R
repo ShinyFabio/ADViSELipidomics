@@ -901,14 +901,7 @@ app_server <- function( input, output, session ) {
     }
   })
   
-  observe({
-    if(!is.null(sumexp_filt())){
-      print("ci sta il filtrato")
-    }else{
-      print("ci sta il default")
-    }
-  })
-  
+
   
   output$check_filt = reactive({
     tryCatch({is.null(sumexp_filt())},
@@ -1138,7 +1131,7 @@ app_server <- function( input, output, session ) {
   
   ###biplot
   output$biplotlc = plotly::renderPlotly({
-    req(pcadata(), input$colbiplotlc)
+    req(pcadata(), input$colbiplotlc, pcadata_info())
     data_info = pcadata_info()
     pcadata = pcadata()
     
@@ -1288,17 +1281,10 @@ app_server <- function( input, output, session ) {
   })
 
 
+
   output$taxabarplot_ui = renderUI({
     req(data_for_taxa())
-    height = "650px"
-    
-    
-    if(input$annot_taxa != "No"){
-      n_coldata = data_for_taxa() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
-        dplyr::pull(input$annot_taxa) %>% unique() %>% length()
-      if(n_coldata > 3){height = "850px"}
-    }
-    plotly::plotlyOutput("taxabarplot", height = height)
+    plotly::plotlyOutput("taxabarplot", height = paste0(input$height_taxa,"px"))
     
   })
   ##### lipid species distribution barplot #####
@@ -1951,39 +1937,7 @@ app_server <- function( input, output, session ) {
 
   })
 
-  
-  #variables
-  output$checkadd2var = reactive({
-    if(input$add2var %%2 == 0){
-      "onevar"
-    }else{"twovar"}
-  })
-  outputOptions(output, "checkadd2var", suspendWhenHidden = FALSE)
-  
-  observeEvent(input$add2var,{
-    if(input$add2var %%2 == 1){
-      updateButton(session, "add2var",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
-    }else{
-      updateButton(session, "add2var", label = HTML("&nbsp;Add"), style="success", icon("plus"))
-    }
-  })
-  
-  
-  #Batch variable
-  output$checkadd2batch = reactive({
-    if(input$add2batch %%2 == 0){
-      "onebatch"
-    }else{"twobatch"}
-  })
-  outputOptions(output, "checkadd2batch", suspendWhenHidden = FALSE)
-  
-  observeEvent(input$add2batch,{
-    if(input$add2batch %%2 == 1){
-      updateButton(session, "add2batch",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
-    }else{
-      updateButton(session, "add2batch", label = HTML("&nbsp;Add"), style="success", icon("plus"))
-    }
-  })
+
 
 #### Clustering #####
   
@@ -2110,6 +2064,42 @@ app_server <- function( input, output, session ) {
     updateSelectInput(session, "expdes_batch_var2", choices = colnames(SummarizedExperiment::colData(sumexpde_forcoldata())))
   })
 
+  
+  
+  #variables
+  output$checkadd2var = reactive({
+    if(input$add2var %%2 == 0){
+      "onevar"
+    }else{"twovar"}
+  })
+  outputOptions(output, "checkadd2var", suspendWhenHidden = FALSE)
+  
+  observeEvent(input$add2var,{
+    if(input$add2var %%2 == 1){
+      updateButton(session, "add2var",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
+    }else{
+      updateButton(session, "add2var", label = HTML("&nbsp;Add"), style="success", icon("plus"))
+    }
+  })
+  
+  
+  #Batch variable
+  output$checkadd2batch = reactive({
+    if(input$add2batch %%2 == 0){
+      "onebatch"
+    }else{"twobatch"}
+  })
+  outputOptions(output, "checkadd2batch", suspendWhenHidden = FALSE)
+  
+  observeEvent(input$add2batch,{
+    if(input$add2batch %%2 == 1){
+      updateButton(session, "add2batch",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
+    }else{
+      updateButton(session, "add2batch", label = HTML("&nbsp;Add"), style="success", icon("plus"))
+    }
+  })
+  
+  
   varsde = reactive({
     req(input$expdes_design_vars)
     validate(need(input$expdes_design_vars != "", "Select a primary variable."))

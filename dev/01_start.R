@@ -19,13 +19,16 @@
 ## to change the name in the app_sys() function in app_config.R /!\
 ## 
 golem::fill_desc(
-  pkg_name = "ADViSEBioassay", # The Name of the package containing the App 
-  pkg_title = "ADViSEBioassay shiny app", # The Title of the package containing the App 
-  pkg_description = "PKG_DESC.", # The Description of the package containing the App 
+  pkg_name = "ADViSELipidomics", # The Name of the package containing the App 
+  pkg_title = "Shinyapp for the acquisition and the analysis of lipidomics data.", # The Title of the package containing the App 
+  pkg_description = "ADViSELipidomics is suitable for the acquisition of LipidSearch and LIQUID files, the computation
+             of the recovery percentages, the creation of the feature matrix (lipid species 
+             concentration) and the statistical analysis of the feature matrix.", # The Description of the package containing the App 
   author_first_name = "Fabio", # Your First Name
   author_last_name = "Della Rocca", # Your Last Name
-  author_email = "fabiodellarocca94@gmail.com", # Your Email
-  repo_url = NULL # The URL of the GitHub Repo (optional) 
+  author_email = "f.dellarocca@na.iac.cnr.it", # Your Email
+  author_orcid = "0000-0002-8003-2648",
+  repo_url = "https://github.com/ShinyFabio/ADViSELipidomics" # The URL of the GitHub Repo (optional) 
 )     
 
 ## Set {golem} options ----
@@ -33,7 +36,7 @@ golem::set_golem_options()
 
 #set package version
 golem::set_golem_version(
-  version = "1.1.0",
+  version = "1.2.0",
   path = pkgload::pkg_path(),
   talkative = TRUE
 )

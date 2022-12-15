@@ -90,16 +90,16 @@ app_ui <- function(request) {
           linebreaks(5),
           fluidRow(
             shinydashboard::infoBox(width = 3, icon = icon("github"), title = "Bug reports", 
-            subtitle = "If you encounter a bug or a problem click here and go to the GitHub page.", 
+            subtitle = "If you encounter a bug or a problem click in this box and you can ask for help in the GitHub page.", 
             color = "aqua", href = "https://github.com/ShinyFabio/ADViSELipidomics/issues", fill = T),
           shinydashboard::infoBox(
             width = 6, icon = icon("newspaper"), title = "Citation", color = "aqua", fill = T,
-            subtitle = c("Please cite our article  when you publish using this tool: 
+            subtitle = p("Please cite our article  when you publish using this tool: 
             E. Del Prete et al. (2022) ADViSELipidomics: a workflow for analyzing lipidomics data. Bioinformatics, 2022, 1-3.
             The paper is available", strong(a(href = "https://doi.org/10.1093/bioinformatics/btac706", "here.", .noWS = "after"))
             )),
           shinydashboard::infoBox(width = 3, icon = icon("book"), title = "Guide", 
-                                  subtitle = "If you need help in the use of ADViSELipidomics, click here.", 
+                                  subtitle = "If you need help in the use of ADViSELipidomics, click in this box.", 
                                   color = "aqua", href = "https://shinyfabio.github.io/ADViSELipidomics_book/", fill = T)
           ),
           linebreaks(2),
@@ -169,7 +169,7 @@ app_ui <- function(request) {
                   box(width = NULL, title = "1. Importing & Filtering", status = "primary", solidHeader = TRUE,
                       
                       # Step 1.
-                      div(icon("circle"), HTML("&nbsp;Step. 1: Import targetfile and internal reference files (.xlsx)"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                      div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 1: Import targetfile and internal reference files (.xlsx)"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                       br(),
                       fluidRow(
                         column(10, fileInput("targetfile_liquid", "Select the Targetfile Lipidomics (.xlsx)", accept = ".xlsx")),
@@ -192,7 +192,7 @@ app_ui <- function(request) {
                       #Step 2.
                       conditionalPanel(
                         condition = "output.checktargets_liquid == false",
-                        div(icon("circle"), HTML("&nbsp;Step. 2: Choose the data folder and read all the data."), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                        div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 2: Choose the data folder and read all the data."), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                         br(),
                         fluidRow(
                           div(
@@ -215,7 +215,7 @@ app_ui <- function(request) {
                       #Step 3.
                       conditionalPanel(
                         condition = "output.checkdatafiles_liquid == false",
-                        div(icon("circle"), HTML("&nbsp;Step. 3: Select a range for the carbon number and the double bound number"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                        div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 3: Select a range for the carbon number and the double bound number"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                         br(),
                         sliderInput("ca_bound_liquid", div("Range carbon number", style = "font-size: 15px; font-weight: bold;"), min = 0, max = 50, value = c(14, 24)),
                         sliderInput("db_bound_liquid", div("Range double bound number", style = "font-size: 15px; font-weight: bold;"), min = 0, max = 10, value = c(0, 6)),
@@ -556,7 +556,8 @@ app_ui <- function(request) {
                 conditionalPanel(
                   condition = "input.selplotlip1 == 'Lipid class proportion'",
                   awesomeCheckbox("summ_taxabar", "Summarize data"),
-                  selectInput("annot_taxa", "Annotation", choices = "")
+                  selectInput("annot_taxa", "Annotation", choices = ""),
+                  sliderInput("height_taxa", "Adjust plot height (px)", value = 650, min = 500, max = 1200, step = 50)
                 ),
                 
                 conditionalPanel(
@@ -1124,17 +1125,22 @@ app_ui <- function(request) {
                   fluidRow(
                     column(
                       6, 
-                      bsplus::bs_embed_tooltip(
-                        selectInput("expdes_batch_type", "Batch type", choices = c("remove", "fit")),
-                        title = "ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables 
+                      selectInput("expdes_batch_type", choices = c("remove", "fit"),
+                        label = tags$span("Batch type", 
+                          tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
+                                 title = "ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables 
                         or removing the batch effect before fitting the model. If you select 'fit', the software requires your batch variable
-                        also in the contrasts list. Remember that you can generate a contrasts list up to two variables.")),
+                        also in the contrasts list. Remember that you can generate a contrasts list up to two variables.")))
+                    ),
+
                     column(
                       6, 
-                      bsplus::bs_embed_tooltip(
-                        title = "Algorithm used for the batch effect. If 'limma',it will be used the 'removeBatchEffect' function, otherwhise
-                        the 'ComBat' function from SVA package (parametric or non-parametric)",
-                        selectInput("batch_meth", "Batch method", choices = "")))
+                      selectInput("batch_meth",choices = "",
+                        label = tags$span("Batch method", 
+                                          tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
+                                                 title = "Algorithm used for the batch effect. If 'limma',it will be used the 'removeBatchEffect' function, otherwhise
+                        the 'ComBat' function from SVA package (parametric or non-parametric).")))
+                    )
                   ),
                   conditionalPanel(
                     condition = "input.expdes_batch_type == 'remove' || input.batch_meth == 'given'",
@@ -1207,8 +1213,11 @@ app_ui <- function(request) {
                 ),
                 
                 prettyRadioButtons("expdes_thresh", "p-value threshold", choices = c(0.001, 0.01, 0.05), inline = TRUE, selected = 0.05),
-                bsplus::bs_embed_tooltip(title = "A method for the decideTests function (limma package) used to identify 'differentially expressed' lipids.",
-                selectInput("expdes_decide_met", "Select method", choices = c("separate", "global", "hierarchical", "nestedF"), selected = "separate")),
+                
+                selectInput("expdes_decide_met", choices = c("separate", "global", "hierarchical", "nestedF"), selected = "separate",
+                  label = tags$span("Select method", tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
+                           title = "A method for the decideTests function (limma package) used to identify 'differentially expressed' lipids."))),
+
                 fluidRow(
                   column(
                     6,

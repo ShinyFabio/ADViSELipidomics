@@ -20,7 +20,7 @@ mod_reading_step_ui <- function(id){
       box(width = NULL, title = "1. IMPORTING & FILTERING", status = "primary", solidHeader = TRUE,
           
           # Step 1.
-          div(icon("circle"), HTML("&nbsp;Step. 1: Import targetfile and internal reference files (.xlsx)"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+          div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 1: Import targetfile and internal reference files (.xlsx)"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
           br(),
           fluidRow(
             column(10, fileInput(ns("targetfilepath"), "Select the Targetfile Lipidomics (.xlsx)", accept = ".xlsx")),
@@ -39,7 +39,7 @@ mod_reading_step_ui <- function(id){
           #Step 2.
           conditionalPanel(
             condition = "output.checktargets == false", ns = ns,
-            div(icon("circle"), HTML("&nbsp;Step. 2: Choose the data folder and read all the data."), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+            div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 2: Choose the data folder and read all the data."), style = "text-align: left; font-size: 18px; font-weight: bold;"),
             br(),
             fluidRow(
               div(
@@ -67,7 +67,7 @@ mod_reading_step_ui <- function(id){
           #Step 3.
           conditionalPanel(
             condition = "output.checkdatafiles == false", ns = ns,
-            div(icon("circle"), HTML("&nbsp;Step. 3: Select a range for the carbon number and the double bound number"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+            div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 3: Select a range for the carbon number and the double bound number"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
             br(),
             sliderInput(ns("ca_bound"), div("Range carbon number", style = "font-size: 15px; font-weight: bold;"), min = 0, max = 50, value = c(14, 24)),
             sliderInput(ns("db_bound"), div("Range double bound number", style = "font-size: 15px; font-weight: bold;"), min = 0, max = 10, value = c(0, 6)),

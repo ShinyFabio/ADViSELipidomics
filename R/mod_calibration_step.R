@@ -16,7 +16,7 @@ mod_calibration_step_ui <- function(id){
            box(width = NULL, title = "2. CALIBRATION", status = "primary", solidHeader = TRUE,
                
                #Step 1.
-               div(icon("circle"), HTML("&nbsp;Step. 1: Import calibration files (.xlsx)"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+               div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 1: Import calibration files (.xlsx)"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                br(),
                fluidRow(
                  column(10, fileInput(ns("calibdeuteratedpath"), "Select the Calibration Deuterated (.xlsx)", accept = ".xlsx")),
@@ -38,7 +38,7 @@ mod_calibration_step_ui <- function(id){
                
                #Step 2.
                conditionalPanel(condition = "output.checkfilterdata == false", ns = ns,
-                                div(icon("circle"), HTML("&nbsp;Step. 2: Select the folder with the concentration files"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                                div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 2: Select the folder with the concentration files"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                                 br(),
                                 fluidRow(
                                   div(
@@ -50,7 +50,7 @@ mod_calibration_step_ui <- function(id){
                
                #Step 3.
                conditionalPanel(condition = "output.checkcalibmatrix == false", ns = ns,
-                                div(icon("circle"), HTML("&nbsp;Step. 3: Choose a folder where to save the outputs"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                                div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 3: Choose a folder where to save the outputs"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                                 br(),
                                 fluidRow(
                                   div(
@@ -62,7 +62,7 @@ mod_calibration_step_ui <- function(id){
                
                #Step 4.
                conditionalPanel(condition = "input.createfolders > 0 && output.checkfolders == 1", ns = ns,
-                                div(icon("circle"), HTML("&nbsp;Step. 4: Choose the calibration options"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                                div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 4: Choose the calibration options"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                                 br(),
                                 fluidRow(
                                   column(6, offset = 1,
@@ -93,7 +93,7 @@ mod_calibration_step_ui <- function(id){
                #Step 5.
                conditionalPanel(
                  condition = "output.checkstepf == false", ns = ns,
-                 div(icon("circle"), HTML("&nbsp;Step. 5: Apply recovery"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+                 div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 5: Apply recovery"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                  fluidRow(
                    column(4, offset = 1,
                           br(),
@@ -154,7 +154,7 @@ mod_calibration_step_server <- function(id, stepc){
       readxl::read_xlsx(input$calibdeuteratedpath$datapath, na = c("", "NA"))
     })
     
-    calibdeu_edit <- DataEditR::dataEditServer("editedcalibeu", data = calibdeu_to_edit())
+    calibdeu_edit <- DataEditR::dataEditServer("editedcalibeu", data = calibdeu_to_edit)
     
     DataEditR::dataOutputServer("output_calibeu_edit", data = calibdeu_edit)
     
@@ -170,7 +170,7 @@ mod_calibration_step_server <- function(id, stepc){
       readxl::read_xlsx(input$calibnonlabelpath$datapath, na = c("", "NA"))
     })
     
-    caliblab_edit <- DataEditR::dataEditServer("editedcalilab", data = caliblab_to_edit())
+    caliblab_edit <- DataEditR::dataEditServer("editedcalilab", data = caliblab_to_edit)
     
     DataEditR::dataOutputServer("output_calilab_edit", data = caliblab_edit)
     
@@ -215,6 +215,7 @@ mod_calibration_step_server <- function(id, stepc){
     })
     
     
+
     
     calibration_matrix = eventReactive(input$gocalibrationfiles,{
       #calibration matrix deuterated
@@ -242,9 +243,7 @@ mod_calibration_step_server <- function(id, stepc){
     })
     
     
-    
-    
-    
+
     
     
     ##### STEP 3. Select a folder where to save the outputs
@@ -347,6 +346,9 @@ mod_calibration_step_server <- function(id, stepc){
       )
     })
     
+
+    
+
     #stepf() prende il path stepd()$folders$output_path_plots, crea la cartella CalibrationPlot e crea i plot. Inoltre
     #dalla calibration_matrix() restituisce i seguenti valori:
     #stepf()$calibration_matrix

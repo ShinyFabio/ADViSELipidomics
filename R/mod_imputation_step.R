@@ -17,7 +17,7 @@ mod_imputation_step_ui <- function(id, offset){
     column(5, offset = offset,
            box(width = NULL, title = "3. MISSING DATA & SUMMARIZED EXPERIMENT", status = "primary", solidHeader = TRUE,
                # Filtering
-               div(icon("circle"), HTML("&nbsp;Step. 1: Missing data filtering"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+               div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 1: Missing data filtering"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                br(),
                fluidRow(
                  column(5, h4("Do you want to filter data/NA? "), style="padding-right: 0px; width: 275px;"),
@@ -74,7 +74,7 @@ mod_imputation_step_ui <- function(id, offset){
                hr(),
                
                # Imputation
-               div(icon("circle"), HTML("&nbsp;Step. 2: Imputation"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+               div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 2: Imputation"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                br(),
                
                fluidRow(
@@ -117,7 +117,7 @@ mod_imputation_step_ui <- function(id, offset){
                
                
                # finish and sumexp
-               div(icon("circle"), HTML("&nbsp;Step. 3: Creation of Summarized Experiment"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
+               div(icon("circle", class = "fa-solid"), HTML("&nbsp;Step. 3: Creation of Summarized Experiment"), style = "text-align: left; font-size: 18px; font-weight: bold;"),
                fluidRow(
                  column(7, br(),
                         div(

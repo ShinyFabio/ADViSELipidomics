@@ -84,7 +84,7 @@ filter_advise_lipidomics <- function(out,
       #--- Subfunction---#
     fun_a <- function(a){
       aa <- a$FattyAcid
-      aa <- gsub("[a-zA-Z()]", "", aa)
+      aa <- gsub("[a-zA-Z()-]", "", aa)
       aa <- strsplit(aa, split = "[:_]")
       aa <- list(ca = lapply(aa, function(x) c(x[seq(length(x)) %% 2 == 1])),
                  db = lapply(aa, function(x) c(x[seq(length(x)) %% 2 == 0])) )
@@ -124,8 +124,6 @@ filter_advise_lipidomics <- function(out,
     }
   }
 
-  ca_list_2 <- lapply(lipid_filtered, function (x) fun_a(x)$ca)
-  db_list_2 <- lapply(lipid_filtered, function (x) fun_a(x)$db)
 
   ## II.2) Even Number
 
@@ -136,7 +134,7 @@ filter_advise_lipidomics <- function(out,
     return(cc)
   }
 
-  ca_list_idx_2 <- lapply(ca_list_2, fun_c)
+  ca_list_idx_2 <- lapply(ca_list, fun_c)
   for(k in 1:length(lipid_filtered)){
     if (length(ca_list_idx_2[[k]]) != 0){
       aux = lipid_filtered[[k]]
@@ -145,8 +143,6 @@ filter_advise_lipidomics <- function(out,
     }
   }
 
-  ca_list_3 <- lapply(lipid_filtered, function (x) fun_a(x)$ca)
-  db_list_3 <- lapply(lipid_filtered, function (x) fun_a(x)$db)
 
   # III) Check on insaturation (double bonds)
   message("Check on number of double bonds...")
@@ -162,7 +158,7 @@ filter_advise_lipidomics <- function(out,
     return(dd)
   }
 
-  db_list_idx <- lapply(db_list_3,fun_d)
+  db_list_idx <- lapply(db_list,fun_d)
   for(k in 1:length(lipid_filtered)){
     if (length(db_list_idx[[k]]) != 0){
       aux = lipid_filtered[[k]]
@@ -241,7 +237,9 @@ filter_advise_lipidomics <- function(out,
           max_dup[[k]] <- all_dup[[k]] %>% dplyr::slice_max(Intensity,n = 1,with_ties = FALSE)
         }
         max_dup_df <- as.data.frame(do.call(rbind, max_dup))
-        max_dup_df <- rbind(max_dup_df, dplyr::filter(f, Common_Name %in% not_dup))
+        rbind(max_dup_df, dplyr::filter(f, Common_Name %in% not_dup))
+      }else{
+        f
       }
     }
     

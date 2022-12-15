@@ -58,8 +58,9 @@ calibplot_advise_lipidomics <- function(out,
     }
     
     aux_cal <- cbind(rownames(cal_mat),cal_mat) %>% dplyr::select(-LipidIon)
-    aux_lin <- out$targets$internal_standard[,c("InternalStandardLipidIon",
-                                                "MinLinearity","MaxLinearity")]
+    aux_lin <- out$targets$internal_standard %>% dplyr::select("InternalStandardLipidIon","MinLinearity","MaxLinearity") %>% 
+      dplyr::distinct()
+    
     colnames(aux_cal)[1] <- "InternalStandardLipidIon"
     aux_cal <- reshape2::melt(aux_cal, id.vars="InternalStandardLipidIon")
     aux_cal <- base::merge(aux_cal,aux_lin)
