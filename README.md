@@ -31,22 +31,23 @@ other R package on several operating systems (Windows, macOS and Linux).
 Before installing the package you have to perform few supplementary
 steps based on your operating systems:
 
--   **Windows (tested on Windows 10 64bit)** 
+- **Windows (tested on Windows 10 64bit)** 
 
-Before installing the package you need also to install Rtools from the
-following link:
+On Windows, ADViSELipidomics should work out of the box. If you
+encounter some problems during the installation, try to install Rtools
+from the following link:
 
 <https://cran.r-project.org/bin/windows/Rtools>.
 
--   **MacOS**  
-    If you are on MacOs run the following codes in the console:
+- **MacOS**  
+  If you are on MacOs run the following codes in the console:
 
 ``` r
 brew install imagemagick@6
 brew install cairo
 ```
 
--   **Ubuntu (tested on 18.04).**  
+- **Ubuntu (tested on 18.04).**  
 
 If you are on Ubuntu run the following codes in the console:
 
@@ -82,9 +83,8 @@ run_ADViSELipidomics()
 Depending on the screen size and especially the resolution of your
 monitor, ADViSELipidomics interface can be a bit different from how it
 was thought and built. Try to reduce or increment the zoom using
-**Ctrl** + **+** (plus) or **Ctrl** + **-** (minus) for Windows or Linux
-users, or **Command** + **+** (plus) or **Command** + **-** (minus) for
-Mac users.
+**Ctrl** and **+** or **Ctrl** and **-** for Windows or Linux users, or
+**Command** and **+** or **Command** and **-** for Mac users.
 
 An **user manual** is available at the following link:
 <https://shinyfabio.github.io/ADViSELipidomics_book/>
