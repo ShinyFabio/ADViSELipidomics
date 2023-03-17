@@ -24,7 +24,6 @@
 #' @import utils
 #' @importFrom tibble rownames_to_column as_tibble column_to_rownames
 #' @import ggVennDiagram
-#' @importFrom stringi stri_list2matrix
 #' @importFrom ComplexHeatmap make_comb_mat comb_size comb_degree UpSet upset_right_annotation draw column_order decorate_annotation anno_barplot
 #' @importFrom grid gpar unit grid.text
 #' @importFrom mixOmics plsda background.predict plotIndiv plotVar perf splsda tune.splsda color.jet color.mixo
@@ -32,7 +31,7 @@
 #' @importFrom cluster pam clara
 #' @importFrom factoextra fviz_nbclust fviz_cluster eclust fviz_dend fviz_silhouette
 #' @importFrom metabolomicsWorkbenchR do_query
-#' @importFrom openxlsx write.xlsx
+#' @importFrom openxlsx write.xlsx read.xlsx
 #' @importFrom graphics par
 #' @import scales
 #' @noRd
@@ -207,7 +206,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    x = readxl::read_xlsx(input$targetfile_liquid$datapath, na = c("", "NA"))
+    x = tibble::as_tibble(openxlsx::read.xlsx(input$targetfile_liquid$datapath, na.strings = c("", "NA"), sep.names = " "))
     #x$Exp_date = lubridate::as_date(x$Exp_date)
     return(x)
   })
@@ -224,7 +223,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    readxl::read_xlsx(input$internalstdpath_liquid$datapath, na = c("", "NA"))
+    tibble::as_tibble(openxlsx::read.xlsx(input$internalstdpath_liquid$datapath, na.strings = c("", "NA"), sep.names = " "))
   })
   
   internalstd_edit_liquid = mod_edit_data_server("edit_internal_liquid", data_input = internalstd_to_edit_liquid)
@@ -591,7 +590,8 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    readxl::read_xlsx(input$coldatainput$datapath, na = c("", "NA"))
+    tibble::as_tibble(openxlsx::read.xlsx(input$coldatainput$datapath, na.strings = c("", "NA"), sep.names = " "))
+    
   })
   
   
@@ -630,7 +630,7 @@ app_server <- function( input, output, session ) {
       shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
     }
     validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-    readxl::read_xlsx(input$assayinput$datapath, na = c("", "NA"))
+    tibble::as_tibble(openxlsx::read.xlsx(input$assayinput$datapath, na.strings = c("", "NA"), sep.names = " "))
   })
   
   
@@ -2029,17 +2029,6 @@ app_server <- function( input, output, session ) {
   
   
     ##### EXP Design #####
-
-  #update batch method
-  observeEvent(input$expdes_batch_type, {
-    if(input$expdes_batch_type == "fit"){
-      updateSelectInput(session, "batch_meth", choices = c("given", "estimate"))
-    }else if(input$expdes_batch_type == "remove"){
-      updateSelectInput(session, "batch_meth", choices = c("limma", "combat_param", "combat_nonparam"))
-    }
-  })
-
-
   sumexpde_forcoldata = reactive({
     req(sumexp_all())
     if(input$expdes_summar == TRUE && sumexp_all()$replicates == TRUE){
@@ -2048,283 +2037,14 @@ app_server <- function( input, output, session ) {
       sumexpdata()
     }
   })
-
-
-  observeEvent(sumexpde_forcoldata(), {
-    datavar1 = sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>%
-      as.data.frame() %>% dplyr::select(!where(is.double)) %>% dplyr::select(where(function(x) length(unique(x))>1))
-    
-    datavar2 = sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>%
-      as.data.frame() %>% dplyr::select(where(function(x) length(unique(x))>1))
-    
-    updateSelectInput(session, "expdes_design_vars", choices = colnames(datavar1))
-    updateSelectInput(session, "expdes_design_vars2", choices = colnames(datavar2))
-    #batch
-    updateSelectInput(session, "expdes_batch_var1", choices = colnames(SummarizedExperiment::colData(sumexpde_forcoldata())))
-    updateSelectInput(session, "expdes_batch_var2", choices = colnames(SummarizedExperiment::colData(sumexpde_forcoldata())))
-  })
-
   
   
-  #variables
-  output$checkadd2var = reactive({
-    if(input$add2var %%2 == 0){
-      "onevar"
-    }else{"twovar"}
-  })
-  outputOptions(output, "checkadd2var", suspendWhenHidden = FALSE)
-  
-  observeEvent(input$add2var,{
-    if(input$add2var %%2 == 1){
-      updateButton(session, "add2var",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
-    }else{
-      updateButton(session, "add2var", label = HTML("&nbsp;Add"), style="success", icon("plus"))
-    }
-  })
-  
-  
-  #Batch variable
-  output$checkadd2batch = reactive({
-    if(input$add2batch %%2 == 0){
-      "onebatch"
-    }else{"twobatch"}
-  })
-  outputOptions(output, "checkadd2batch", suspendWhenHidden = FALSE)
-  
-  observeEvent(input$add2batch,{
-    if(input$add2batch %%2 == 1){
-      updateButton(session, "add2batch",label = HTML("&nbsp;Remove"), style = "danger", icon("minus")) 
-    }else{
-      updateButton(session, "add2batch", label = HTML("&nbsp;Add"), style="success", icon("plus"))
-    }
-  })
-  
-  
-  varsde = reactive({
-    req(input$expdes_design_vars)
-    validate(need(input$expdes_design_vars != "", "Select a primary variable."))
-    if(input$add2var %%2 == 1){
-      vars = c(input$expdes_design_vars, input$expdes_design_vars2)
-    }else{
-      vars = input$expdes_design_vars
-    }
-    vars
-  })
-  
-  #update batch method
-  observeEvent(varsde(), {
-    if(length(varsde()) == 2){
-      updateSelectInput(session, "expdes_batch_type", choices = c("remove"))
-    }else{
-      updateSelectInput(session, "expdes_batch_type", choices = c("remove", "fit"))
-    }
-  })
-
-  batch_type1 = reactive({
-    if(input$expdes_batch_effect == FALSE){
-      "none"
-    }else{
-      input$expdes_batch_type
-    }
-  })
-
-  #all batches here
-  batches = reactive({
-    if(input$expdes_batch_effect == TRUE){
-      if(input$add2batch %%2 == 1){
-        batchs = c(input$expdes_batch_var, input$expdes_batch_var2)
-      }else{ batchs = input$expdes_batch_var1 }
-    }else{ batchs = "" }
-    batchs
-  })
+  final_contrast = mod_write_contrasts_server("write_contrasts_1", 
+                                              sumexp = sumexpde_forcoldata, 
+                                              is_batch_removed = reactive(FALSE),
+                                              Batch_Options = NULL)
 
 
-  ntotvars = reactive({
-    req(varsde())
-    if(input$batch_meth == "given"){
-      totvar = c(varsde(),batches())
-    }else{
-      totvar = c(varsde())
-    }
-    totvar = totvar[totvar != ""]
-    length(totvar)
-  })
-
-  output$checkntotvars = reactive(
-    ntotvars()
-  )
-  outputOptions(output, "checkntotvars", suspendWhenHidden = FALSE)
-
-  #### write table ##
-  #first var
-  firstvar = eventReactive(input$expdes_design_vars,{
-    req(sumexpde_forcoldata()) #firstvariab
-    validate(need(input$expdes_design_vars != "", "Select a primary variable"))
-    sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>% as.data.frame() %>%
-      dplyr::select(input$expdes_design_vars) %>% unique()
-  })
-  
-  observeEvent(firstvar(),{
-    updateSelectInput(session, "firstelement", label = paste0("Level 1 for ", input$expdes_design_vars), choices = firstvar())
-    updateSelectInput(session, "secondelement1", label = paste0("Level 2 for ", input$expdes_design_vars), choices = firstvar())
-  })
-
-  #second var
-  secondvar = reactive({
-    req(sumexpde_forcoldata(), ntotvars()) #input$secondvariab
-    if(ntotvars() == 2){
-      if(input$batch_meth == "given"){
-        sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
-          dplyr::select(input$expdes_batch_var1) %>% unique()
-      }else{
-        sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>% as.data.frame() %>% 
-          dplyr::select(input$expdes_design_vars2) %>% unique()
-      }
-    }else{
-      NULL
-    }
-
-  })
-  observeEvent(secondvar(),{
-    updateSelectInput(session, "secondelement2", label = paste("Level 2 for", colnames(secondvar())), choices = secondvar())
-  })
-
-
-  #third var
-  thirdvar = reactive({
-    req(sumexpde_forcoldata())
-    if(input$fixedlevel == "Level 2"){
-      firstvar()
-    }else{
-      secondvar()
-    }
-  })
-
-
-  observeEvent(thirdvar(),{
-    updateSelectInput(session, "thirdelement1", label = paste("Level 1 for", colnames(thirdvar())), choices = thirdvar())
-    updateSelectInput(session, "thirdelement2", label = paste("Level 2 for",colnames(thirdvar())), choices = thirdvar())
-  })
-
-  observeEvent(secondvar(),{
-    req(firstvar())
-    updateRadioButtons(session, "fixedlevel", choiceNames  = c(input$expdes_design_vars, colnames(thirdvar())), choiceValues = c("Level 1", "Level 2"))
-  })
-
-#thirdvariab
-  values <- reactiveValues()
-  values$df <- na.omit(data.frame(First_level = NA,
-                          Second_level = NA, Third_level = NA, Fourth_level = NA))
-
-
-  observeEvent(ntotvars(),{
-    if(ntotvars() == 1){
-      values$df <- na.omit(data.frame(First_level = NA, Second_level = NA))
-    }else{
-      values$df <- na.omit(data.frame(First_level = NA, Second_level = NA,
-                                      Third_level = NA, Fourth_level = NA))
-    }
-  })
-
-  observeEvent(input$add.button,{
-    cat("addEntry\n")
-    print(input$firstelement)
-    print(input$secondelement)
-    if(ntotvars() == 2){
-      print(input$thirdelement2)
-      if(input$fixedlevel == "Level 2"){
-        newRow <- data.frame(input$firstelement, input$secondelement2, input$thirdelement1, input$secondelement2)
-      }else{
-        newRow <- data.frame(input$firstelement, input$secondelement2, input$firstelement, input$thirdelement2)
-      }
-    }else{
-      newRow <- data.frame(input$firstelement, input$secondelement1)
-    }
-    colnames(newRow)<-colnames(values$df)
-    values$df <- rbind(values$df,newRow)
-  })
-
-  observeEvent(input$delete.button,{
-    cat("deleteEntry\n")
-    if(is.na(input$row.selection)){
-      values$df <- values$df[-nrow(values$df), ]
-    } else {
-      values$df <- values$df[-input$row.selection, ]
-    }
-  })
-
-  output$tablewritten1 = renderDT({
-    values$df[,c(1,2)]
-  },options = list(dom = 't'))
-  output$tablewritten2 = renderDT({
-    values$df[,c(3,4)]
-  },options = list(dom = 't'))
-
-  output$tablewritten = renderDT({
-    values$df
-  },options = list(dom = 't'))
-
-
-  writtenlist = reactive({
-    validate(need(nrow(values$df) > 0, "Dataframe empty. Waiting for new data..."))
-    if(ntotvars() == 2){
-      d1= values$df[,c(1,2)] %>% tidyr::unite(col = "unif_1", sep = "_")
-      d2= values$df[,c(3,4)] %>% tidyr::unite(col = "unif_2", sep = "_")
-      cbind(d1,d2) %>% tidyr::unite(col = "unif_3", sep = "vs") %>% dplyr::mutate(unif_4 = unif_3 ) %>%
-        dplyr::mutate(unif_4 = stringr::str_replace(unif_4,"vs","-")) %>%
-        tidyr::unite(col = "contrast", sep = "=")
-    }else{
-      values$df %>% tidyr::unite(col = "unif_1", sep = "vs") %>% dplyr::mutate(unif_2 = unif_1 ) %>%
-        dplyr::mutate(unif_2 = stringr::str_replace(unif_2,"vs","-")) %>%
-        tidyr::unite(col = "contrast", sep = "=")
-    }
-  })
-
-  output$printconlist = renderPrint({
-    req(writtenlist())
-    writtenlist()
-  })
-
-
-  
-
-  file_contrast = eventReactive(input$submit_written,{
-    req(writtenlist())
-    
-    if(ntotvars() == 2){
-    tocheck = stringr::str_split_fixed(writtenlist()$contrast, pattern = "=", n = 2)[,1] %>% 
-      stringr::str_split_fixed(pattern = "vs", n = 2) %>% as.vector()
-    
-    if(input$batch_meth == "given"){
-      totvar = c(varsde(),batches())
-      }else{
-      totvar = c(varsde())}
-    totvar = totvar[totvar != ""]
-    
-    united = sumexpde_forcoldata() %>% SummarizedExperiment::colData() %>% 
-      as.data.frame() %>% tidyr::unite("merged", totvar, sep = "_")
-
-    check = tocheck %in% united$merged  #check if are all present
-    if(FALSE %in% check){
-      no_comb = tocheck[!check]
-      shinyWidgets::show_alert(title = "One or more combinations don't exist!", type = "error",
-                               text = paste0("The combination(s) '", no_comb, 
-                                            "' doesn't exist in your dataset. Please change the levels and submit again."))
-      
-    }
-    validate(need(!(FALSE %in% check), "A combination is not present"))
-    }
-    x = writtenlist()
-    colnames(x) <- "X1"
-    x%>% tibble::as_tibble()
-    return(x)
-  })
-  
-  observeEvent(input$submit_written,{
-    showNotification(tagList(icon("check"), HTML("&nbsp;Written contrasts submitted!")), type = "message")
-    })
-
-  
   observeEvent(sumexp_all(),{
     if(sumexp_all()$data_type != "Concentration"){
       updateAwesomeRadio(session, "expdes_bs_norm", choices = c("none", "scale", "quantile"), inline = TRUE)
@@ -2336,7 +2056,7 @@ app_server <- function( input, output, session ) {
   
   #expdes_summar
   expdesign = eventReactive(input$runDE,{
-    req(sumexp_all(), file_contrast(), varsde())
+    req(sumexp_all(), final_contrast())
 
     #se non ci sono repliche faccio finta che sia mediato
     if(sumexp_all()$replicates == FALSE){
@@ -2347,12 +2067,12 @@ app_server <- function( input, output, session ) {
 
     exp1 = expdesign_advise_lipidomics(
       out = sumexp_all(),
-      design_vars = varsde(),
+      design_vars = final_contrast()$varsde,
       rep_mean = exp_summ,
-      file_contrast = file_contrast(),
-      batch_type = batch_type1(),
-      batch_vars = batches(),
-      batch_method = input$batch_meth
+      file_contrast = final_contrast()$file_cont,
+      batch_type = final_contrast()$batch_type,
+      batch_vars = final_contrast()$batches,
+      batch_method = final_contrast()$batch_meth
       )
     tryCatch({
       diffexp_advise_lipidomics(
@@ -2360,9 +2080,9 @@ app_server <- function( input, output, session ) {
         rep_mean = exp_summ,
         rep_effect = input$expdes_repeffect,
         bs_norm = input$expdes_bs_norm,
-        batch_vars = batches(),
-        batch_type = batch_type1(),
-        batch_method = input$batch_meth,
+        batch_vars = final_contrast()$batches,
+        batch_type = final_contrast()$batch_type,
+        batch_method = final_contrast()$batch_meth,
         thresh = input$expdes_thresh,
         decide_met = input$expdes_decide_met
       )
@@ -2421,6 +2141,21 @@ app_server <- function( input, output, session ) {
   })
 
 
+  #Add another volcano button
+  output$checkadd2volcano = reactive({
+    if(input$addmorevolcanos %%2 == 0){"onevolc"} else{"twovolc"}
+  })
+  outputOptions(output, "checkadd2volcano", suspendWhenHidden = FALSE)
+  
+  observeEvent(input$addmorevolcanos,{
+    if(input$addmorevolcanos %%2 == 1){
+      updateButton(session, "addmorevolcanos",label = HTML("&nbsp;Remove second plot"), style = "danger", icon("minus"))
+    }else{
+      updateButton(session, "addmorevolcanos", label = HTML("&nbsp;Add another plot"), style="success", icon("plus"))
+    }
+  })
+  
+  
   mod_ma_volcano_plot_server("ma_volcano_plot1",
                              data_input = expdes_data_forplot,
                              contrast = reactive(input$expdes_colmaplot),
@@ -2489,10 +2224,9 @@ output$venndiag = renderUI({
     })
 
     output$dtvenn = DT::renderDT({
-      table_venn <- stringi::stri_list2matrix(data_venn@region$item, byrow = FALSE)
+      len <- max(sapply(data_venn@region$item, length)) ## get length of longest vector
+      table_venn <- sapply(data_venn@region$item, function(x) `length<-`(unlist(x), len))
       colnames(table_venn) <-  gsub("\\.+","\U2229",data_venn@region$name)
-      #table_venn = gsub(").*", ")", table_venn)
-      #table_venn = gsub("_","/", table_venn)
       render <- c(
         "function(data, type, row){",
         "  if(type === 'display' && data){",

@@ -11,7 +11,6 @@
 #'
 #' @importFrom SummarizedExperiment SummarizedExperiment
 #' @importFrom purrr flatten
-#' @importFrom stringi stri_list2matrix
 #' @importFrom stringr str_extract
 #' @importFrom tibble column_to_rownames
 #' @import shiny
@@ -90,7 +89,7 @@ sumexp_advise_lipidomics <- function(out){
   aux_rowdata <- strsplit(out$concentration_matrix_filt[,1], split = ")")
   aux_rowdata_ion <- unlist(lapply(aux_rowdata,"[",2))
   aux_rowdata_species <- unlist(lapply(aux_rowdata,"[",1)) %>% strsplit(split = "[(_/:]") ####MODIFICA aggiunto "/" in split
-  aux_rowdata_species <- stringi::stri_list2matrix(aux_rowdata_species, byrow = TRUE)
+  aux_rowdata_species <- t(sapply(aux_rowdata_species, function(x) `length<-`(unlist(x), max(sapply(aux_rowdata_species, length)))))
   aux_rowdata_class <- aux_rowdata_species[,1]
 
   #---Subfunction---#

@@ -7,7 +7,7 @@
 #' @noRd 
 #'
 #' @importFrom shiny NS tagList
-#' @importFrom bsplus bs_embed_tooltip
+#' @importFrom bsplus bs_embed_tooltip bs_embed_tooltip
 mod_calibration_step_ui <- function(id){
   ns <- NS(id)
   tagList(
@@ -66,9 +66,16 @@ mod_calibration_step_ui <- function(id){
                                 br(),
                                 fluidRow(
                                   column(6, offset = 1,
-                                         fluidRow(checkboxInput(ns("intercept_flag"), "Intercept at zero", value = TRUE)),
-                                         fluidRow(checkboxInput(ns("lm_robust_flag"), "Use robust method linear model", value = FALSE)),
-                                         fluidRow(checkboxInput(ns("lin_calibration"), "Filter on concentration range of linearity", value = TRUE))
+                                         fluidRow(bsplus::bs_embed_tooltip(
+                                           checkboxInput(ns("intercept_flag"), "Intercept at zero", value = TRUE),
+                                           title = "If checked the linear model will be forced to have the intercept at zero: a zero Area always correspond to a zero concentration.")),
+                                         fluidRow(bsplus::bs_embed_tooltip(
+                                           checkboxInput(ns("lm_robust_flag"), "Use robust method linear model", value = FALSE),
+                                           title = "Fit a linear model by robust regression using an M estimator. Check rlm function from {MASS} package.")),
+                                         fluidRow(bsplus::bs_embed_tooltip(
+                                           checkboxInput(ns("lin_calibration"), "Filter on concentration range of linearity", value = TRUE),
+                                           title = "If checked, a filter on concentration range of linearity is applied, considering the min and max values in the internal standard file.")
+                                         )
                                   ),
                                   column(4,
                                          div(
@@ -151,7 +158,7 @@ mod_calibration_step_server <- function(id, stepc){
         shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
       }
       validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-      readxl::read_xlsx(input$calibdeuteratedpath$datapath, na = c("", "NA"))
+      tibble::as_tibble(openxlsx::read.xlsx(input$calibdeuteratedpath$datapath, na.strings = c("", "NA"), sep.names = " "))
     })
     
     calibdeu_edit <- DataEditR::dataEditServer("editedcalibeu", data = calibdeu_to_edit)
@@ -167,7 +174,7 @@ mod_calibration_step_server <- function(id, stepc){
         shinyWidgets::show_alert("Invalid file!", "Please upload a .xlsx file", type = "error")
       }
       validate(need(ext == "xlsx", "Invalid file! Please upload a .xlsx file"))
-      readxl::read_xlsx(input$calibnonlabelpath$datapath, na = c("", "NA"))
+      tibble::as_tibble(openxlsx::read.xlsx(input$calibnonlabelpath$datapath, na.strings = c("", "NA"), sep.names = " "))
     })
     
     caliblab_edit <- DataEditR::dataEditServer("editedcalilab", data = caliblab_to_edit)

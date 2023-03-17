@@ -1,3 +1,11 @@
+# ADViSELipidomics 1.3.0
+* Graphical improvements
+* ADViSELipidomics now can perform DA with more than two design variables uploading a txt file with the contrasts. For 1 or 2 design variables it is still possible to easily write the contrasts inside the shinyapp as before.
+* Removed two package dependencies (readxl and stringi)
+* Added other tooltips
+* Added a docker version of ADViSELipidomics
+
+
 # ADViSELipidomics 1.2.0
 
 * Added check for the LipidSearch version.

@@ -89,6 +89,24 @@ was thought and built. Try to reduce or increment the zoom using
 An **user manual** is available at the following link:
 <https://shinyfabio.github.io/ADViSELipidomics_book/>
 
+## Docker
+
+A docker version of ADViSELipidomics is also available. Please, first
+install Docker Desktop from here:
+
+<https://docs.docker.com/get-docker/>
+
+After that, open your console and run this code:
+
+``` cmd
+docker run -p 80:80 shinyfabio/adviselipidomics:latest
+```
+
+Finally open your browser (tested on Chrome, Firefox can have some
+problems) and go to this link:
+
+<http://localhost:80/>
+
 ## Update
 
 When a new ADViSELipidomics version is released, it can be updated with

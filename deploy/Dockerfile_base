@@ -1,0 +1,7 @@
+FROM rocker/verse:4.2.2
+RUN apt-get update -y && apt-get install -y  libicu-dev pandoc make  libicu-dev pandoc make zlib1g-dev  cmake make libicu-dev pandoc  perl  make libcurl4-openssl-dev  libfontconfig1-dev libfreetype6-dev  cmake make libicu-dev zlib1g-dev  libxml2-dev  libicu-dev  make  cmake make libicu-dev  make zlib1g-dev  libcurl4-openssl-dev libssl-dev  zlib1g-dev  libfontconfig1-dev libfreetype6-dev libudunits2-dev libicu-dev libssl-dev libcurl4-openssl-dev pandoc make zlib1g-dev libgdal-dev gdal-bin libgeos-dev libproj-dev libsqlite3-dev  libglpk-dev libgmp3-dev libxml2-dev  libfontconfig1-dev  libfreetype6-dev  imagemagick  libmagick++-dev  gsfonts  libpng-dev  libcurl4-openssl-dev  libssl-dev  pandoc  cmake make  libicu-dev libcurl4-openssl-dev libssl-dev pandoc make zlib1g-dev  git  libxml2-dev libicu-dev libcurl4-openssl-dev libssl-dev  libudunits2-dev libssl-dev libgdal-dev gdal-bin libgeos-dev libproj-dev libsqlite3-dev  libfontconfig1-dev libfreetype6-dev libpng-dev  libudunits2-dev && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /usr/local/lib/R/etc/ /usr/lib/R/etc/
+RUN echo "options(renv.config.pak.enabled = TRUE, repos = c(CRAN = 'https://cran.rstudio.com/'), download.file.method = 'libcurl', Ncpus = 4)" | tee /usr/local/lib/R/etc/Rprofile.site | tee /usr/lib/R/etc/Rprofile.site
+RUN R -e 'install.packages(c("renv","remotes"))'
+COPY renv.lock.prod renv.lock
+RUN R -e 'renv::restore()'

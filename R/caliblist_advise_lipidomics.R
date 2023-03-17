@@ -13,7 +13,6 @@
 #'
 #' @import dplyr
 #' @import shiny
-#' @importFrom readxl read_xlsx
 #' @importFrom readr read_delim
 #' @importFrom tibble as_tibble rownames_to_column
 #' @importFrom tidyr pivot_wider

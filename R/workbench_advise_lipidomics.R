@@ -12,7 +12,6 @@
 #' @return res: a list with two SummerizedExperiment
 #'
 #' @importFrom SummarizedExperiment SummarizedExperiment
-#' @importFrom stringi stri_list2matrix
 #' @importFrom stringr str_extract str_split_fixed
 #' @import shiny
 #' @import dplyr
@@ -68,14 +67,14 @@ workbench_advise_lipidomics <-  function(filtered, coldata, metadata, data_type,
     aux_rowdata_species = unlist(lapply(test,"[",2))
     aux_rowdata_species = gsub("\\)", "", aux_rowdata_species)
     aux_rowdata_species = strsplit(aux_rowdata_species, split = "[/:]")
-    aux_rowdata_species <- stringi::stri_list2matrix(aux_rowdata_species, byrow = TRUE)
+    aux_rowdata_species <- t(sapply(aux_rowdata_species, function(x) `length<-`(unlist(x), max(sapply(aux_rowdata_species, length)))))
     aux_rowdata_species = cbind(aux_rowdata_class, aux_rowdata_species)
     aux_rowdata_ion = unlist(lapply(test,"[",44)) #44 perchè sicuro non c'è nulla quindi tutti NA
   }else{
     aux_rowdata <- strsplit(filtered$concentration_matrix_filt[,1], split = ")")
     aux_rowdata_ion <- unlist(lapply(aux_rowdata,"[",2))
     aux_rowdata_species <- unlist(lapply(aux_rowdata,"[",1)) %>% strsplit(split = "[(/:]")
-    aux_rowdata_species <- stringi::stri_list2matrix(aux_rowdata_species, byrow = TRUE)
+    aux_rowdata_species <- t(sapply(aux_rowdata_species, function(x) `length<-`(unlist(x), max(sapply(aux_rowdata_species, length)))))
     aux_rowdata_class <- aux_rowdata_species[,1]
   }
   

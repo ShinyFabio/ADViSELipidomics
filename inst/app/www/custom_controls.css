@@ -1,0 +1,28 @@
+.my-control {
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  font-size: 2.5em;
+  color: #0055DD;
+  opacity: 0.8;
+  cursor: pointer;
+}
+.my-control:hover {
+  opacity: 1;
+}
+.disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+.prev-screen {
+  left: 20px;
+}
+.next-screen,
+.last-screen {
+  right: 20px;
+}
+.glide__slides {
+  margin: 0 7em;
+}

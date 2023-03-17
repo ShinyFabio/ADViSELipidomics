@@ -27,7 +27,7 @@ app_ui <- function(request) {
     
     #custom infobox with height fixed (for the citation)
     tags$head(tags$style(HTML('.info-box {height: 90px;}'))),
-    
+
     tags$head(tags$link(rel = "stylesheet", type = "text/css", href = "www/custom_dashboardheader_title.css")),
 
     # Your application UI logic 
@@ -113,11 +113,9 @@ app_ui <- function(request) {
         tabItem(tabName = "rawsub",
           fluidPage(
             fluidRow(
-              
                 box(width = 3, title = "What is your data source?", status = "primary", solidHeader = TRUE,
                     column(
                       10,offset = 1,
-                      
                   radioGroupButtons("sel_inputdata_type", "Choose one :",
                                     choiceValues = list("lipidsearch", "liquid", "excel", "sumexp", "mw"),
                                     choiceNames = list(
@@ -1105,113 +1103,115 @@ app_ui <- function(request) {
                 
 
                 awesomeRadio("expdes_bs_norm", "Normalization between replicates or samples", choices = "", inline = TRUE),
-                #awesomeCheckbox("expdes_bs_norm", "Normalization between replicates or samples", value = FALSE),
-                hr(),
-                h4(strong("Variables")),
-                
-                fluidRow(
-                  column(8, selectInput("expdes_design_vars", "Select primary variable", choices = "")),
-                  column(4, br(), bsButton("add2var", label = HTML("&nbsp;Add"), style="success", icon("plus")))
-                ),
-                fluidRow(conditionalPanel(condition = "output.checkadd2var == 'twovar'",
-                                          column(8, selectInput("expdes_design_vars2", "Select secondary variable", choices = "")))
-                ),
                 hr(),
                 
-                h4(strong("Batch effect")),
-                awesomeCheckbox("expdes_batch_effect", "Batch effect", value = TRUE),
-                conditionalPanel(
-                  condition = "input.expdes_batch_effect == true",
-                  fluidRow(
-                    column(
-                      6, 
-                      selectInput("expdes_batch_type", choices = c("remove", "fit"),
-                        label = tags$span("Batch type", 
-                          tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
-                                 title = "ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables 
-                        or removing the batch effect before fitting the model. If you select 'fit', the software requires your batch variable
-                        also in the contrasts list. Remember that you can generate a contrasts list up to two variables.")))
-                    ),
-
-                    column(
-                      6, 
-                      selectInput("batch_meth",choices = "",
-                        label = tags$span("Batch method", 
-                                          tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
-                                                 title = "Algorithm used for the batch effect. If 'limma',it will be used the 'removeBatchEffect' function, otherwhise
-                        the 'ComBat' function from SVA package (parametric or non-parametric).")))
-                    )
-                  ),
-                  conditionalPanel(
-                    condition = "input.expdes_batch_type == 'remove' || input.batch_meth == 'given'",
-                    fluidRow(
-                      column(8, selectInput("expdes_batch_var1", "Primary batch variable", choices = "")),
-                      column(4, br(), bsButton("add2batch", label = HTML("&nbsp;Add"), style="success", icon("plus")))
-                    ),
-                    fluidRow(
-                      conditionalPanel(condition = "output.checkadd2batch == 'twobatch'",
-                                       column(8, selectInput("expdes_batch_var2", "Second batch variable", choices = ""))
-                      )
-                    )
-                  )
-                ),
-                hr(),
+                mod_write_contrasts_ui("write_contrasts_1"),
                 
-                div(actionButton("open_writecontrast", "Write contrasts", icon("pen")), style = "text-align: center;"),
-                br(),
                 
-                tags$head(tags$style("#view_writecontrast .modal-dialog{ width:1100px}")),
-                shinyBS::bsModal("view_writecontrast", trigger = "open_writecontrast", size = "large", title = "Write the contrasts",
-                                   fluidPage(
-                                     column(
-                                       3,
-                                       box(width = NULL, status = "primary", title = "First term", solidHeader = TRUE,
-                                           selectInput("firstelement", "Level 1", choices = ""),
-                                           conditionalPanel(condition = "output.checkntotvars == 1",
-                                                            selectInput("secondelement1", "Level 2", choices = "")
-                                           ),
-                                           conditionalPanel(condition = "output.checkntotvars == 2",
-                                                            selectInput("secondelement2", "Level 2", choices = "")
-                                           )
-                                       ),
-                                       conditionalPanel(condition = "output.checkntotvars == 2",
-                                                        box(width = NULL, status = "primary", title = "Second term", solidHeader = TRUE,
-                                                            radioButtons("fixedlevel", "Fixed Level", choices = c("Level 1", "Level 2"), inline = TRUE), #, checkbox = TRUE
-                                                            conditionalPanel(condition = "input.fixedlevel == 'Level 1'",
-                                                                             br(),
-                                                                             h5(strong("Level 1: fixed")), 
-                                                                             br(),
-                                                                             selectInput("thirdelement2", "Level 2", choices = "")
-                                                            ),
-                                                            conditionalPanel(condition = "input.fixedlevel == 'Level 2'",
-                                                                             selectInput("thirdelement1", "Level 1", choices = ""),
-                                                                             h5(strong("Level 2: fixed"))
-                                                            )
-                                                        )
-                                                        
-                                       ),
-                                       hr(),
-                                       # Row selection
-                                       numericInput("row.selection", "Select row to be deleted", min = 1, max = 100, value = ""),
-                                       # Add button
-                                       actionButton("add.button", "Add", icon("plus")), 
-                                       # Delete button 
-                                       actionButton("delete.button", "Delete", icon("minus"))
-                                     ),
-                                     column(8,
-                                            DTOutput("tablewritten"),
-                                            br(), 
-                                            hr(), 
-                                            br(),
-                                            fluidRow(
-                                              column(9,verbatimTextOutput("printconlist")),
-                                              column(3, actionButton("submit_written", "Submit", icon("file-import"), style = "width: 150px;height: 50px;font-size: 20px;"))
-                                            )
-                                     )
-                                   )
-
-                ),
-                
+                # h4(strong("Variables")),
+                # fluidRow(
+                #   column(8, selectInput("expdes_design_vars", "Select primary variable", choices = "")),
+                #   column(4, br(), bsButton("add2var", label = HTML("&nbsp;Add"), style="success", icon("plus")))
+                # ),
+                # fluidRow(conditionalPanel(condition = "output.checkadd2var == 'twovar'",
+                #                           column(8, selectInput("expdes_design_vars2", "Select secondary variable", choices = "")))
+                # ),
+                # hr(),
+                # 
+                # h4(strong("Batch effect")),
+                # awesomeCheckbox("expdes_batch_effect", "Batch effect", value = TRUE),
+                # conditionalPanel(
+                #   condition = "input.expdes_batch_effect == true",
+                #   fluidRow(
+                #     column(
+                #       6, 
+                #       selectInput("expdes_batch_type", choices = c("remove", "fit"),
+                #         label = tags$span("Batch type", 
+                #           tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
+                #                  title = "ADViSELipidomics copes with the batch effects by either fitting the model with the batch variables 
+                #         or removing the batch effect before fitting the model. If you select 'fit', the software requires your batch variable
+                #         also in the contrasts list. Remember that you can generate a contrasts list up to two variables.")))
+                #     ),
+                # 
+                #     column(
+                #       6, 
+                #       selectInput("batch_meth",choices = "",
+                #         label = tags$span("Batch method", 
+                #                           tags$i(style = "color:#0072B2;",class = "glyphicon glyphicon-info-sign",
+                #                                  title = "Algorithm used for the batch effect. If 'limma',it will be used the 'removeBatchEffect' function, otherwhise
+                #         the 'ComBat' function from SVA package (parametric or non-parametric).")))
+                #     )
+                #   ),
+                #   conditionalPanel(
+                #     condition = "input.expdes_batch_type == 'remove' || input.batch_meth == 'given'",
+                #     fluidRow(
+                #       column(8, selectInput("expdes_batch_var1", "Primary batch variable", choices = "")),
+                #       column(4, br(), bsButton("add2batch", label = HTML("&nbsp;Add"), style="success", icon("plus")))
+                #     ),
+                #     fluidRow(
+                #       conditionalPanel(condition = "output.checkadd2batch == 'twobatch'",
+                #                        column(8, selectInput("expdes_batch_var2", "Second batch variable", choices = ""))
+                #       )
+                #     )
+                #   )
+                # ),
+                # hr(),
+                # 
+                # div(actionButton("open_writecontrast", "Write contrasts", icon("pen")), style = "text-align: center;"),
+                # br(),
+                # 
+                # tags$head(tags$style("#view_writecontrast .modal-dialog{ width:1100px}")),
+                # shinyBS::bsModal("view_writecontrast", trigger = "open_writecontrast", size = "large", title = "Write the contrasts",
+                #                    fluidPage(
+                #                      column(
+                #                        3,
+                #                        box(width = NULL, status = "primary", title = "First term", solidHeader = TRUE,
+                #                            selectInput("firstelement", "Level 1", choices = ""),
+                #                            conditionalPanel(condition = "output.checkntotvars == 1",
+                #                                             selectInput("secondelement1", "Level 2", choices = "")
+                #                            ),
+                #                            conditionalPanel(condition = "output.checkntotvars == 2",
+                #                                             selectInput("secondelement2", "Level 2", choices = "")
+                #                            )
+                #                        ),
+                #                        conditionalPanel(condition = "output.checkntotvars == 2",
+                #                                         box(width = NULL, status = "primary", title = "Second term", solidHeader = TRUE,
+                #                                             radioButtons("fixedlevel", "Fixed Level", choices = c("Level 1", "Level 2"), inline = TRUE), #, checkbox = TRUE
+                #                                             conditionalPanel(condition = "input.fixedlevel == 'Level 1'",
+                #                                                              br(),
+                #                                                              h5(strong("Level 1: fixed")), 
+                #                                                              br(),
+                #                                                              selectInput("thirdelement2", "Level 2", choices = "")
+                #                                             ),
+                #                                             conditionalPanel(condition = "input.fixedlevel == 'Level 2'",
+                #                                                              selectInput("thirdelement1", "Level 1", choices = ""),
+                #                                                              h5(strong("Level 2: fixed"))
+                #                                             )
+                #                                         )
+                #                                         
+                #                        ),
+                #                        hr(),
+                #                        # Row selection
+                #                        numericInput("row.selection", "Select row to be deleted", min = 1, max = 100, value = ""),
+                #                        # Add button
+                #                        actionButton("add.button", "Add", icon("plus")), 
+                #                        # Delete button 
+                #                        actionButton("delete.button", "Delete", icon("minus"))
+                #                      ),
+                #                      column(8,
+                #                             DTOutput("tablewritten"),
+                #                             br(), 
+                #                             hr(), 
+                #                             br(),
+                #                             fluidRow(
+                #                               column(9,verbatimTextOutput("printconlist")),
+                #                               column(3, actionButton("submit_written", "Submit", icon("file-import"), style = "width: 150px;height: 50px;font-size: 20px;"))
+                #                             )
+                #                      )
+                #                    )
+                # 
+                # ),
+                # 
                 prettyRadioButtons("expdes_thresh", "p-value threshold", choices = c(0.001, 0.01, 0.05), inline = TRUE, selected = 0.05),
                 
                 selectInput("expdes_decide_met", choices = c("separate", "global", "hierarchical", "nestedF"), selected = "separate",
@@ -1249,14 +1249,14 @@ app_ui <- function(request) {
                 sliderInput("expdes_lfc", "Select logFC", min = 1, max = 10, value = 2, step = 0.5),
                 hr(),
                 h4(strong("Plot options")),
-                div(actionButton("addmorevolcanos", "Add another plot"), align = "center")
+                div(actionButton("addmorevolcanos", "Add another plot", icon = icon("plus")), align = "center")
                 
               ),
               
               mainPanel(width = 9,
                         mod_ma_volcano_plot_ui("ma_volcano_plot1"),
                         
-                        conditionalPanel(condition = "input.addmorevolcanos != 0",
+                        conditionalPanel("output.checkadd2volcano == 'twovolc'",
                                          mod_ma_volcano_plot_ui("ma_volcano_plot2")
                         )
               ) #end of mainpanel
@@ -1308,7 +1308,7 @@ app_ui <- function(request) {
       tabItem(tabName = "enrmenu",
         sidebarLayout(
           sidebarPanel(width = 2,
-            selectInput("rank_c", "rank_c", choices = c("logFC" , "P.Value", "adj.P.Val", "B")),
+            selectInput("rank_c", "Ranking DA lipids considering:", choices = c("logFC" , "P.Value", "adj.P.Val", "B")),
             prettyRadioButtons("enrich_thresh", "p-value threshold", choices = c(0.001, 0.01, 0.05), selected = 0.05),
             selectInput("enrich_selcont", "Select contrast", choices = "")
           ),

@@ -160,8 +160,8 @@ read_advise_lipidomics <- function(out,
       if(sum(nas$NAs) > 0){
         if(shiny::isRunning()){
           showNotification(duration = 8, tagList(icon("exclamation-circle"), 
-                                 HTML("&nbsp;Some lipid areas (",sum(nas$NAs),"in total) are equal or less than 0 and will be removed. 
-                                      Check the console to see where.")), type = "warning")
+                                 HTML(paste0("&nbsp;Some lipid areas (",sum(nas$NAs)," in total) are equal or less than 0 and will be removed. 
+                                      Check the console to see where."))), type = "warning")
         }
         message(paste0("Some lipid areas (",sum(nas$NAs)," in total) are equal or less than 0 and will be removed."))
         cat(crayon::bgYellow(crayon::red("Some lipid areas are removed in the following samples.")))

@@ -1,5 +1,8 @@
+^renv$
+^renv\.lock$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^README\.Rmd$
 ^dev
 ^\.github$
+^deploy$
